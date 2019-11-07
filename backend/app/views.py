@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework.response import Response
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
 
 # MARTIN IMPORTS
 from sklearn import preprocessing
@@ -58,6 +59,19 @@ dummy_row = [0 for i in range(number_of_features)]
 ###################################################
 
 
+class loginWOpass(APIView):
+    def get(self, request, name):
+        try:
+            user = User.objects.get(username=name)
+            login(request, user)
+            print('logged in as', request.user)
+            return Response('login successful')
+        except:
+            user = User.objects.create_user(name)
+            print('created new user', user.username)
+            return Response('created new user '+str(user.username))
+
+
 class example(APIView):
     def get(self, request):
 
@@ -69,6 +83,7 @@ class example(APIView):
 
 class allResources(APIView):
     def get(self, request):
+        print(request.user)
         return Response(resc)
 
 

@@ -8,5 +8,6 @@ urlpatterns = [
     path('priporocila/ucenje/<str:name>/',
          views.trainingReccomendations.as_view()),
     path('uporabnik/<str:name>/<str:material>/<int:eng>/',
-         views.trainingReccomendations.as_view())
+         views.trainingReccomendations.as_view()),
+    path('prijava/<str:name>/', views.loginWOpass.as_view())
 ]
