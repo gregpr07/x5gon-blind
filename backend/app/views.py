@@ -136,14 +136,14 @@ class updateLearner(APIView):
         # print(mat)
 
         # print(users[name][0])
-        
-        learner = parm_to_skill(user[name][0])
+
+        learner = Serial.parm_to_skill(users[name][0])
         learner.fit(mat, y)
-        
-        user[name][0] = skill_to_parm(learner)
+
+        users[name][0] = Serial.skill_to_parm(learner)
         # redirect('/priporocila/<name>')
 
-        return Response('sth')
+        return Response(users)
 
 # todo
 # ? add /priporocila/ucenje/<name>
