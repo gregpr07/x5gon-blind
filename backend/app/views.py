@@ -9,6 +9,7 @@ from sklearn import preprocessing
 import martinscripts.SpeculativeRepresentation as S
 import operator
 import martinscripts.TrueLearn as TrueLearn
+import martinscripts.Serial as Serial
 
 
 ###################################################
@@ -18,7 +19,7 @@ resc = {'wiki1': ('https://sl.wikipedia.org/wiki/Wikipedija', [3, 3, 3, 3], None
         'jacobin': ('https://jacobinmag.com/', [2, 2, 2, 2], None)
         }
 
-users = {'martin': [TrueLearn.TrueSkill_classifier(), 0]}
+users = {'martin': [[], 0]}
 
 
 # TOLE BO TREBA MAL BOL ROBUSTNO NAREST
@@ -100,7 +101,7 @@ class trainingReccomendations(APIView):
 class personalReccomendations(APIView):
     def get(self, request, name):
         prob = {}
-        learner = users[name][0]
+        learner = Serial.parm_to_skill(users[name][0])
 
         # check for new user:
         if learner.learners == {}:
@@ -135,8 +136,11 @@ class updateLearner(APIView):
         # print(mat)
 
         # print(users[name][0])
-
-        users[name][0].fit(mat, y)
+        
+        learner = parm_to_skill(user[name][0])
+        learner.fit(mat, y)
+        
+        user[name][0] = skill_to_parm(learner)
         # redirect('/priporocila/<name>')
 
         return Response('sth')
