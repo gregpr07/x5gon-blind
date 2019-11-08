@@ -99,24 +99,28 @@ class trainingReccomendations(APIView):
 
 
 class personalReccomendations(APIView):
-    def get(self, request, name):
-        prob = {}
-        learner = Serial.parm_to_skill(users[name][0])
+    def get(self, request):
+        if request.user.is_authenticated:
+            prob = {}
+            name = str(request.user)
+            learner = Serial.parm_to_skill(users[name][0])
 
-        # check for new user:
-        if learner.learners == {}:
+            # check for new user:
+            if learner.learners == {}:
+                for i in resc.keys():
+                    prob[i] = 0.5
+                return Response(prob)
+
             for i in resc.keys():
-                prob[i] = 0.5
+                single_resource = resc[i][1]
+                print(enc.transform([single_resource]).toarray())
+
+                prob[i] = learner.predict_proba(
+                    enc.transform([single_resource]).toarray())
+
             return Response(prob)
-
-        for i in resc.keys():
-            single_resource = resc[i][1]
-            print(enc.transform([single_resource]).toarray())
-
-            prob[i] = learner.predict_proba(
-                enc.transform([single_resource]).toarray())
-
-        return Response(prob)
+        else:
+            return Response('user not logged in')
 
 
 class updateLearner(APIView):
