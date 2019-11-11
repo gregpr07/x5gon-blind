@@ -5,6 +5,7 @@ from django.contrib.postgres.fields import ArrayField, JSONField
 
 class UserInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    # todo - slep al skrin user
     params = JSONField()
 
 
@@ -21,11 +22,12 @@ UserInfo.save()
 
 
 ############
- """
+"""
 
 
 class Material(models.Model):
     name = models.CharField(max_length=100)
+    displayName = models.CharField(max_length=100)
     url = models.URLField()
     vector = ArrayField(models.IntegerField())
     IDKparam = models.CharField(null=True, max_length=100)

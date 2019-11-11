@@ -9,5 +9,6 @@ urlpatterns = [
          views.trainingReccomendations.as_view()),
     path('uporabnik/<str:name>/<str:material>/<int:eng>/',
          views.updateLearner.as_view()),
-    path('prijava/<str:name>/', views.loginWOpass.as_view())
+    path('prijava/<str:name>/', views.loginWOpass.as_view()),
+    path('test/', views.test.as_view())
 ]

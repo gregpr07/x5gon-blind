@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework.response import Response
 from django.contrib.auth.models import User
+from app.models import UserInfo, Material
 from django.contrib.auth import authenticate, login
 
 # MARTIN IMPORTS
@@ -13,13 +14,13 @@ import martinscripts.Serial as Serial
 
 
 ###################################################
-# TOLE BO TREBA KONVERTAT V DATABAZO
+""" # TOLE BO TREBA KONVERTAT V DATABAZO
 resc = {'wiki1': ('https://sl.wikipedia.org/wiki/Wikipedija', [3, 3, 3, 3], None),
         'lego': ('https://www.lego.com/en-us/kids/the-lego-movie-2', [0, 1, 0, 1], None),
         'jacobin': ('https://jacobinmag.com/', [2, 2, 2, 2], None)
         }
 
-users = {'martin': [[], 0]}
+users = {'martin': [[], 0]} """
 
 
 # TOLE BO TREBA MAL BOL ROBUSTNO NAREST
@@ -68,7 +69,10 @@ class loginWOpass(APIView):
             print('logged in as', request.user)
             return Response('login successful')
         except:
+            default_params = [[], 0]
+
             user = User.objects.create_user(name)
+            UserInfo.objects.create(user=user, params=default_params)
             print('created new user', user.username)
             return Response('created new user '+str(user.username))
 
@@ -76,24 +80,34 @@ class loginWOpass(APIView):
 class example(APIView):
     def get(self, request):
 
-        # KODA GRE TUKEJ
-
         usernames = [user.username for user in User.objects.all()]
         return Response(usernames)
+
+
+class test(APIView):
+    def get(self, request):
+        return Response('get')
+
+    def post(self, request):
+        print(request.data)
+        return Response(request.data)
 
 
 class allResources(APIView):
     def get(self, request):
         print(request.user)
-        return Response(resc)
+        all = Material.objects.all().values('displayName', 'url')
+        return Response(all)
 
 
 class trainingReccomendations(APIView):
     def get(self, request, name):
         prob = {}
+        all = list(Material.objects.all().values('name', 'vector', 'url'))
 
-        for i in resc.keys():
-            prob[i] = S.learning_score(resc[i][1], max_value)
+        for element in all:
+            prob[element['name']] = S.learning_score(
+                element['vector'], max_value)
 
         return Response(prob)
 
@@ -103,51 +117,60 @@ class personalReccomendations(APIView):
         if request.user.is_authenticated:
             prob = {}
             name = str(request.user)
-            learner = Serial.parm_to_skill(users[name][0])
+            user = User.objects.get(username=name)
 
+            learner = Serial.parm_to_skill(user.userinfo.params[0])
+
+            all_mat = list(Material.objects.all().values(
+                'name', 'vector', 'url'))
             # check for new user:
             if learner.learners == {}:
-                for i in resc.keys():
-                    prob[i] = 0.5
+                for i in all_mat:
+                    prob[i['name']] = 0.5
                 return Response(prob)
 
-            for i in resc.keys():
-                single_resource = resc[i][1]
+            for i in all_mat:
+                single_resource = i['vector']
                 print(enc.transform([single_resource]).toarray())
 
-                prob[i] = learner.predict_proba(
+                prob[i['name']] = learner.predict_proba(
                     enc.transform([single_resource]).toarray())
 
             return Response(prob)
         else:
             return Response('user not logged in')
 
+# engagement -- rate system
+
 
 class updateLearner(APIView):
+
     def get(self, request, name, material, eng):
+        curr_material = Material.objects.get(name=material)
+        mat = curr_material.vector
+
         if speculative_induction == False:
-            mat = resc[material][1]
             mat = enc.transform([mat]).toarray()
             y = [int(eng)]
         else:
-            mat = resc[material][1]
             print(mat)
             mat = S.speculative_induction(mat, max_value)
             print(mat)
             mat = enc.transform(mat).toarray()
             y = [int(eng) for k in range(len(mat))]
             print(y)
-        # print(mat)
 
-        # print(users[name][0])
+        user = User.objects.get(username=name)
 
-        learner = Serial.parm_to_skill(users[name][0])
+        learner = Serial.parm_to_skill(user.userinfo.params[0])
         learner.fit(mat, y)
 
-        users[name][0] = Serial.skill_to_parm(learner)
-        # redirect('/priporocila/<name>')
+        # save to database
 
-        return Response(users)
+        user.userinfo.params = [Serial.skill_to_parm(learner), 0]
+        user.userinfo.save()
+
+        return Response({name: user.userinfo.params})
 
 # todo
 # ? add /priporocila/ucenje/<name>
