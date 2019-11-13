@@ -1,9 +1,12 @@
 from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework.response import Response
+from rest_framework import status
 from django.contrib.auth.models import User
 from app.models import UserInfo, Material
 from django.contrib.auth import authenticate, login
+
+import uuid
 
 # MARTIN IMPORTS
 from sklearn import preprocessing
@@ -61,8 +64,13 @@ dummy_row = [0 for i in range(number_of_features)]
 ###################################################
 
 
+# todo -- USER HASH LOGIN SYSTEM
+# User.objects.get(userinfo__userHash='<hash>')
+
+
 class loginWOpass(APIView):
-    def get(self, request, name):
+    def get(self, request):
+        name = 'gregor'
         try:
             user = User.objects.get(username=name)
             login(request, user)
@@ -72,9 +80,21 @@ class loginWOpass(APIView):
             default_params = [[], 0]
 
             user = User.objects.create_user(name)
-            UserInfo.objects.create(user=user, params=default_params)
+            UserInfo.objects.create(
+                user=user, params=default_params, userHash=uuid.uuid4().hex)
             print('created new user', user.username)
             return Response('created new user '+str(user.username))
+
+    def post(self, request):
+        name = request.data['name']
+        try:
+            user = User.objects.get(username=name)
+            login(request, user)
+            print('logged in as', request.user)
+            user = User.objects.get(username=user)
+            return Response(user.userinfo.userHash)
+        except:
+            return Response('error')
 
 
 class example(APIView):
@@ -86,7 +106,7 @@ class example(APIView):
 
 class test(APIView):
     def get(self, request):
-        return Response('get')
+        return Response('user not logged in')
 
     def post(self, request):
         print(request.data)
@@ -113,11 +133,10 @@ class trainingReccomendations(APIView):
 
 
 class personalReccomendations(APIView):
-    def get(self, request):
-        if request.user.is_authenticated:
+    def get(self, request, hash):
+        try:
             prob = {}
-            name = str(request.user)
-            user = User.objects.get(username=name)
+            user = User.objects.get(userinfo__userHash=hash)
 
             learner = Serial.parm_to_skill(user.userinfo.params[0])
 
@@ -137,7 +156,7 @@ class personalReccomendations(APIView):
                     enc.transform([single_resource]).toarray())
 
             return Response(prob)
-        else:
+        except:
             return Response('user not logged in')
 
 # engagement -- rate system
@@ -173,8 +192,4 @@ class updateLearner(APIView):
         return Response({name: user.userinfo.params})
 
 # todo
-# ? add /priporocila/ucenje/<name>
-# and
-# ? /uporabnik/<name>/<material>/<eng>
-# and
 # ! dodaj-uporabnika
