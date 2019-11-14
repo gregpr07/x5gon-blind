@@ -6,6 +6,7 @@ const Main = props => {
 		<div>
 			Main apge
 			<Link to="/admin">Bla</Link>
+			<Link to="/recommendations">Recommendations</Link>
 		</div>
 	);
 };

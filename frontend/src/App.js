@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import {
 	BrowserRouter as Router,
 	Link,
@@ -8,14 +8,9 @@ import {
 import Signup from './pages/signup';
 import Main from './pages/main';
 import Private from './pages/private';
+import Recommendations from './pages/recommendations';
 
 const App = props => {
-	const getreq = () => {
-		fetch(`http://localhost:8000/api/priporocila/${authTokens}`)
-			.then(res => res.json())
-			.then(json => console.log(json));
-	};
-
 	const [authTokens, setAuthTokens] = useState(localStorage.getItem('user'));
 
 	const setTokens = data => {
@@ -34,7 +29,7 @@ const App = props => {
 
 		const postLogin = e => {
 			e.preventDefault();
-			fetch('http://localhost:8000/api/prijava/', {
+			fetch('http://localhost:8000/api/login/', {
 				method: 'POST',
 				headers: {
 					Accept: 'application/json',
@@ -87,10 +82,13 @@ const App = props => {
 			<div>
 				<ul>{authTokens}</ul>
 				<Route exact path="/" component={Main} />
+				<Route
+					path="/recommendations"
+					render={props => <Recommendations {...props} token={authTokens} />}
+				/>
 				<Route path="/login" component={Login} />
 				<Route path="/logout" component={Logout} />
 				<Route path="/signup" component={Signup} />
-				<button onClick={getreq}>getreq</button>
 			</div>
 		</Router>
 	);

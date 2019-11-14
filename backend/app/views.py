@@ -134,6 +134,8 @@ class trainingReccomendations(APIView):
 
 class personalReccomendations(APIView):
     def get(self, request, hash):
+        def return_format(dic):
+            return [{'material': x, 'probability': prob[x]} for x in prob]
         try:
             prob = {}
             user = User.objects.get(userinfo__userHash=hash)
@@ -146,7 +148,7 @@ class personalReccomendations(APIView):
             if learner.learners == {}:
                 for i in all_mat:
                     prob[i['name']] = 0.5
-                return Response(prob)
+                return Response(return_format(prob))
 
             for i in all_mat:
                 single_resource = i['vector']
@@ -155,7 +157,7 @@ class personalReccomendations(APIView):
                 prob[i['name']] = learner.predict_proba(
                     enc.transform([single_resource]).toarray())
 
-            return Response(prob)
+            return Response(return_format(prob))
         except:
             return Response('user not logged in')
 
