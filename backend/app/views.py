@@ -134,22 +134,24 @@ class trainingReccomendations(APIView):
 
 class personalReccomendations(APIView):
     def get(self, request, hash):
-        def return_format(dic):
-            return [{'material': x, 'probability': prob[x]} for x in prob]
         try:
-            prob = {}
+            prob = []
             user = User.objects.get(userinfo__userHash=hash)
 
             learner = Serial.parm_to_skill(user.userinfo.params[0])
 
             all_mat = list(Material.objects.all().values(
                 'name', 'vector', 'url'))
-            # check for new user:
+
             if learner.learners == {}:
                 for i in all_mat:
-                    prob[i['name']] = 0.5
-                return Response(return_format(prob))
+                    i.pop('vector', None)
+                    i['probability'] = 0.5
+                    prob.append(i)
+                    print(i)
+                return Response(prob)
 
+            #! treba spremenit - drgacn formating gor za response!!!! (list je zdej)
             for i in all_mat:
                 single_resource = i['vector']
                 print(enc.transform([single_resource]).toarray())
@@ -157,9 +159,9 @@ class personalReccomendations(APIView):
                 prob[i['name']] = learner.predict_proba(
                     enc.transform([single_resource]).toarray())
 
-            return Response(return_format(prob))
+            return Response(prob)
         except:
-            return Response('user not logged in')
+            return Response('user error')
 
 # engagement -- rate system
 

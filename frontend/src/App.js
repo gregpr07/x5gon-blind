@@ -7,8 +7,16 @@ import {
 } from 'react-router-dom';
 import Signup from './pages/signup';
 import Main from './pages/main';
-import Private from './pages/private';
 import Recommendations from './pages/recommendations';
+
+import Layout from './components/layout';
+
+import logo from './images/logo/x5gon_logo_light.svg';
+
+import './css/x5gon.css';
+import './css/bootstrap.css';
+import './css/search.css';
+import './css/animate.css';
 
 const App = props => {
 	const [authTokens, setAuthTokens] = useState(localStorage.getItem('user'));
@@ -54,40 +62,86 @@ const App = props => {
 		}
 
 		return (
-			<div>
-				<form onSubmit={e => postLogin(e)}>
-					<input
-						type="username"
-						value={userName}
-						onChange={e => {
-							setUserName(e.target.value);
-						}}
-						placeholder="username"
-					/>
-					<button type="submit">Sign In</button>
+			<Layout>
+				<form onSubmit={e => postLogin(e)} className="maxer-form mx-auto">
+					<div className="form-group">
+						<input
+							className="form-control"
+							type="username"
+							value={userName}
+							onChange={e => {
+								setUserName(e.target.value);
+							}}
+							placeholder="username"
+						/>
+					</div>
+					<button type="submit" className="button-green px-5 mb-2">
+						Sign In
+					</button>
 				</form>
 
 				<Link to="/signup">Don't have an account?</Link>
 				{isError && <div>The username provided does not exist</div>}
-			</div>
+			</Layout>
 		);
 	};
 	const Logout = () => {
 		setTokens();
-		return <Redirect to="/" />;
+	};
+
+	const Navbar = () => {
+		return (
+			<nav className="navbar navbar-expand navbar-light bg-light fixed-top">
+				<div className="navbar-brand">
+					<Link to="/" className="nav-link">
+						<img src={logo} height="22px" alt="logo"></img>
+					</Link>
+				</div>
+				<button
+					className="navbar-toggler"
+					type="button"
+					data-toggle="collapse"
+					data-target="#navbarNavAltMarkup"
+					aria-controls="navbarNavAltMarkup"
+					aria-expanded="false"
+					aria-label="Toggle navigation"
+				>
+					<span className="navbar-toggler-icon"></span>
+				</button>
+				<div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+					<ul className="navbar-nav ml-auto">
+						{authTokens ? (
+							<>
+								<li className="nav-item nav-link" onClick={Logout}>
+									Log out?
+								</li>
+							</>
+						) : (
+							<>
+								<Link to="/login">
+									<li className="nav-item nav-link">Login</li>
+								</Link>
+								<Link to="/signup">
+									<li className="nav-item nav-link">Sign up</li>
+								</Link>
+							</>
+						)}
+					</ul>
+				</div>
+			</nav>
+		);
 	};
 
 	return (
 		<Router>
+			<Navbar />
 			<div>
-				<ul>{authTokens}</ul>
 				<Route exact path="/" component={Main} />
 				<Route
 					path="/recommendations"
 					render={props => <Recommendations {...props} token={authTokens} />}
 				/>
 				<Route path="/login" component={Login} />
-				<Route path="/logout" component={Logout} />
 				<Route path="/signup" component={Signup} />
 			</div>
 		</Router>
