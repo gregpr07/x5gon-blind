@@ -8,6 +8,7 @@ class UserInfo(models.Model):
     # todo - slep al skrin user
     params = JSONField()
     userHash = models.CharField(max_length=100)
+    userType = models.IntegerField()
 
 
 """ 

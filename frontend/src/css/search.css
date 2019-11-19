@@ -53,6 +53,13 @@
 	margin: 0;
 }
 
+.nav-link {
+	cursor: pointer;
+}
+.nav-link:hover {
+	color: #00ad57 !important;
+}
+
 @media (max-width: 768px) {
 	.search-input {
 		grid-template-columns: 80% 20%;

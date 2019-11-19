@@ -69,22 +69,6 @@ dummy_row = [0 for i in range(number_of_features)]
 
 
 class loginWOpass(APIView):
-    def get(self, request):
-        name = 'gregor'
-        try:
-            user = User.objects.get(username=name)
-            login(request, user)
-            print('logged in as', request.user)
-            return Response('login successful')
-        except:
-            default_params = [[], 0]
-
-            user = User.objects.create_user(name)
-            UserInfo.objects.create(
-                user=user, params=default_params, userHash=uuid.uuid4().hex)
-            print('created new user', user.username)
-            return Response('created new user '+str(user.username))
-
     def post(self, request):
         name = request.data['name']
         try:
@@ -93,6 +77,24 @@ class loginWOpass(APIView):
             print('logged in as', request.user)
             user = User.objects.get(username=user)
             return Response(user.userinfo.userHash)
+        except:
+            return Response('error')
+
+
+class registerUser(APIView):
+    def post(self, request):
+        try:
+
+            name = request.data['name']
+            userType = int(request.data['userType'])
+
+            default_params = [[], 0]
+
+            user = User.objects.create_user(name)
+            UserInfo.objects.create(
+                user=user, params=default_params, userHash=uuid.uuid4().hex, userType=userType)
+            print('created new user', user.username)
+            return Response('created new user '+str(user.username))
         except:
             return Response('error')
 

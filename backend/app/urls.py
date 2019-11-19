@@ -10,5 +10,6 @@ urlpatterns = [
     path('user/<str:name>/<str:material>/<int:eng>/',
          views.updateLearner.as_view()),
     path('login/', views.loginWOpass.as_view()),
+    path('register/', views.registerUser.as_view()),
     path('test/', views.test.as_view())
 ]
