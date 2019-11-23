@@ -131,7 +131,7 @@ const App = props => {
 			</nav>
 		);
 	};
-
+	console.log('loaded');
 	return (
 		<Router basename={'inspiration'}>
 			<Navbar />

@@ -22,6 +22,5 @@ from .views import index
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('app.urls')),
-    re_path(r'^(?P<path>.*)/$', index, name='index'),
-    path('', index, name='index'),
+    path('inspiration/', index),
 ]
