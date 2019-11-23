@@ -133,7 +133,7 @@ const App = props => {
 	};
 
 	return (
-		<Router basename={'inspirations'}>
+		<Router basename={'inspiration'}>
 			<Navbar />
 			<div>
 				<Route exact path="/" component={Main} />
