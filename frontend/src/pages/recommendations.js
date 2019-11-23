@@ -7,7 +7,7 @@ const Recommendations = props => {
 	const [isLoading, setIsLoading] = useState(true);
 
 	const getreq = () => {
-		fetch(`http://localhost:8000/api/recommendations/${props.token}`)
+		fetch(`${props.requestLink}/api/recommendations/${props.token}`)
 			.then(res => res.json())
 			.then(json => {
 				if (json !== 'user error') {

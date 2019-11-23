@@ -12,7 +12,7 @@ const Signup = props => {
 	const postRegister = e => {
 		e.preventDefault();
 		console.log(userType);
-		fetch('/api/register/', {
+		fetch(`${props.requestLink}/api/register/`, {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',

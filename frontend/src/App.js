@@ -23,6 +23,17 @@ export const history = createBrowserHistory({
 	basename: process.env.PUBLIC_URL
 });
 
+var requestLink;
+
+if (process.env.NODE_ENV === 'production') {
+	requestLink = '/' + process.env.PUBLIC_URL;
+}
+if (process.env.NODE_ENV === 'development') {
+	requestLink = 'http://localhost:8000';
+}
+
+console.log(process.env.PUBLIC_URL);
+
 const App = props => {
 	const [authTokens, setAuthTokens] = useState(localStorage.getItem('user'));
 
@@ -42,7 +53,7 @@ const App = props => {
 
 		const postLogin = e => {
 			e.preventDefault();
-			fetch('/api/login/', {
+			fetch(`${requestLink}/api/login/`, {
 				method: 'POST',
 				headers: {
 					Accept: 'application/json',
@@ -143,10 +154,21 @@ const App = props => {
 				<Route exact path="/" component={Main} />
 				<Route
 					path="/recommendations"
-					render={props => <Recommendations {...props} token={authTokens} />}
+					render={props => (
+						<Recommendations
+							{...props}
+							token={authTokens}
+							requestLink={requestLink}
+						/>
+					)}
 				/>
 				<Route path="/login" component={Login} />
-				<Route path="/signup" component={Signup} />
+				<Route
+					path="/signup"
+					render={props => (
+						<Signup {...props} token={authTokens} requestLink={requestLink} />
+					)}
+				/>
 			</div>
 		</Router>
 	);
