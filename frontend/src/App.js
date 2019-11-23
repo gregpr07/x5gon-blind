@@ -5,6 +5,7 @@ import {
 	Route,
 	Redirect
 } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
 import Signup from './pages/signup';
 import Main from './pages/main';
 import Recommendations from './pages/recommendations';
@@ -17,6 +18,10 @@ import './css/x5gon.css';
 import './css/bootstrap.css';
 import './css/search.css';
 import './css/animate.css';
+
+export const history = createBrowserHistory({
+	basename: process.env.PUBLIC_URL
+});
 
 const App = props => {
 	const [authTokens, setAuthTokens] = useState(localStorage.getItem('user'));
