@@ -26,7 +26,7 @@ export const history = createBrowserHistory({
 var requestLink;
 
 if (process.env.NODE_ENV === 'production') {
-	requestLink = '/' + process.env.PUBLIC_URL;
+	requestLink = process.env.PUBLIC_URL;
 }
 if (process.env.NODE_ENV === 'development') {
 	requestLink = 'http://localhost:8000';
