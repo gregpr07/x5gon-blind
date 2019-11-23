@@ -12,7 +12,7 @@ const Signup = props => {
 	const postRegister = e => {
 		e.preventDefault();
 		console.log(userType);
-		fetch('http://localhost:8000/api/register/', {
+		fetch('/api/register/', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',

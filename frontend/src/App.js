@@ -42,7 +42,7 @@ const App = props => {
 
 		const postLogin = e => {
 			e.preventDefault();
-			fetch('http://localhost:8000/api/login/', {
+			fetch('/api/login/', {
 				method: 'POST',
 				headers: {
 					Accept: 'application/json',
@@ -136,7 +136,6 @@ const App = props => {
 			</nav>
 		);
 	};
-	console.log('loaded');
 	return (
 		<Router basename={'inspiration'}>
 			<Navbar />
