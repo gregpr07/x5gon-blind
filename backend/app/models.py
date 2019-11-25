@@ -33,7 +33,6 @@ class Material(models.Model):
     displayName = models.CharField(max_length=100)
     url = models.URLField()
     vector = ArrayField(models.IntegerField())
-    IDKparam = models.CharField(null=True, max_length=100)
 
 
 class Visit(models.Model):

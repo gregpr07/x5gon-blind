@@ -13,7 +13,7 @@ import Recommendations from './pages/recommendations';
 import Layout from './components/layout';
 import Teachers from './pages/teachers';
 
-import logo from './images/logo/x5gon_logo_light.svg';
+import logo from './images/logo/x5gon_logo_dark.svg';
 
 import './css/x5gon.css';
 import './css/bootstrap.css';
@@ -108,7 +108,7 @@ const App = props => {
 
 	const Navbar = () => {
 		return (
-			<nav className="navbar navbar-expand navbar-light bg-light fixed-top">
+			<nav className="navbar navbar-expand navbar-light bg-dark fixed-top">
 				<div className="navbar-brand">
 					<Link to="/" className="nav-link">
 						<img src={logo} height="22px" alt="logo"></img>
@@ -129,17 +129,17 @@ const App = props => {
 					<ul className="navbar-nav ml-auto">
 						{authTokens ? (
 							<>
-								<li className="nav-item nav-link" onClick={Logout}>
+								<li className="nav-item nav-link text-white" onClick={Logout}>
 									Log out?
 								</li>
 							</>
 						) : (
 							<>
 								<Link to="/login">
-									<li className="nav-item nav-link">Login</li>
+									<li className="nav-item nav-link text-white">Login</li>
 								</Link>
 								<Link to="/signup">
-									<li className="nav-item nav-link">Sign up</li>
+									<li className="nav-item nav-link text-white">Sign up</li>
 								</Link>
 							</>
 						)}
@@ -153,12 +153,11 @@ const App = props => {
 			<Navbar />
 			<div>
 				<Route
-					exact
 					path="/teachers"
 					render={props => (
 						<Teachers {...props} token={authTokens} requestLink={requestLink} />
 					)}
-				/>{' '}
+				/>
 				<Route exact path="/" component={Main} />
 				<Route
 					path="/recommendations"

@@ -23,22 +23,10 @@ import numpy as np
 
 
 # TOLE BO TREBA MAL BOL ROBUSTNO NAREST
-speculative_induction = True
 
-history = []
-
-enc = preprocessing.OneHotEncoder(categories='auto')
-
-number_of_features = 4
-number_of_values = 5
+number_of_features = 10
+number_of_values = 4
 max_value = 3
-
-dummyX = [[j-1 for i in range(number_of_features)]
-          for j in range(number_of_values)]
-enc = enc.fit(dummyX)
-
-
-dummy_row = [0 for i in range(number_of_features)]
 
 ###################################################
 
@@ -72,6 +60,7 @@ class presentPlayers(APIView):
         learners = [Serial.parm_to_skill(
             info.params[0]) for info in users]
         reprs = []
+
         for i in learners:
             rep = []
             for j in i.learners:
@@ -79,8 +68,20 @@ class presentPlayers(APIView):
                 rep.append(i.learners[j].mu)
             if rep != []:
                 reprs.append(rep)
+
+        reprs = np.array(reprs)
+
+        print(type(reprs[0]))
+        print(type(np.array(reprs)))
+
+        reprs = np.array(reprs)
+
+        print(reprs.shape)
+
         tsne = TSNE(n_components=2)
         tsne = tsne.fit(reprs)
+
+        print('here')
         repX = tsne.embedding_[:, 0].tolist()
         repY = tsne.embedding_[:, 1].tolist()
 

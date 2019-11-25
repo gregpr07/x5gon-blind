@@ -38,8 +38,8 @@ history = []
 
 enc = preprocessing.OneHotEncoder(categories='auto')
 
-number_of_features = 4
-number_of_values = 5
+number_of_features = 10
+number_of_values = 4
 max_value = 3
 
 # possible values (levels of compliance as defined in ISO 40500:2012
@@ -51,7 +51,7 @@ max_value = 3
 # 3 := AAA level compliance
 
 # enforcing correct encoding
-dummyX = [[j-1 for i in range(number_of_features)]
+dummyX = [[j for i in range(number_of_features)]
           for j in range(number_of_values)]
 enc = enc.fit(dummyX)
 
@@ -102,6 +102,18 @@ class registerUser(APIView):
             return Response('created new user '+str(user.username))
         except:
             return Response('error')
+
+
+class addMaterial(APIView):
+    def post(self, request):
+        try:
+            data = request.data
+            Material.objects.create(
+                name=data['name'], displayName=data['dname'], url=data['url'], vector=data['vector'])
+            return Response(request.data)
+        except:
+            print('wrong data')
+            return Response(request.data)
 
 
 class example(APIView):
@@ -189,6 +201,7 @@ class updateLearner(APIView):
         mat = curr_material.vector
 
         if speculative_induction == False:
+            print(mat)
             mat = enc.transform([mat]).toarray()
             y = [int(eng)]
         else:

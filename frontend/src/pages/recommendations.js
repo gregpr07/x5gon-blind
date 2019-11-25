@@ -26,7 +26,7 @@ const Recommendations = props => {
 					{props.items.map(single => (
 						<div key={single.name} className="maxer-540 mx-auto my-3">
 							<div className="card">
-								<div className="card-body">
+								<div className="card-body bg-light">
 									<a
 										href={single.url}
 										target="blank"
@@ -73,9 +73,9 @@ const Recommendations = props => {
 			<div className="position-fixed z-2000 full-width">
 				<div className="alert alert-success" role="alert">
 					<h4 className="alert-heading">Did you like {clickedName}</h4>
-					<p>Please click something, pLS m7</p>
+					<p>Answer below</p>
 					<hr />
-					<p className="mb-0">somethig something</p>
+					<p className="mb-0">sample text</p>
 					<button
 						className="btn btn-success m-3 px-5"
 						onClick={() => postEval(1)}

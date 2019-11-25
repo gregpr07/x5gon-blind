@@ -6,7 +6,7 @@ const Main = props => {
 	console.log(props);
 	return (
 		<Layout>
-			<div className="animated fadeIn">
+			<div className="animated fadeIn text-dark">
 				<h3 className="font-weight-bold">Recommender</h3>
 				<div className="my-5">
 					<Link to="/recommendations">
