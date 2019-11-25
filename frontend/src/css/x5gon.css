@@ -7,6 +7,14 @@ body {
 body a:hover {
 	text-decoration: none;
 }
+.z-2000 {
+	z-index: 2000;
+}
+.full-width {
+	width: 100%;
+	min-width: 100%;
+	max-width: 100%;
+}
 .maxer {
 	max-width: 1250px;
 }

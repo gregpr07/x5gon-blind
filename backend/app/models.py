@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField, JSONField
+from django.utils import timezone
 
 
 class UserInfo(models.Model):
@@ -33,3 +34,12 @@ class Material(models.Model):
     url = models.URLField()
     vector = ArrayField(models.IntegerField())
     IDKparam = models.CharField(null=True, max_length=100)
+
+
+class Visit(models.Model):
+    user = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
+    material = models.ForeignKey(
+        Material, on_delete=models.SET_NULL, null=True)
+    timeOfVisit = models.DateTimeField(
+        default=timezone.now, blank=True)
+    engagement = models.IntegerField()
