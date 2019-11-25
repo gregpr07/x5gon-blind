@@ -11,6 +11,7 @@ import Main from './pages/main';
 import Recommendations from './pages/recommendations';
 
 import Layout from './components/layout';
+import Teachers from './pages/teachers';
 
 import logo from './images/logo/x5gon_logo_light.svg';
 
@@ -151,9 +152,17 @@ const App = props => {
 		<Router>
 			<Navbar />
 			<div>
+				<Route
+					exact
+					path="/teachers"
+					render={props => (
+						<Teachers {...props} token={authTokens} requestLink={requestLink} />
+					)}
+				/>{' '}
 				<Route exact path="/" component={Main} />
 				<Route
 					path="/recommendations"
+					exact
 					render={props => (
 						<Recommendations
 							{...props}
@@ -162,9 +171,10 @@ const App = props => {
 						/>
 					)}
 				/>
-				<Route path="/login" component={Login} />
+				<Route path="/login" component={Login} exact />
 				<Route
 					path="/signup"
+					exact
 					render={props => (
 						<Signup {...props} token={authTokens} requestLink={requestLink} />
 					)}

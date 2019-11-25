@@ -32,7 +32,7 @@ users = {'martin': [[], 0]} """
 
 
 # TOLE BO TREBA MAL BOL ROBUSTNO NAREST
-speculative_induction = True
+speculative_induction = False
 
 history = []
 
@@ -111,8 +111,6 @@ class example(APIView):
         return Response(usernames)
 
 
-    
-    
 class test(APIView):
     def get(self, request):
         return Response('user not logged in')
@@ -180,52 +178,6 @@ class personalReccomendations(APIView):
             print(str(e))
             return Response('user error')
 
-# engagement -- rate system
-
-class displayGauisan(APIView):
-    
-    def get(self, request, name):        
-        user = User.objects.get(username=name)
-        learner = Serial.parm_to_skill(user.userinfo.params[0])
-        x = np.linspace(-5, 5, 100)
-        y = []
-        
-        l = learner.learners
-        mu = {i:l[i].mu for i in l.keys()}
-        sigma = {i:l[i].sigma for i in l.keys()}
-        sorted_mu = sorted(mu.items(), key=operator.itemgetter(1))
-        sorted_sigma = sorted(sigma.items(), key=operator.itemgetter(1))
-        for i in range(len(sorted_mu)):
-            mu = sorted_mu[i][1]
-            variance = sorted_sigma[i][1]
-            sigma = math.sqrt(variance)
-            y.append(stats.norm.pdf(x, mu, sigma))
-        
-        return(Response([list(x),list(y)]))
-    
-    
-class presentPlayers(APIView):
-    
-    def get(self, request, name):
-        users = [user.username for user in User.objects.all()]
-        learners = [Serial.parm_to_skill(user.userinfo.params[0]) for user in users]
-        reprs = []
-        for i in learners:
-            rep = []
-            for j in learners:
-                rep.append(i.learners[j].mu)
-            reprs.append(rep)
-        
-        tsne = TSNE(n_components=2)
-        tsne = tsne.fit(reprs)
-        repX = tsne.embedding_[:,0].tolist()
-        repY = tsne.embedding_[:,1].tolist()
-        
-        GM = BayesianGaussianMixture(n_components = 4, max_iter = 200)
-        GM = GM.fit(reprs)
-        clusters = GM.predict(reprs).tolist()
-        
-        return([repX,repY,clusters])
 
 class updateLearner(APIView):
     def post(self, request):
