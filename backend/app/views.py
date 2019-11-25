@@ -3,7 +3,7 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
-from app.models import UserInfo, Material
+from app.models import UserInfo, Material, Visit
 from django.contrib.auth import authenticate, login
 
 import uuid
@@ -152,24 +152,32 @@ class personalReccomendations(APIView):
             all_mat = list(Material.objects.all().values(
                 'name', 'vector', 'url'))
 
+            print(learner.learners)
+
             if learner.learners == {}:
+
                 for i in all_mat:
                     i.pop('vector', None)
                     i['probability'] = 0.5
                     prob.append(i)
-                    print(i)
                 return Response(prob)
 
             #! treba spremenit - drgacn formating gor za response!!!! (list je zdej)
             for i in all_mat:
-                single_resource = i['vector']
-                print(enc.transform([single_resource]).toarray())
 
-                prob[i['name']] = learner.predict_proba(
+                single_resource = i['vector']
+
+                probability = learner.predict_proba(
                     enc.transform([single_resource]).toarray())
 
-            return Response(prob)
-        except:
+                i['probability'] = probability[0]
+                prob.append(i)
+
+            sort_prob = sorted(
+                prob, key=lambda k: k['probability'], reverse=True)
+            return Response(sort_prob)
+        except Exception as e:
+            print(str(e))
             return Response('user error')
 
 # engagement -- rate system
@@ -220,8 +228,11 @@ class presentPlayers(APIView):
         return([repX,repY,clusters])
 
 class updateLearner(APIView):
+    def post(self, request):
+        name = request.data['name']
+        material = request.data['material']
+        eng = request.data['eng']
 
-    def get(self, request, name, material, eng):
         curr_material = Material.objects.get(name=material)
         mat = curr_material.vector
 
@@ -236,15 +247,21 @@ class updateLearner(APIView):
             y = [int(eng) for k in range(len(mat))]
             print(y)
 
-        user = User.objects.get(username=name)
+        user = User.objects.get(userinfo__userHash=name)
 
         learner = Serial.parm_to_skill(user.userinfo.params[0])
         learner.fit(mat, y)
 
         # save to database
 
+        material_obj = Material.objects.get(name=material)
+        user_inf = UserInfo.objects.get(user=user)
+
         user.userinfo.params = [Serial.skill_to_parm(learner), 0]
         user.userinfo.save()
+
+        Visit.objects.create(
+            user=user_inf, material=material_obj, engagement=eng)
 
         return Response({name: user.userinfo.params})
 

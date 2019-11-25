@@ -148,7 +148,7 @@ const App = props => {
 		);
 	};
 	return (
-		<Router basename={'inspiration'}>
+		<Router>
 			<Navbar />
 			<div>
 				<Route exact path="/" component={Main} />

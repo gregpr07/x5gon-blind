@@ -7,7 +7,7 @@ urlpatterns = [
     path('recommendations/<str:hash>', views.personalReccomendations.as_view()),
     path('recommendations/learn/<str:name>/',
          views.trainingReccomendations.as_view()),
-    path('user/<str:name>/<str:material>/<int:eng>/',
+    path('eval/',
          views.updateLearner.as_view()),
     path('login/', views.loginWOpass.as_view()),
     path('register/', views.registerUser.as_view()),
