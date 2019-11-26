@@ -66,6 +66,7 @@ const Recommendations = props => {
 			.then(res => res.json())
 			.then(json => {
 				console.log(json);
+				getreq();
 			});
 	};
 

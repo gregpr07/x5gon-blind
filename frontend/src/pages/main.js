@@ -9,10 +9,11 @@ const Main = props => {
 		<Layout>
 			<Navbar />
 			<div className="animated fadeIn text-dark">
-				<h3 className="font-weight-bold">Recommender</h3>
 				<div className="my-5">
 					<Link to="/recommendations">
-						<div className="button-green mx-auto">Recommend stuff</div>
+						<div className="buttonless-green mx-auto">
+							<h2>Recommend materials</h2>
+						</div>
 					</Link>
 				</div>
 			</div>

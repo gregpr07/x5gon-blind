@@ -185,7 +185,7 @@ class personalReccomendations(APIView):
 
             sort_prob = sorted(
                 prob, key=lambda k: k['probability'], reverse=True)
-            return Response(sort_prob)
+            return Response(sort_prob[0:10])
         except Exception as e:
             print(str(e))
             return Response('user error')

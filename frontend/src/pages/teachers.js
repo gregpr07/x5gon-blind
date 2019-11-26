@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Layout from '../components/layout';
 import { Bubble } from 'react-chartjs-2';
 import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
 
@@ -53,7 +52,7 @@ const Teachers = props => {
 									setUsername(e.target.value);
 								}}
 								required
-								placeholder="Choose a username"
+								placeholder="Choose username"
 							/>
 						</div>
 						<div className="form-group">
@@ -68,21 +67,25 @@ const Teachers = props => {
 								placeholder="Choose password"
 							/>
 						</div>
-						<button type="submit" className="button-green px-5 mb-2">
-							Login
-						</button>
+						<div className="row">
+							<div className="mx-auto">
+								<button type="submit" className="button-green px-5 mb-2">
+									Login
+								</button>
+							</div>
+						</div>
 					</form>
 				</div>
 			</div>
 		);
 	};
 	const Chart = () => {
-		const [players, setPlayers] = useState(null);
+		const [students, setStudents] = useState(null);
 		useEffect(() => {
 			fetch(`${props.requestLink}/teachers/players`)
 				.then(res => res.json())
 				.then(json => {
-					setPlayers(json);
+					setStudents(json);
 				});
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, []);
@@ -92,8 +95,8 @@ const Teachers = props => {
 					data={{
 						datasets: [
 							{
-								label: 'Players',
-								data: players,
+								label: 'Students',
+								data: students,
 								backgroundColor: 'red',
 								borderColor: 'rgb(255, 99, 132)'
 							}
@@ -134,8 +137,8 @@ const Teachers = props => {
 					<Link to="/" className="mx-3">
 						Home
 					</Link>
-					<Link to="/players" className="mx-3">
-						All players
+					<Link to="/students" className="mx-3">
+						All students
 					</Link>
 					<Link to="/newmaterial" className="mx-3">
 						Add material
@@ -244,6 +247,18 @@ const Teachers = props => {
 				]
 			}
 		];
+		const topics = [
+			'Perception',
+			null,
+			null,
+			null,
+			'Operability',
+			null,
+			null,
+			'Understandability',
+			null,
+			null
+		];
 		const HandleSubmit = e => {
 			e.preventDefault();
 			const arr = () => {
@@ -270,11 +285,23 @@ const Teachers = props => {
 				.then(json => console.log(json));
 		};
 		return (
-			<div className="maxer-800 mx-auto">
+			<div className="maxer-800 mx-auto pt-4">
+				<h4>Introduction</h4>
+				<p className="maxer-625 py-3">
+					Attribute representation serves as the basis for recommendation
+					system. Recommender sees the materials just as collection of their
+					attributes; it is important for the attribute description to be
+					accurate and comprehensive. Attribute description is based on ISO
+					40500:2012 standard.
+				</p>
+				<hr />
+
 				<form onSubmit={HandleSubmit}>
-					<div className="form-row">
+					<div className="form-row pb-4">
 						<div className="col">
+							<label htmlFor="name">Name of the material</label>
 							<input
+								id="name"
 								type="text"
 								className="form-control"
 								placeholder="Name"
@@ -282,7 +309,10 @@ const Teachers = props => {
 							/>
 						</div>
 						<div className="col">
+							<label htmlFor="dname">Name of the material (public)</label>
+
 							<input
+								id="dname"
 								type="text"
 								className="form-control"
 								placeholder="Display Name"
@@ -291,7 +321,7 @@ const Teachers = props => {
 						</div>
 					</div>
 					<div className="form-group">
-						<label htmlFor="inputUrl">Url</label>
+						<label htmlFor="inputUrl">Link of the material</label>
 						<input
 							type="text"
 							className="form-control"
@@ -301,24 +331,31 @@ const Teachers = props => {
 						/>
 					</div>
 					{questions.map((question, index) => (
-						<div key={index} label={index}>
-							<div className="form-group maxer-540 mx-auto" key={index}>
-								<label htmlFor="Select1" className="text-dark">
-									{question.q}
-								</label>
-								<select className="form-control" id="Select1">
-									{question.a.map((a, index) => (
-										<option value={3 - index} key={index}>
-											{a}
-										</option>
-									))}
-								</select>
+						<>
+							{topics[index] ? (
+								<h4 className="py-1 my-0">{topics[index]}</h4>
+							) : null}
+							<div key={index} label={index}>
+								<div className="form-group maxer-625 mt-2" key={index}>
+									<label htmlFor="Select1" className="text-dark">
+										{question.q}
+									</label>
+									<select className="form-control" id="Select1">
+										{question.a.map((a, index) => (
+											<option value={3 - index} key={index}>
+												{a}
+											</option>
+										))}
+									</select>
+								</div>
 							</div>
-						</div>
+						</>
 					))}
-					<button type="submit" className="button-green px-5 mb-2 mt-4">
-						Sign Up
-					</button>
+					<div className="pb-5">
+						<button type="submit" className="button-green px-3 mb-2 mt-4">
+							Add material
+						</button>
+					</div>
 				</form>
 			</div>
 		);
@@ -333,7 +370,7 @@ const Teachers = props => {
 						<Route exact path="/">
 							<Header />
 						</Route>
-						<Route path="/players">
+						<Route path="/students">
 							<Chart />
 						</Route>
 						<Route path="/newmaterial">
