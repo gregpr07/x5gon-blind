@@ -1,11 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '../components/layout';
+import Navbar from '../components/navbar';
 
 const Main = props => {
 	console.log(props);
 	return (
 		<Layout>
+			<Navbar />
 			<div className="animated fadeIn text-dark">
 				<h3 className="font-weight-bold">Recommender</h3>
 				<div className="my-5">

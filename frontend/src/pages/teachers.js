@@ -3,7 +3,79 @@ import Layout from '../components/layout';
 import { Bubble } from 'react-chartjs-2';
 import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
 
+const Header = () => {
+	return (
+		<header className="bg-white" style={{ zIndex: '-100' }}>
+			<div className="mx-auto maxer contents">
+				<div className="row no-gutters my-auto mt-md-0">
+					<div className="col-md-12 col-lg-6 my-auto">
+						<div className="main-content pl-1 ml-4">
+							<h1 className="text-black text-main-header">Undestand</h1>
+							<h4 className="body-2">your</h4>
+							<h1 className="text-black text-main-header">
+								<b className="d-block">Students</b>
+							</h1>
+							<p className="mt-3 pt-3 text-black w-100 body-2 pb-2 pr-4 pr-md-3">
+								Understand your students' accessibility progress and monitor
+								their progress
+							</p>
+						</div>
+					</div>
+					<div className="col-md-12 col-lg-6 pt-md-0 pt-4">
+						<div className="main-img animated fadeIn slower mx-auto mr-md-auto"></div>
+					</div>
+				</div>
+			</div>
+		</header>
+	);
+};
+
 const Teachers = props => {
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+	const Login = () => {
+		const [username, setUsername] = useState();
+		const [password, setPassword] = useState();
+		const handleLogin = e => {
+			e.preventDefault();
+			setIsLoggedIn(true);
+		};
+		return (
+			<div className="full-screen">
+				<div>
+					<form onSubmit={handleLogin} className="maxer-form mx-auto">
+						<div className="form-group">
+							<input
+								className="form-control"
+								type="username"
+								value={username}
+								onChange={e => {
+									setUsername(e.target.value);
+								}}
+								required
+								placeholder="Choose a username"
+							/>
+						</div>
+						<div className="form-group">
+							<input
+								className="form-control"
+								type="password"
+								value={password}
+								onChange={e => {
+									setPassword(e.target.value);
+								}}
+								required
+								placeholder="Choose password"
+							/>
+						</div>
+						<button type="submit" className="button-green px-5 mb-2">
+							Login
+						</button>
+					</form>
+				</div>
+			</div>
+		);
+	};
 	const Chart = () => {
 		const [players, setPlayers] = useState(null);
 		useEffect(() => {
@@ -15,56 +87,60 @@ const Teachers = props => {
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, []);
 		return (
-			<Bubble
-				data={{
-					datasets: [
-						{
-							label: 'Players',
-							data: players,
-							backgroundColor: 'red',
-							borderColor: 'rgb(255, 99, 132)'
-						}
-					]
-				}}
-				options={{
-					scales: {
-						yAxes: [
+			<div className="maxer mx-auto">
+				<Bubble
+					data={{
+						datasets: [
 							{
-								ticks: {
-									display: false
-								},
-								gridLines: {
-									display: false
-								}
-							}
-						],
-						xAxes: [
-							{
-								ticks: {
-									display: false
-								},
-								gridLines: {
-									display: false
-								}
+								label: 'Players',
+								data: players,
+								backgroundColor: 'red',
+								borderColor: 'rgb(255, 99, 132)'
 							}
 						]
-					}
-				}}
-			/>
+					}}
+					options={{
+						scales: {
+							yAxes: [
+								{
+									ticks: {
+										display: false
+									},
+									gridLines: {
+										display: false
+									}
+								}
+							],
+							xAxes: [
+								{
+									ticks: {
+										display: false
+									},
+									gridLines: {
+										display: false
+									}
+								}
+							]
+						}
+					}}
+				/>
+			</div>
 		);
 	};
 	const NavRouter = () => {
 		return (
-			<div className="mb-5">
-				<Link to="/" className="mx-3">
-					Home
-				</Link>
-				<Link to="/players" className="mx-3">
-					All players
-				</Link>
-				<Link to="/newmaterial" className="mx-3">
-					Add material
-				</Link>
+			<div className="navbar">
+				<div className="my-3 mx-auto">
+					<Link to="/" className="mx-3">
+						Home
+					</Link>
+					<Link to="/players" className="mx-3">
+						All players
+					</Link>
+					<Link to="/newmaterial" className="mx-3">
+						Add material
+					</Link>
+				</div>
 			</div>
 		);
 	};
@@ -249,21 +325,30 @@ const Teachers = props => {
 	};
 
 	return (
-		<Layout>
-			<Router basename="teachers">
-				<NavRouter />
-				<Route exact path="/">
-					Teacher menu
-				</Route>
-				<Route path="/players">
-					<div>All users</div>
-					<Chart />
-				</Route>
-				<Route path="/newmaterial">
-					<NewMaterial />
-				</Route>
-			</Router>
-		</Layout>
+		<div>
+			{isLoggedIn ? (
+				<>
+					<Router basename="teachers">
+						<NavRouter />
+						<Route exact path="/">
+							<Header />
+						</Route>
+						<Route path="/players">
+							<Chart />
+						</Route>
+						<Route path="/newmaterial">
+							<NewMaterial />
+						</Route>
+					</Router>
+				</>
+			) : (
+				<div className="h-100 row align-items-center">
+					<div className="col pt-35p">
+						<Login />
+					</div>
+				</div>
+			)}
+		</div>
 	);
 };
 

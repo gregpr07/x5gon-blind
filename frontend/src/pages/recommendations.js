@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '../components/layout';
+import Navbar from '../components/navbar';
 
 const Recommendations = props => {
 	const [recc, setRecc] = useState();
@@ -99,6 +100,7 @@ const Recommendations = props => {
 	}, []);
 	return (
 		<Layout>
+			<Navbar />
 			{waitEval ? <Eval /> : null}
 			{isLoading ? (
 				<div className="loading-icon mx-auto" />
