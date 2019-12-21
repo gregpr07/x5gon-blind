@@ -25,3 +25,10 @@ urlpatterns = [
     path('teachers/', include('teachers.urls')),
     path('', index),
 ]
+
+urlpatterns += [
+    # match the root
+    re_path(r'^$', index),
+    # match all other pages
+    re_path(r'^(?:.*)/?$', index),
+]

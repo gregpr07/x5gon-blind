@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom';
 import Layout from '../components/layout';
 import Navbar from '../components/navbar';
 
+import { getCookie } from '../components/functions';
+
+var csrftoken = getCookie('csrftoken');
+
 const Signup = props => {
 	const [userName, setUserName] = useState('');
 	const [userType, setUserType] = useState(0);
@@ -15,9 +19,12 @@ const Signup = props => {
 		console.log(userType);
 		fetch(`${props.requestLink}/api/register/`, {
 			method: 'POST',
+			credentials: 'same-origin',
+
 			headers: {
 				Accept: 'application/json',
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				'X-CSRFToken': csrftoken
 			},
 			body: JSON.stringify({
 				name: userName,
@@ -67,8 +74,8 @@ const Signup = props => {
 						value={userType}
 						onChange={event => setUserType(event.target.value)}
 					>
-						<option value="0">Blindman</option>
-						<option value="1">Teacher</option>
+						<option value="0">Blind student</option>
+						<option value="1">Partially blind student</option>
 					</select>
 				</div>
 				<button type="submit" className="button-green px-5 mb-2">

@@ -20,6 +20,8 @@ import './css/bootstrap.css';
 import './css/search.css';
 import './css/animate.css';
 
+import { getCookie } from './components/functions';
+
 export const history = createBrowserHistory({
 	basename: process.env.PUBLIC_URL
 });
@@ -34,6 +36,8 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 console.log(process.env.PUBLIC_URL);
+
+var csrftoken = getCookie('csrftoken');
 
 const App = props => {
 	const [authTokens, setAuthTokens] = useState(localStorage.getItem('user'));
@@ -56,9 +60,11 @@ const App = props => {
 			e.preventDefault();
 			fetch(`${requestLink}/api/login/`, {
 				method: 'POST',
+				credentials: 'same-origin',
 				headers: {
 					Accept: 'application/json',
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
+					'X-CSRFToken': csrftoken
 				},
 				body: JSON.stringify({
 					name: userName
