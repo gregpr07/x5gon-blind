@@ -20,7 +20,6 @@ const Signup = props => {
 		fetch(`${props.requestLink}/api/register/`, {
 			method: 'POST',
 			credentials: 'same-origin',
-
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'application/json',
