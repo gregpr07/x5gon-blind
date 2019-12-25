@@ -23,12 +23,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('app.urls')),
     path('teacher/', include('teachers.urls')),
-    path('', index),
+    #path('', index),
 ]
 
 urlpatterns += [
     # match the root
-    re_path(r'^$', index),
+    #re_path(r'^$', index),
     # match all other pages
     re_path(r'^(?:.*)/?$', index),
 ]
