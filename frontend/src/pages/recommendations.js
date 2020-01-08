@@ -13,7 +13,7 @@ const Recommendations = props => {
 	const [clickedName, setClickedName] = useState();
 
 	const getreq = () => {
-		fetch(`${props.requestLink}/api/recommendations/${props.token}`)
+		fetch(`/api/recommendations/${props.token}`)
 			.then(res => res.json())
 			.then(json => {
 				if (json !== 'user error') {
@@ -53,7 +53,7 @@ const Recommendations = props => {
 
 	const postEval = num => {
 		setWaitEval(false);
-		fetch(`${props.requestLink}/api/eval/`, {
+		fetch(`/api/eval/`, {
 			method: 'POST',
 			credentials: 'same-origin',
 			headers: {

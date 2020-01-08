@@ -26,15 +26,6 @@ export const history = createBrowserHistory({
 	basename: process.env.PUBLIC_URL
 });
 
-var requestLink;
-
-if (process.env.NODE_ENV === 'production') {
-	requestLink = process.env.PUBLIC_URL + '/';
-}
-if (process.env.NODE_ENV === 'development') {
-	requestLink = 'http://localhost:8000';
-}
-
 console.log(process.env.PUBLIC_URL + '/');
 
 var csrftoken = getCookie('csrftoken');
@@ -58,7 +49,7 @@ const App = props => {
 
 		const postLogin = e => {
 			e.preventDefault();
-			fetch(`${requestLink}/api/login/`, {
+			fetch(`/api/login/`, {
 				method: 'POST',
 				credentials: 'same-origin',
 				headers: {
@@ -117,30 +108,20 @@ const App = props => {
 			<div>
 				<Route
 					path="/teachers"
-					render={props => (
-						<Teachers {...props} token={authTokens} requestLink={requestLink} />
-					)}
+					render={props => <Teachers {...props} token={authTokens} />}
 				/>
 				<Route exact path="/" component={Main} />
 				<Route exact path="/logout" component={Logout} />
 				<Route
 					path="/recommendations"
 					exact
-					render={props => (
-						<Recommendations
-							{...props}
-							token={authTokens}
-							requestLink={requestLink}
-						/>
-					)}
+					render={props => <Recommendations {...props} token={authTokens} />}
 				/>
 				<Route path="/login" component={Login} exact />
 				<Route
 					path="/signup"
 					exact
-					render={props => (
-						<Signup {...props} token={authTokens} requestLink={requestLink} />
-					)}
+					render={props => <Signup {...props} token={authTokens} />}
 				/>
 			</div>
 		</Router>

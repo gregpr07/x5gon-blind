@@ -85,7 +85,7 @@ const Teachers = props => {
 		const [students, setStudents] = useState(null);
 
 		useEffect(() => {
-			fetch(`${props.requestLink}/teacher/players/`)
+			fetch(`/teacher/players/`)
 				.then(res => res.json())
 				.then(json => {
 					setStudents(json);
@@ -271,7 +271,7 @@ const Teachers = props => {
 				}
 				return x;
 			};
-			fetch(`${props.requestLink}/api/material/add`, {
+			fetch(`/api/material/add`, {
 				method: 'POST',
 				credentials: 'same-origin',
 				headers: {
