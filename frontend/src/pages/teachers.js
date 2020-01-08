@@ -32,7 +32,7 @@ const Header = () => {
 
 const Teachers = props => {
 	var csrftoken = getCookie('csrftoken');
-	const [isLoggedIn, setIsLoggedIn] = useState(true);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 	const Login = () => {
 		const [username, setUsername] = useState();
