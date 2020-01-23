@@ -56,6 +56,7 @@ def return_summary_gaussian(annotated_dict):
     return(summary)
 
 def player_summary(learners):
-    return return_summary_gaussian(annotate_learner(learners))
+    summ = return_summary_gaussian(annotate_learner(learners))
+    return [list(summ.keys()),list(summ.values())]
 
 
