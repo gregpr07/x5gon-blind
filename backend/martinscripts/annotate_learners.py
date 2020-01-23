@@ -32,5 +32,30 @@ def annotate_learner(learners):
                 i += 1
     return user_attributes
 
+def return_biggest_value_mu(feature_dict):
+    max_value = list(feature_dict.keys())[0]
+    max_mu = 0
+    max_sigma = 0
+    for value in feature_dict.keys():
+        if abs(feature_dict[value]['mu']) > abs(feature_dict[max_value]['mu']):
+            max_value = value
+            max_mu = feature_dict[value]['mu']
+            max_sigma = feature_dict[value]['sigma']
+    return {'max_value':value, 'mu':max_mu, 'sigma':max_sigma}
+
+def return_summary_gaussian(annotated_dict):
+    summary = {}
+    for topic in annotated_dict.keys():
+        summary[topic] = {}
+        biggest_mu = 0
+        for feature in annotated_dict[topic].keys():
+            feature_dict = return_biggest_value_mu(annotated_dict[topic][feature])
+            
+            if abs(feature_dict['mu']) > abs(biggest_mu):
+                summary[topic] = feature_dict
+    return(summary)
+
+def player_summary(learners):
+    return return_summary_gaussian(annotate_learner(learners))
 
 
