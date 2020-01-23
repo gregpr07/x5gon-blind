@@ -3,7 +3,8 @@ import {
 	BrowserRouter as Router,
 	Link,
 	Route,
-	Redirect
+	Redirect,
+	Switch
 } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import Signup from './pages/signup';
@@ -64,6 +65,7 @@ const App = props => {
 				.then(res => res.json())
 				.then(json => {
 					if (json === 'error') {
+						console.log(json);
 						setIsError(true);
 					} else {
 						setTokens(json);
@@ -105,7 +107,7 @@ const App = props => {
 
 	return (
 		<Router>
-			<div>
+			<Switch>
 				<Route
 					path="/teachers"
 					render={props => <Teachers {...props} token={authTokens} />}
@@ -123,7 +125,10 @@ const App = props => {
 					exact
 					render={props => <Signup {...props} token={authTokens} />}
 				/>
-			</div>
+				<Route>
+					<div>page not found</div>
+				</Route>
+			</Switch>
 		</Router>
 	);
 };

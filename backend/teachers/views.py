@@ -31,26 +31,24 @@ max_value = 3
 ###################################################
 
 
-class displayGauisan(APIView):
+class presentPlayer(APIView):
 
     def get(self, request, name):
-        user = User.objects.get(username=name)
-        learner = Serial.parm_to_skill(user.userinfo.params[0])
-        x = np.linspace(-5, 5, 100)
-        y = []
+        #user = User.objects.get(username=name)
+        #learner = Serial.parm_to_skill(user.userinfo.params[0])
+        userinfo = UserInfo.objects.get(user__username=name)
+        print(userinfo.userType)
 
-        l = learner.learners
-        mu = {i: l[i].mu for i in l.keys()}
-        sigma = {i: l[i].sigma for i in l.keys()}
-        sorted_mu = sorted(mu.items(), key=operator.itemgetter(1))
-        sorted_sigma = sorted(sigma.items(), key=operator.itemgetter(1))
-        for i in range(len(sorted_mu)):
-            mu = sorted_mu[i][1]
-            variance = sorted_sigma[i][1]
-            sigma = math.sqrt(variance)
-            y.append(stats.norm.pdf(x, mu, sigma))
+        visits = Visit.objects.filter(user=userinfo).values(
+            'material_id__name', 'material_id__url', 'timeOfVisit', 'engagement')[:10]
 
-        return(Response([list(x), list(y)]))
+        resp = {
+            'user': name,
+            'usertype': userinfo.userType,
+            'visits': visits
+
+        }
+        return(Response(resp))
 
 
 class presentPlayers(APIView):

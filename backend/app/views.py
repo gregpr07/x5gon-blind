@@ -57,7 +57,7 @@ enc = enc.fit(dummyX)
 
 
 # workaround!!!!
-# cannot call recomendations on fresh user!
+#! cannot call recomendations on fresh user!
 
 dummy_row = [0 for i in range(number_of_features)]
 # enforcing correct shape of classifiers:
@@ -78,6 +78,11 @@ class loginWOpass(APIView):
         name = request.data['name']
         try:
             user = User.objects.get(username=name)
+
+            #! must fix
+            # if user.is_superuser():
+            #    raise Exception('Need password')
+
             login(request, user)
             print('logged in as', request.user)
             user = User.objects.get(username=user)

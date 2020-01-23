@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Bubble } from 'react-chartjs-2';
-import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
 import { getCookie } from '../components/functions';
 
 const Header = () => {
@@ -32,7 +32,7 @@ const Header = () => {
 
 const Teachers = props => {
 	var csrftoken = getCookie('csrftoken');
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useState(true);
 
 	const Login = () => {
 		const [username, setUsername] = useState();
@@ -146,12 +146,16 @@ const Teachers = props => {
 					<Link to="/newmaterial" className="mx-3">
 						Add material
 					</Link>
+					<Link to="/student/123" className="mx-3">
+						Single student
+					</Link>
 				</div>
 			</div>
 		);
 	};
 
 	const NewMaterial = () => {
+		const [addedSuccesfully, setAddedSuccesfully] = useState(false);
 		const questions = [
 			{
 				q: 'Text alternatives: how much non-text content has text alternatives',
@@ -287,10 +291,16 @@ const Teachers = props => {
 				})
 			})
 				.then(res => res.json())
-				.then(json => console.log(json));
+				.then(json => {
+					console.log(json);
+					setAddedSuccesfully(true);
+				});
 		};
 		return (
 			<div className="maxer-800 mx-auto pt-4">
+				{addedSuccesfully ? (
+					<div className="alert alert-success">Material added succesfully</div>
+				) : null}
 				<h4>Introduction</h4>
 				<p className="maxer-625 py-3">
 					Attribute representation serves as the basis for recommendation
@@ -366,21 +376,44 @@ const Teachers = props => {
 		);
 	};
 
+	const SingleStudent = () => {
+		const [studentInfo, setStudentInfo] = useState(null);
+
+		useEffect(() => {
+			fetch(`/teacher/present/martin`)
+				.then(res => res.json())
+				.then(json => {
+					setStudentInfo(json);
+				});
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+		}, []);
+		return (
+			<div className="maxer-800 mx-auto">
+				bla<p>asd</p>
+			</div>
+		);
+	};
+
 	return (
 		<div>
 			{isLoggedIn ? (
 				<>
 					<Router basename="teachers">
 						<NavRouter />
-						<Route exact path="/">
-							<Header />
-						</Route>
-						<Route path="/students">
-							<Chart />
-						</Route>
-						<Route path="/newmaterial">
-							<NewMaterial />
-						</Route>
+						<Switch>
+							<Route exact path="/">
+								<Header />
+							</Route>
+							<Route path="/students">
+								<Chart />
+							</Route>
+							<Route path="/newmaterial">
+								<NewMaterial />
+							</Route>
+							<Route path="/student/:id">
+								<SingleStudent />
+							</Route>
+						</Switch>
 					</Router>
 				</>
 			) : (
