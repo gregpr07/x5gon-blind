@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Bubble } from 'react-chartjs-2';
 import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
+import { getCookie } from '../components/functions';
 
 const Header = () => {
 	return (
@@ -30,6 +31,7 @@ const Header = () => {
 };
 
 const Teachers = props => {
+	var csrftoken = getCookie('csrftoken');
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 	const Login = () => {
@@ -81,8 +83,9 @@ const Teachers = props => {
 	};
 	const Chart = () => {
 		const [students, setStudents] = useState(null);
+
 		useEffect(() => {
-			fetch(`${props.requestLink}/teachers/players`)
+			fetch(`/teacher/players/`)
 				.then(res => res.json())
 				.then(json => {
 					setStudents(json);
@@ -268,11 +271,13 @@ const Teachers = props => {
 				}
 				return x;
 			};
-			fetch(`${props.requestLink}/api/material/add`, {
+			fetch(`/api/material/add`, {
 				method: 'POST',
+				credentials: 'same-origin',
 				headers: {
 					Accept: 'application/json',
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
+					'X-CSRFToken': csrftoken
 				},
 				body: JSON.stringify({
 					name: e.target[0].value,
