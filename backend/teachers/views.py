@@ -58,7 +58,7 @@ class presentPlayers(APIView):
         learners = [Serial.parm_to_skill(
             info.params[0]) for info in users]
         reprs = []
-
+        
         for i in learners:
             rep = []
             for j in i.learners:
@@ -87,8 +87,8 @@ class presentPlayers(APIView):
         GM = GM.fit(reprs)
         clusters = GM.predict(reprs).tolist()
 
-        formatted = [{'x': obj[0], 'y': obj[1], 'color': obj[2], 'r': 10}
-                     for obj in zip(repX, repY, clusters)]
+        formatted = [{'x': obj[0], 'y': obj[1], 'color': obj[2], 'r': 10, 'user':obj[3]}
+                     for obj in zip(repX, repY, clusters,users)]
 
         print(formatted)
 
