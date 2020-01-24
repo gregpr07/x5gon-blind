@@ -113,8 +113,14 @@ The model iterates over rows of the dataset - model is updated after each row. I
 
 
 \bigbreak
-The main advantage of using described scalable Bayesian approach as a classifier is its interpretability.  Learned attribute weights (Gaussians for each feature) can be examined and visualized as a plot. Variance holds additional information compared to scalar weight values as it describes certainty about the estimated weight.
+The main advantage of using described scalable Bayesian approach as a classifier is its interpretability.  Learned attribute weights (Gaussians for each feature) can be examined and visualized as a plot. Variance holds additional information compared to scalar weight values as it describes certainty about the estimated weight. Learning schema can also be represented as a graphical model (as presented on figure \ref{f:g}).
 
+\begin{figure}[h!]
+\centering
+\caption{Factor graph of a Opposition Bayesian classifier.}
+\label{f:g}
+\includegraphics[width=8cm]{fg_true}
+\end{figure}
 
 
 %----------------------------------------------------------------------------------------
