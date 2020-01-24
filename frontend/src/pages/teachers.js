@@ -104,7 +104,7 @@ const Teachers = props => {
 		}, []);
 
 		if (redirectTo) {
-			return <Redirect to={`/teachers/student/${redirectTo}`} />;
+			return <Redirect to={`/student/${redirectTo}`} />;
 		}
 
 		return (
