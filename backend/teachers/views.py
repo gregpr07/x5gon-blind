@@ -94,8 +94,8 @@ class presentPlayers(APIView):
         GM = GM.fit(reprs)
         clusters = GM.predict(reprs).tolist()
 
-        users = [{'x': obj[0], 'y': obj[1], 'type': obj[2], 'r': 10, }
-                 for obj in zip(repX, repY, clusters)]
+        formatted = [{'x': obj[0], 'y': obj[1], 'type': obj[2], 'r': 10, 'user':obj[3]}
+                     for obj in zip(repX, repY, clusters, users)]
 
         formatted = [
             {
@@ -109,5 +109,7 @@ class presentPlayers(APIView):
                 'backgroundColor': '#EA9AAD85'
             }
         ]
+
+        print(formatted)
 
         return(Response(formatted))
