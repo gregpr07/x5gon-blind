@@ -19,9 +19,9 @@ const Header = () => {
 					<div className="col-md-12 col-lg-6 my-auto">
 						<div className="main-content pl-1 ml-4">
 							<h1 className="text-black text-main-header">Undestand</h1>
-							<h4 className="body-2">your</h4>
+							<h4 className="body-2">your students with</h4>
 							<h1 className="text-black text-main-header">
-								<b className="d-block">Students</b>
+								<b className="d-block">PYTHIA</b>
 							</h1>
 							<p className="mt-3 pt-3 text-black w-100 body-2 pb-2 pr-4 pr-md-3">
 								Understand your students' accessibility progress and monitor
@@ -108,7 +108,7 @@ const Teachers = props => {
 		}
 
 		return (
-			<div className="maxer mx-auto">
+			<div className="maxer mx-auto py-4">
 				<Bubble
 					data={{
 						datasets: studentSet
@@ -165,14 +165,14 @@ const Teachers = props => {
 					<Link to="/" className="mx-3">
 						Home
 					</Link>
-					<Link to="/students" className="mx-3">
-						All students
-					</Link>
 					<Link to="/newmaterial" className="mx-3">
 						Add material
 					</Link>
 					<Link to="/student/gregor" className="mx-3">
 						Single student
+					</Link>
+					<Link to="/students" className="mx-3">
+						All students
 					</Link>
 				</div>
 			</div>
@@ -466,7 +466,7 @@ const Teachers = props => {
 								{
 									label: '',
 									data: data,
-									backgroundColor: '#7EB7DF75'
+									backgroundColor: '#009CCC75'
 								}
 							]
 						}}
@@ -486,7 +486,7 @@ const Teachers = props => {
 		};
 
 		const GaussianDistro = () => {
-			const range = 100;
+			const range = 200;
 
 			const val = 8.3 * 3;
 			const dx = (val * 2) / range;
@@ -508,7 +508,7 @@ const Teachers = props => {
 			const summary = studentInfo.annotated_summary;
 
 			console.log(summary);
-			const colors = ['#7EB7DF75', '#EA9AAD85', '#7EB27B75'];
+			const colors = ['#4877FF50', '#17285D45', '#00AD5780'];
 			return (
 				/* ! display poiting line at 0 */
 				<Line
