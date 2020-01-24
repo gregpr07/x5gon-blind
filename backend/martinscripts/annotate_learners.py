@@ -32,31 +32,34 @@ def annotate_learner(learners):
                 i += 1
     return user_attributes
 
-def return_biggest_value_mu(feature_dict):
-    max_value = list(feature_dict.keys())[0]
-    max_mu = 0
-    max_sigma = 0
-    for value in feature_dict.keys():
-        if abs(feature_dict[value]['mu']) > abs(feature_dict[max_value]['mu']):
-            max_value = value
-            max_mu = feature_dict[value]['mu']
-            max_sigma = feature_dict[value]['sigma']
-    return {'max_value':value, 'mu':max_mu, 'sigma':max_sigma}
+def dist_sum_per_value(a_l):
+    new_dict = {}
+    for topic in a_l.keys():
+        values_map = {0: {'mu':0, 'sigma':0}, 1: {'mu':0, 'sigma':0}, 2: {'mu':0, 'sigma':0}, 3: {'mu':0, 'sigma':0}}
+        for feature in a_l[topic].keys():
+            for value in a_l[topic][feature].keys():
+                values_map[value]['mu'] += a_l[topic][feature][value]['mu']
+                values_map[value]['sigma'] += a_l[topic][feature][value]['sigma']
+        new_dict[topic] = values_map
+    return new_dict
 
-def return_summary_gaussian(annotated_dict):
-    summary = {}
-    for topic in annotated_dict.keys():
-        summary[topic] = {}
-        biggest_mu = 0
-        for feature in annotated_dict[topic].keys():
-            feature_dict = return_biggest_value_mu(annotated_dict[topic][feature])
-            
-            if abs(feature_dict['mu']) > abs(biggest_mu):
-                summary[topic] = feature_dict
-    return(summary)
+def most_important_value_topic(new_dict):
+    max_value_dict = {}
+    for topic in new_dict.keys():
+        max_value = 0
+        max_mu = 0
+        max_sigma = 0
+        for value in new_dict[topic].keys():
+            if abs(new_dict[topic][value]['mu']) > abs(new_dict[topic][max_value]['mu']):
+                max_value = value
+                max_mu = new_dict[topic][value]['mu']
+                max_sigma = new_dict[topic][value]['sigma']
+        max_value_dict[topic] = {'value': max_value, 'mu': max_mu, 'sigma':max_sigma}
+    return(max_value_dict)
+    
+def topic_summary(annotated_dict):
+    return most_important_value_topic(dist_sum_per_value(annotated_dict))
 
-def player_summary(learners):
-    summ = return_summary_gaussian(annotate_learner(learners))
-    return [list(summ.keys()),list(summ.values())]
-
-
+def player_summary(learner):
+    summary = topic_summary(annotate_learner(learner))
+    return [list(summary.keys()), list(summary.values())]
