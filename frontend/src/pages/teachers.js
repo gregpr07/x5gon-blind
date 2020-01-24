@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Bubble, Radar, Line, defaults } from 'react-chartjs-2';
-import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
+import {
+	BrowserRouter as Router,
+	Link,
+	Route,
+	Switch,
+	Redirect
+} from 'react-router-dom';
 import { getCookie } from '../components/functions';
 
 defaults.global.animation = false;
@@ -85,6 +91,7 @@ const Teachers = props => {
 	};
 	const Chart = () => {
 		const [studentSet, setStudents] = useState(null);
+		const [redirectTo, setRedirectTo] = useState(null);
 
 		useEffect(() => {
 			fetch(`/teacher/players/`)
@@ -95,6 +102,11 @@ const Teachers = props => {
 				});
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, []);
+
+		if (redirectTo) {
+			return <Redirect to={`/teachers/student/${redirectTo}`} />;
+		}
+
 		return (
 			<div className="maxer mx-auto">
 				<Bubble
@@ -102,6 +114,13 @@ const Teachers = props => {
 						datasets: studentSet
 					}}
 					options={{
+						onClick: function(evt, item) {
+							console.log('legend onClick', item);
+							const datasetIndex = item[0]._datasetIndex;
+							const index = item[0]._index;
+							const user = studentSet[datasetIndex].data[index].user;
+							setRedirectTo(user);
+						},
 						tooltips: {
 							callbacks: {
 								label: (tooltipItem, data) => {
@@ -412,7 +431,7 @@ const Teachers = props => {
 			const summary = studentInfo.annotated_summary;
 			var data = [];
 			summary[1].map(item => {
-				data.push(item.max_value);
+				data.push(item.value);
 			});
 			console.log(data);
 			return (

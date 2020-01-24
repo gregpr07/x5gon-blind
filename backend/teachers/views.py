@@ -103,12 +103,12 @@ class presentPlayers(APIView):
             {
                 'label': 'Blind students',
                 'data': [x for x in usersinfo if x['type'] == 0],
-                'backgroundColor': '#7EB7DF75'
+                'backgroundColor': '#EA9AAD85'
             },
             {
                 'label': 'Partially blind students',
                 'data': [x for x in usersinfo if x['type'] == 1],
-                'backgroundColor': '#EA9AAD85'
+                'backgroundColor': '#7EB7DF75'
             }
         ]
 
