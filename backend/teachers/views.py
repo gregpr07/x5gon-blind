@@ -94,22 +94,24 @@ class presentPlayers(APIView):
         GM = GM.fit(reprs)
         clusters = GM.predict(reprs).tolist()
 
-        formatted = [{'x': obj[0], 'y': obj[1], 'type': obj[2], 'r': 10, 'user':obj[3]}
-                     for obj in zip(repX, repY, clusters, users)]
+        usernames = [x.user.username for x in users]
+
+        usersinfo = [{'x': obj[0], 'y': obj[1], 'type': obj[2], 'r': 10, 'user':obj[3]}
+                     for obj in zip(repX, repY, clusters, usernames)]
 
         formatted = [
             {
                 'label': 'Blind students',
-                'data': [x for x in users if x['type'] == 0],
+                'data': [x for x in usersinfo if x['type'] == 0],
                 'backgroundColor': '#7EB7DF75'
             },
             {
                 'label': 'Partially blind students',
-                'data': [x for x in users if x['type'] == 1],
+                'data': [x for x in usersinfo if x['type'] == 1],
                 'backgroundColor': '#EA9AAD85'
             }
         ]
 
-        print(formatted)
+        # print(formatted)
 
         return(Response(formatted))

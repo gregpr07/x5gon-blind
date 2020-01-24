@@ -108,7 +108,7 @@ const Teachers = props => {
 									// data for manipulation
 									return data.datasets[tooltipItem.datasetIndex].data[
 										tooltipItem.index
-									].x;
+									].user;
 								}
 							}
 						},
