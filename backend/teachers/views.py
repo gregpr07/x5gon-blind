@@ -41,10 +41,11 @@ class presentPlayer(APIView):
         learner = Serial.parm_to_skill(userinfo.params[0])
 
         ll = learner.learners
-        annotated_summary = {}
-        if ll != {}:
-            #annotated_data = annotate_learner(ll)
-            annotated_summary = player_summary(ll)
+        if ll == {}:
+            return (Response('Error'))
+
+        #annotated_data = annotate_learner(ll)
+        annotated_summary = player_summary(ll)
 
         visits = Visit.objects.filter(user=userinfo).order_by('-timeOfVisit').values(
             'material_id__name', 'material_id__url', 'timeOfVisit', 'engagement')[:10]

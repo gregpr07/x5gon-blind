@@ -404,11 +404,15 @@ const Teachers = props => {
 	const SingleStudent = props => {
 		const currentUser = props.match.params.id;
 		const [studentInfo, setStudentInfo] = useState(null);
+		const [isError, setIsError] = useState(false);
 
 		useEffect(() => {
 			fetch(`/teacher/present/${currentUser}`)
 				.then(res => res.json())
 				.then(json => {
+					if (json === 'Error') {
+						setIsError(true);
+					}
 					setStudentInfo(json);
 					console.log(json);
 				});
@@ -561,6 +565,12 @@ const Teachers = props => {
 				</ul>
 			</div>
 		);
+
+		if (isError) {
+			return (
+				<div className="maxer-1000 mx-auto">User doesn't have any data</div>
+			);
+		}
 
 		return (
 			<div className="maxer-1000 mx-auto">
