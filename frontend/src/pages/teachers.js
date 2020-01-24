@@ -179,6 +179,25 @@ const Teachers = props => {
 		);
 	};
 
+	const Footer = () => {
+		return (
+			<div className="navbar">
+				<div className="my-3 mx-auto">
+					<a
+						href="/files/non_profesional_background.pdf"
+						className="mx-3 text-green"
+					>
+						Teacher guide
+					</a>
+					<a href="/files/technical_background.pdf" className="mx-3 text-green">
+						Technical documentation
+					</a>
+				</div>
+				<div className="pt-3"></div>
+			</div>
+		);
+	};
+
 	const NewMaterial = () => {
 		const [addedSuccesfully, setAddedSuccesfully] = useState(false);
 		const questions = [
@@ -576,7 +595,7 @@ const Teachers = props => {
 			<div className="maxer-1000 mx-auto">
 				{studentInfo ? (
 					<div className="row">
-						<h4 className="mx-auto mt-3 mb-5">
+						<h4 className="mx-auto mt-1 mb-4">
 							Current student: <b>{studentInfo.user}</b>
 						</h4>
 						<div className="col-9">
@@ -612,6 +631,7 @@ const Teachers = props => {
 							<Route path="/newmaterial" component={NewMaterial} />
 							<Route path="/student/:id" component={SingleStudent} />
 						</Switch>
+						<Footer />
 					</Router>
 				</>
 			) : (
