@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Bubble } from 'react-chartjs-2';
+import { Bubble, Radar, Line, defaults } from 'react-chartjs-2';
 import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
 import { getCookie } from '../components/functions';
+
+defaults.global.animation = false;
 
 const Header = () => {
 	return (
@@ -82,13 +84,14 @@ const Teachers = props => {
 		);
 	};
 	const Chart = () => {
-		const [students, setStudents] = useState(null);
+		const [studentSet, setStudents] = useState(null);
 
 		useEffect(() => {
 			fetch(`/teacher/players/`)
 				.then(res => res.json())
 				.then(json => {
 					setStudents(json);
+					console.log(json);
 				});
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, []);
@@ -96,16 +99,19 @@ const Teachers = props => {
 			<div className="maxer mx-auto">
 				<Bubble
 					data={{
-						datasets: [
-							{
-								label: 'Students',
-								data: students,
-								backgroundColor: 'red',
-								borderColor: 'rgb(255, 99, 132)'
-							}
-						]
+						datasets: studentSet
 					}}
 					options={{
+						tooltips: {
+							callbacks: {
+								label: (tooltipItem, data) => {
+									// data for manipulation
+									return data.datasets[tooltipItem.datasetIndex].data[
+										tooltipItem.index
+									].x;
+								}
+							}
+						},
 						scales: {
 							yAxes: [
 								{
@@ -146,7 +152,7 @@ const Teachers = props => {
 					<Link to="/newmaterial" className="mx-3">
 						Add material
 					</Link>
-					<Link to="/student/123" className="mx-3">
+					<Link to="/student/gregor" className="mx-3">
 						Single student
 					</Link>
 				</div>
@@ -376,20 +382,189 @@ const Teachers = props => {
 		);
 	};
 
-	const SingleStudent = () => {
+	const SingleStudent = props => {
+		const currentUser = props.match.params.id;
 		const [studentInfo, setStudentInfo] = useState(null);
 
 		useEffect(() => {
-			fetch(`/teacher/present/martin`)
+			fetch(`/teacher/present/${currentUser}`)
 				.then(res => res.json())
 				.then(json => {
 					setStudentInfo(json);
+					console.log(json);
 				});
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, []);
+
+		/* 		useEffect(() => {
+			const interval = setInterval(() => {
+				fetch(`/teacher/present/${currentUser}`)
+					.then(res => res.json())
+					.then(json => {
+						setStudentInfo(json);
+						console.log(json);
+					});
+			}, 1000);
+			return () => clearInterval(interval);
+		}, []); */
+
+		const SpiderChart = () => {
+			const summary = studentInfo.annotated_summary;
+			var data = [];
+			summary[1].map(item => {
+				data.push(item.max_value);
+			});
+			console.log(data);
+			return (
+				<div className="fadeInDown">
+					<Radar
+						data={{
+							labels: summary[0],
+							datasets: [
+								{
+									label: '',
+									data: data,
+									backgroundColor: '#7EB7DF75'
+								}
+							]
+						}}
+						options={{
+							legend: {
+								display: false
+							},
+							scale: {
+								ticks: {
+									suggestedMin: 0
+								}
+							}
+						}}
+					/>
+				</div>
+			);
+		};
+
+		const GaussianDistro = () => {
+			const range = 100;
+
+			const val = 8.3 * 3;
+			const dx = (val * 2) / range;
+			var xrange = [-val];
+			for (let i = 0; i < range; i++) {
+				xrange.push(xrange[xrange.length - 1] + dx);
+			}
+			const normdist = (xarr, mu, sig) => {
+				var yarr = [];
+				xarr.map(x => {
+					yarr.push(
+						(1 / (sig * (2 * 3.14) ** 2)) *
+							2.81 ** ((-1 / 2) * (x - mu / sig) ** 2)
+					);
+				});
+				return yarr;
+			};
+
+			const summary = studentInfo.annotated_summary;
+
+			console.log(summary);
+			const colors = ['#7EB7DF75', '#EA9AAD85', '#7EB27B75'];
+			return (
+				/* ! display poiting line at 0 */
+				<Line
+					data={{
+						labels: xrange,
+						datasets: summary[1].map((el, index) => {
+							return {
+								label: summary[0][index],
+								data: normdist(xrange, el.mu, el.sigma),
+								backgroundColor: colors[index]
+							};
+						}),
+						lineAtIndex: 0
+					}}
+					options={{
+						legend: {
+							display: true
+						},
+						scales: {
+							xAxes: [
+								{
+									display: false,
+
+									gridLines: {
+										color: 'rgba(0, 0, 0, 0)'
+									}
+								}
+							],
+							yAxes: [
+								{
+									display: false,
+									gridLines: {
+										color: 'rgba(0, 0, 0, 0)'
+									}
+								}
+							]
+						},
+						elements: {
+							point: {
+								radius: 0
+							}
+						}
+					}}
+				/>
+			);
+		};
+
+		const StudentVisits = object => (
+			<div className="card">
+				<ul className="list-group list-group-flush">
+					<li
+						className={'list-group-item'}
+						data-toggle="tooltip"
+						data-placement="top"
+						title="New to old"
+					>
+						User visit history
+					</li>
+					{object.visits.map((visit, index) => (
+						<li key={index} className={'list-group-item'}>
+							<a
+								className={'text-' + (visit.engagement ? 'success' : 'danger')}
+								href={visit.material_id__url}
+								target="blank"
+								data-toggle="tooltip"
+								data-placement="top"
+								title={visit.timeOfVisit}
+							>
+								{visit.material_id__name}
+							</a>
+						</li>
+					))}
+				</ul>
+			</div>
+		);
+
 		return (
-			<div className="maxer-800 mx-auto">
-				bla<p>asd</p>
+			<div className="maxer-1000 mx-auto">
+				{studentInfo ? (
+					<div className="row">
+						<h4 className="mx-auto mt-3 mb-5">
+							Current student: <b>{studentInfo.user}</b>
+						</h4>
+						<div className="col-9">
+							<SpiderChart />
+							<GaussianDistro />
+						</div>
+						<div className="col">
+							<StudentVisits visits={studentInfo.visits} />
+						</div>
+					</div>
+				) : (
+					<div className="d-flex justify-content-center">
+						<div className="spinner-grow" role="status">
+							<span className="sr-only">Loading...</span>
+						</div>
+					</div>
+				)}
 			</div>
 		);
 	};
@@ -401,18 +576,12 @@ const Teachers = props => {
 					<Router basename="teachers">
 						<NavRouter />
 						<Switch>
-							<Route exact path="/">
-								<Header />
-							</Route>
-							<Route path="/students">
-								<Chart />
-							</Route>
-							<Route path="/newmaterial">
-								<NewMaterial />
-							</Route>
-							<Route path="/student/:id">
-								<SingleStudent />
-							</Route>
+							<Route exact path="/" component={Header} />
+
+							<Route path="/students" component={Chart} />
+
+							<Route path="/newmaterial" component={NewMaterial} />
+							<Route path="/student/:id" component={SingleStudent} />
 						</Switch>
 					</Router>
 				</>

@@ -30,6 +30,9 @@ body a:hover {
 .maxer {
 	max-width: 1250px;
 }
+.maxer-1000 {
+	max-width: 1000px;
+}
 .maxer-625 {
 	max-width: 625px;
 }

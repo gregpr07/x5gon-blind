@@ -12,6 +12,7 @@ import martinscripts.SpeculativeRepresentation as S
 import operator
 import martinscripts.TrueLearn as TrueLearn
 import martinscripts.Serial as Serial
+from martinscripts.annotate_learners import annotate_learner, player_summary
 import scipy.stats as stats
 import math
 import operator
@@ -37,16 +38,22 @@ class presentPlayer(APIView):
         #user = User.objects.get(username=name)
         #learner = Serial.parm_to_skill(user.userinfo.params[0])
         userinfo = UserInfo.objects.get(user__username=name)
-        print(userinfo.userType)
+        learner = Serial.parm_to_skill(userinfo.params[0])
 
-        visits = Visit.objects.filter(user=userinfo).values(
+        ll = learner.learners
+        if ll != {}:
+            #annotated_data = annotate_learner(ll)
+            annotated_summary = player_summary(ll)
+
+        visits = Visit.objects.filter(user=userinfo).order_by('-timeOfVisit').values(
             'material_id__name', 'material_id__url', 'timeOfVisit', 'engagement')[:10]
 
         resp = {
             'user': name,
             'usertype': userinfo.userType,
-            'visits': visits
-
+            'visits': visits,
+            # 'annotated_data': annotated_data,
+            'annotated_summary': annotated_summary
         }
         return(Response(resp))
 
@@ -69,17 +76,17 @@ class presentPlayers(APIView):
 
         reprs = np.array(reprs)
 
-        print(type(reprs[0]))
-        print(type(np.array(reprs)))
+        # print(type(reprs[0]))
+        # print(type(np.array(reprs)))
 
         reprs = np.array(reprs)
 
-        print(reprs.shape)
+        # print(reprs.shape)
 
         tsne = TSNE(n_components=2)
         tsne = tsne.fit(reprs)
 
-        print('here')
+        # print('here')
         repX = tsne.embedding_[:, 0].tolist()
         repY = tsne.embedding_[:, 1].tolist()
 
@@ -87,9 +94,20 @@ class presentPlayers(APIView):
         GM = GM.fit(reprs)
         clusters = GM.predict(reprs).tolist()
 
-        formatted = [{'x': obj[0], 'y': obj[1], 'color': obj[2], 'r': 10}
-                     for obj in zip(repX, repY, clusters)]
+        users = [{'x': obj[0], 'y': obj[1], 'type': obj[2], 'r': 10, }
+                 for obj in zip(repX, repY, clusters)]
 
-        print(formatted)
+        formatted = [
+            {
+                'label': 'Blind students',
+                'data': [x for x in users if x['type'] == 0],
+                'backgroundColor': '#7EB7DF75'
+            },
+            {
+                'label': 'Partially blind students',
+                'data': [x for x in users if x['type'] == 1],
+                'backgroundColor': '#EA9AAD85'
+            }
+        ]
 
         return(Response(formatted))

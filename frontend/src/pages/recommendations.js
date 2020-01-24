@@ -80,9 +80,9 @@ const Recommendations = props => {
 			<div className="position-fixed z-2000 full-width">
 				<div className="alert alert-success" role="alert">
 					<h4 className="alert-heading">Did you like {clickedName}</h4>
-					<p>Answer below</p>
+
 					<hr />
-					<p className="mb-0">sample text</p>
+
 					<button
 						className="btn btn-success m-3 px-5"
 						onClick={() => postEval(1)}
