@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('app.urls')),
     path('teacher/', include('teachers.urls')),
+    re_path(r'^rest-auth/', include('rest_auth.urls')),
     #path('', index),
 ]
 

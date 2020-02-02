@@ -27,7 +27,7 @@ export const history = createBrowserHistory({
 	basename: process.env.PUBLIC_URL
 });
 
-console.log(process.env.PUBLIC_URL + '/');
+//console.log(process.env.PUBLIC_URL + '/');
 
 var csrftoken = getCookie('csrftoken');
 
@@ -50,7 +50,7 @@ const App = props => {
 
 		const postLogin = e => {
 			e.preventDefault();
-			fetch(`/api/login/`, {
+			fetch(`/rest-auth/login/`, {
 				method: 'POST',
 				credentials: 'same-origin',
 				headers: {
@@ -59,17 +59,23 @@ const App = props => {
 					'X-CSRFToken': csrftoken
 				},
 				body: JSON.stringify({
-					name: userName
+					username: userName,
+					password: 'mKC8Xv3s'
 				})
 			})
-				.then(res => res.json())
-				.then(json => {
-					if (json === 'error') {
-						console.log(json);
-						setIsError(true);
-					} else {
-						setTokens(json);
+				.then(res => {
+					if (res.status === 400) {
+						throw 400;
 					}
+					return res.json();
+				})
+				.then(json => {
+					console.log(json);
+					setTokens(json.key);
+				})
+				.catch(rejection => {
+					console.log(rejection);
+					setIsError(true);
 				});
 		};
 
@@ -81,6 +87,9 @@ const App = props => {
 			<>
 				<Navbar />
 				<Layout>
+					{isError ? (
+						<div className="alert alert-danger">User does not exist</div>
+					) : null}
 					<form onSubmit={e => postLogin(e)} className="maxer-form mx-auto">
 						<div className="form-group">
 							<input
@@ -99,7 +108,6 @@ const App = props => {
 					</form>
 
 					<Link to="/signup">Don't have an account?</Link>
-					{isError && <div>The username provided does not exist</div>}
 				</Layout>
 			</>
 		);

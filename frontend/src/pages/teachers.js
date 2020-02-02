@@ -9,6 +9,8 @@ import {
 } from 'react-router-dom';
 import { getCookie } from '../components/functions';
 
+const csrftoken = getCookie('csrftoken');
+
 defaults.global.animation = false;
 
 const Header = () => {
@@ -39,19 +41,89 @@ const Header = () => {
 };
 
 const Teachers = props => {
-	var csrftoken = getCookie('csrftoken');
-	const [isLoggedIn, setIsLoggedIn] = useState(true);
+	const [isLoggedIn, setIsLoggedIn] = useState();
+
+	const [authTokens, setAuthTokens] = useState(localStorage.getItem('user'));
+
+	if (authTokens) {
+		fetch(`/api/isstaff/`, {
+			method: 'POST',
+			credentials: 'same-origin',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+				'X-CSRFToken': csrftoken
+			}
+		})
+			.then(res => {
+				if (res.status !== 200) {
+					throw 'error';
+				}
+				return res.json();
+			})
+			.then(json => {
+				console.log(json);
+				setIsLoggedIn(json);
+			})
+			.catch(rejection => {
+				console.log(rejection);
+				setTokens();
+			});
+	}
+
+	const setTokens = data => {
+		if (data) {
+			localStorage.setItem('user', data);
+			//setAuthTokens(data);
+			window.location.reload();
+		} else {
+			localStorage.removeItem('user');
+			setAuthTokens(data);
+		}
+	};
 
 	const Login = () => {
 		const [username, setUsername] = useState();
 		const [password, setPassword] = useState();
+		const [isError, setIsError] = useState(false);
 		const handleLogin = e => {
 			e.preventDefault();
-			setIsLoggedIn(true);
+			fetch(`/rest-auth/login/`, {
+				method: 'POST',
+				credentials: 'same-origin',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					'X-CSRFToken': csrftoken
+				},
+				body: JSON.stringify({
+					username: username,
+					password: password
+				})
+			})
+				.then(res => {
+					if (res.status === 400) {
+						throw 400;
+					}
+					return res.json();
+				})
+				.then(json => {
+					console.log(json);
+					setTokens(json.key);
+				})
+				.catch(rejection => {
+					console.log(rejection);
+					setIsError(true);
+				});
 		};
 		return (
 			<div className="full-screen">
 				<div>
+					{isError ? (
+						<div className="alert alert-danger text-center">
+							Wrong username or password
+						</div>
+					) : null}
 					<form onSubmit={handleLogin} className="maxer-form mx-auto">
 						<div className="form-group">
 							<input

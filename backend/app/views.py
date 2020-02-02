@@ -73,7 +73,7 @@ dummy_row = [0 for i in range(number_of_features)]
 # User.objects.get(userinfo__userHash='<hash>')
 
 
-class loginWOpass(APIView):
+""" class loginWOpass(APIView):
     def post(self, request):
         name = request.data['name']
         try:
@@ -88,7 +88,7 @@ class loginWOpass(APIView):
             user = User.objects.get(username=user)
             return Response(user.userinfo.userHash)
         except:
-            return Response('error')
+            return Response('error') """
 
 
 class registerUser(APIView):
@@ -98,14 +98,20 @@ class registerUser(APIView):
             name = request.data['name']
             userType = int(request.data['userType'])
 
+            default_password = 'mKC8Xv3s'
+
             default_params = [[], 0]
 
-            user = User.objects.create_user(name)
-            UserInfo.objects.create(
-                user=user, params=default_params, userHash=uuid.uuid4().hex, userType=userType)
+            user = User.objects.create_user(name, password=default_password)
+
+            userinfo = UserInfo.objects.get(user=user)
+            userinfo.params = default_params
+            userinfo.userType = userType
+            userinfo.save()
             print('created new user', user.username)
             return Response('created new user '+str(user.username))
-        except:
+        except Exception as e:
+            print(e)
             return Response('error')
 
 
@@ -121,8 +127,20 @@ class addMaterial(APIView):
             return Response(request.data)
 
 
+class checkStaffStatus(APIView):
+    def post(self, request):
+        try:
+            print(request.user)
+            user = User.objects.get(username=request.user)
+            return Response(user.is_staff)
+        except Exception as e:
+            print(e)
+            return Response(False)
+
+
 class example(APIView):
     def get(self, request):
+        print('############', request.user, '############')
 
         usernames = [user.username for user in User.objects.all()]
         return Response(usernames)
@@ -157,10 +175,14 @@ class trainingReccomendations(APIView):
 
 
 class personalReccomendations(APIView):
-    def get(self, request, hash):
+    def get(self, request):
         try:
+
             prob = []
-            user = User.objects.get(userinfo__userHash=hash)
+            user = User.objects.get(username=request.user)
+
+            # print(user.is_authenticated)
+            print(user.username)
 
             learner = Serial.parm_to_skill(user.userinfo.params[0])
 
@@ -198,26 +220,26 @@ class personalReccomendations(APIView):
 
 class updateLearner(APIView):
     def post(self, request):
-        name = request.data['name']
         material = request.data['material']
         eng = request.data['eng']
+        name = request.user
 
         curr_material = Material.objects.get(name=material)
         mat = curr_material.vector
 
         if speculative_induction == False:
-            print(mat)
+            # print(mat)
             mat = enc.transform([mat]).toarray()
             y = [int(eng)]
         else:
-            print(mat)
+            # print(mat)
             mat = S.speculative_induction(mat, max_value)
-            print(mat)
+            # print(mat)
             mat = enc.transform(mat).toarray()
             y = [int(eng) for k in range(len(mat))]
-            print(y)
+            # print(y)
 
-        user = User.objects.get(userinfo__userHash=name)
+        user = User.objects.get(username=name)
 
         learner = Serial.parm_to_skill(user.userinfo.params[0])
         learner.fit(mat, y)
@@ -232,8 +254,7 @@ class updateLearner(APIView):
 
         Visit.objects.create(
             user=user_inf, material=material_obj, engagement=eng)
-
-        return Response({name: user.userinfo.params})
+        return Response('updated user')
 
 # todo
 # ! dodaj-uporabnika

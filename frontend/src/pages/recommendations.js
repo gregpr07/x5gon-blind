@@ -13,7 +13,7 @@ const Recommendations = props => {
 	const [clickedName, setClickedName] = useState();
 
 	const getreq = () => {
-		fetch(`/api/recommendations/${props.token}`)
+		fetch(`/api/recommendations/`)
 			.then(res => res.json())
 			.then(json => {
 				if (json !== 'user error') {
@@ -63,7 +63,6 @@ const Recommendations = props => {
 			},
 
 			body: JSON.stringify({
-				name: props.token,
 				material: clickedName,
 				eng: num
 			})
