@@ -256,13 +256,13 @@ const Teachers = props => {
 			<div className="navbar">
 				<div className="my-3 mx-auto">
 					<a
-						href="/static/non_profesional_background.pdf"
+						href="/static/Non_profesional_background.pdf"
 						className="mx-3 text-green"
 					>
 						Teacher guide
 					</a>
 					<a
-						href="/static/technical_background.pdf"
+						href="/static/Technical_background.pdf"
 						className="mx-3 text-green"
 					>
 						Technical documentation
