@@ -32,6 +32,7 @@ users = {'martin': [[], 0]} """
 
 
 # TOLE BO TREBA MAL BOL ROBUSTNO NAREST
+# todo - prenest global stvari v martin scripts
 speculative_induction = False
 
 history = []
@@ -42,15 +43,6 @@ number_of_features = 10
 number_of_values = 4
 max_value = 3
 
-# possible values (levels of compliance as defined in ISO 40500:2012
-
-# -1 := null value (speculative induction)
-# 0 := non compliant
-# 1 := A level compliance
-# 2 := AA level compliance
-# 3 := AAA level compliance
-
-# enforcing correct encoding
 dummyX = [[j for i in range(number_of_features)]
           for j in range(number_of_values)]
 enc = enc.fit(dummyX)
@@ -60,36 +52,9 @@ enc = enc.fit(dummyX)
 #! cannot call recomendations on fresh user!
 
 dummy_row = [0 for i in range(number_of_features)]
-# enforcing correct shape of classifiers:
-
-# this warps the data - only for testing!!!!
-# for i in users.keys():
-# users[i][0].fit(enc.transform([dummy_row]).toarray(),[0])
-
-###################################################
 
 
-# todo -- USER HASH LOGIN SYSTEM
-# User.objects.get(userinfo__userHash='<hash>')
-
-
-""" class loginWOpass(APIView):
-    def post(self, request):
-        name = request.data['name']
-        try:
-            user = User.objects.get(username=name)
-
-            #! must fix
-            # if user.is_superuser():
-            #    raise Exception('Need password')
-
-            login(request, user)
-            print('logged in as', request.user)
-            user = User.objects.get(username=user)
-            return Response(user.userinfo.userHash)
-        except:
-            return Response('error') """
-
+# todo - add new materials view, api calls to x5gon
 
 class registerUser(APIView):
     def post(self, request):
@@ -125,6 +90,17 @@ class addMaterial(APIView):
         except:
             print('wrong data')
             return Response(request.data)
+
+
+'''
+for api
+
+mats = [x.split(';') for x in str.split('\n')]
+for mat in mats: 
+    Material.objects.create(name=mat[0],displayName=mat[0],url=mat[1],vector=mat[2:-1]) 
+    print('created',mat[0])
+
+'''
 
 
 class checkStaffStatus(APIView):
