@@ -126,6 +126,6 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(os.path.dirname(
     BASE_DIR), 'frontend', 'build', 'static')
 STATICFILES_DIRS = [os.path.join(os.path.dirname(
-    BASE_DIR), 'documents', 'algorithm')]
+    BASE_DIR), 'Documents', 'algorithm')]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
