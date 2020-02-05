@@ -61,13 +61,12 @@ class registerUser(APIView):
         try:
 
             name = request.data['name']
+            password = request.data['password']
             userType = int(request.data['userType'])
-
-            default_password = 'mKC8Xv3s'
 
             default_params = [[], 0]
 
-            user = User.objects.create_user(name, password=default_password)
+            user = User.objects.create_user(name, password=password)
 
             userinfo = UserInfo.objects.get(user=user)
             userinfo.params = default_params

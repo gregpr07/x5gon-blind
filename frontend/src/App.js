@@ -47,6 +47,7 @@ const App = props => {
 	const Login = () => {
 		const [isError, setIsError] = useState(false);
 		const [userName, setUserName] = useState('');
+		const [password, setPassword] = useState('');
 
 		const postLogin = e => {
 			e.preventDefault();
@@ -60,7 +61,7 @@ const App = props => {
 				},
 				body: JSON.stringify({
 					username: userName,
-					password: 'mKC8Xv3s'
+					password: password
 				})
 			})
 				.then(res => {
@@ -100,6 +101,17 @@ const App = props => {
 									setUserName(e.target.value);
 								}}
 								placeholder="username"
+							/>
+						</div>
+						<div className="form-group">
+							<input
+								className="form-control"
+								type="password"
+								value={password}
+								onChange={e => {
+									setPassword(e.target.value);
+								}}
+								placeholder="Choose a password"
 							/>
 						</div>
 						<button type="submit" className="button-green px-5 mb-2">
