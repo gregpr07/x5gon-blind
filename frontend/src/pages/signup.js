@@ -10,6 +10,7 @@ var csrftoken = getCookie('csrftoken');
 const Signup = props => {
 	const [userName, setUserName] = useState('');
 	const [userType, setUserType] = useState(0);
+	const [password, setPassword] = useState('');
 
 	const [isError, setIsError] = useState(false);
 	const [successfully, setSucessfully] = useState(false);
@@ -27,6 +28,7 @@ const Signup = props => {
 			},
 			body: JSON.stringify({
 				name: userName,
+				password: password,
 				userType: userType
 			})
 		})
@@ -63,6 +65,17 @@ const Signup = props => {
 							setUserName(e.target.value);
 						}}
 						placeholder="Choose a username"
+					/>
+				</div>
+				<div className="form-group">
+					<input
+						className="form-control"
+						type="password"
+						value={password}
+						onChange={e => {
+							setPassword(e.target.value);
+						}}
+						placeholder="Choose a password"
 					/>
 					<label htmlFor="exampleFormControlSelect1" className="mt-3">
 						Choose what you are
