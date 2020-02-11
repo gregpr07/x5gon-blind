@@ -63,7 +63,7 @@ const Teachers = props => {
 			})
 			.then(json => {
 				console.log(json);
-				setIsLoggedIn(json);
+				setIsLoggedIn(json); //json
 			})
 			.catch(rejection => {
 				console.log(rejection);
@@ -246,6 +246,9 @@ const Teachers = props => {
 					<Link to="/students" className="mx-3">
 						All students
 					</Link>
+					<a href="/logout" className="mx-3">
+						Log out
+					</a>
 				</div>
 			</div>
 		);
@@ -691,6 +694,13 @@ const Teachers = props => {
 			</div>
 		);
 	};
+	const LoginWindow = () => (
+		<div className="h-100 row align-items-center">
+			<div className="col pt-35p">
+				<Login />
+			</div>
+		</div>
+	);
 
 	return (
 		<div>
@@ -700,9 +710,7 @@ const Teachers = props => {
 						<NavRouter />
 						<Switch>
 							<Route exact path="/" component={Header} />
-
 							<Route path="/students" component={Chart} />
-
 							<Route path="/newmaterial" component={NewMaterial} />
 							<Route path="/student/:id" component={SingleStudent} />
 						</Switch>
@@ -710,11 +718,7 @@ const Teachers = props => {
 					</Router>
 				</>
 			) : (
-				<div className="h-100 row align-items-center">
-					<div className="col pt-35p">
-						<Login />
-					</div>
-				</div>
+				<LoginWindow />
 			)}
 		</div>
 	);

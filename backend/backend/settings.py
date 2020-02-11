@@ -129,3 +129,7 @@ STATICFILES_DIRS = [os.path.join(os.path.dirname(
     BASE_DIR), 'Documents', 'Algorithm')]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True

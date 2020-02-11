@@ -5,7 +5,7 @@ from rest_framework import status
 from django.contrib.auth.models import User
 from app.models import UserInfo, Material, Visit
 from django.contrib.auth import authenticate, login
-
+from django.http import HttpResponse
 import uuid
 
 # MARTIN IMPORTS
@@ -59,7 +59,6 @@ dummy_row = [0 for i in range(number_of_features)]
 class registerUser(APIView):
     def post(self, request):
         try:
-
             name = request.data['name']
             password = request.data['password']
             userType = int(request.data['userType'])
@@ -81,10 +80,13 @@ class registerUser(APIView):
 
 class addMaterial(APIView):
     def post(self, request):
+        if not request.user.is_staff:
+            return HttpResponse('Unauthorized', status=401)
         try:
             data = request.data
+            user = User.objects.get(username=request.user)
             Material.objects.create(
-                name=data['name'], displayName=data['dname'], url=data['url'], vector=data['vector'])
+                name=data['name'], displayName=data['dname'], url=data['url'], vector=data['vector'], addedBy=user)
             return Response(request.data)
         except:
             print('wrong data')
@@ -106,8 +108,7 @@ class checkStaffStatus(APIView):
     def post(self, request):
         try:
             print(request.user)
-            user = User.objects.get(username=request.user)
-            return Response(user.is_staff)
+            return Response(request.user.is_staff)
         except Exception as e:
             print(e)
             return Response(False)
@@ -115,23 +116,17 @@ class checkStaffStatus(APIView):
 
 class example(APIView):
     def get(self, request):
+        if not request.user.is_staff:
+            return HttpResponse('Unauthorized', status=401)
         print('############', request.user, '############')
-
         usernames = [user.username for user in User.objects.all()]
         return Response(usernames)
 
 
-class test(APIView):
-    def get(self, request):
-        return Response('user not logged in')
-
-    def post(self, request):
-        print(request.data)
-        return Response(request.data)
-
-
 class allResources(APIView):
     def get(self, request):
+        if not request.user.is_staff:
+            return HttpResponse('Unauthorized', status=401)
         print(request.user)
         all = Material.objects.all().values('displayName', 'url')
         return Response(all)

@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
 from app.models import UserInfo, Material, Visit
+from django.http import HttpResponse
 
 
 # MARTIN IMPORTS
@@ -33,10 +34,9 @@ max_value = 3
 
 
 class presentPlayer(APIView):
-
     def get(self, request, name):
-        #user = User.objects.get(username=name)
-        #learner = Serial.parm_to_skill(user.userinfo.params[0])
+        if not request.user.is_staff:
+            return HttpResponse('Unauthorized', status=401)
         userinfo = UserInfo.objects.get(user__username=name)
         learner = Serial.parm_to_skill(userinfo.params[0])
 
@@ -44,7 +44,7 @@ class presentPlayer(APIView):
         if ll == {}:
             return (Response('Error'))
 
-        #annotated_data = annotate_learner(ll)
+        # annotated_data = annotate_learner(ll)
         annotated_summary = player_summary(ll)
 
         visits = Visit.objects.filter(user=userinfo).order_by('-timeOfVisit').values(
@@ -61,8 +61,9 @@ class presentPlayer(APIView):
 
 
 class presentPlayers(APIView):
-
     def get(self, request):
+        if not request.user.is_staff:
+            return HttpResponse('Unauthorized', status=401)
         users = list(UserInfo.objects.all())
         learners = [Serial.parm_to_skill(
             info.params[0]) for info in users]

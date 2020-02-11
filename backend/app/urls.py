@@ -9,9 +9,7 @@ urlpatterns = [
          views.trainingReccomendations.as_view()),
     path('eval/',
          views.updateLearner.as_view()),
-    #path('login/', views.loginWOpass.as_view()),
     path('register/', views.registerUser.as_view()),
-    path('test/', views.test.as_view()),
     path('isstaff/', views.checkStaffStatus.as_view()),
     path('material/add', views.addMaterial.as_view()),
 ]

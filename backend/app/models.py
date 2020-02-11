@@ -27,6 +27,8 @@ class Material(models.Model):
     displayName = models.CharField(max_length=100)
     url = models.URLField()
     vector = ArrayField(models.IntegerField())
+    addedBy = models.ForeignKey(
+        User, on_delete=models.SET_NULL, default=None, null=True)
 
 
 class Visit(models.Model):

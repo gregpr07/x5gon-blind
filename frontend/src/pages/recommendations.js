@@ -106,15 +106,17 @@ const Recommendations = props => {
 	return (
 		<Layout>
 			<Navbar />
-			{waitEval ? <Eval /> : null}
-			{isLoading ? (
+			{waitEval ? (
+				<Eval />
+			) : isLoading ? (
 				<div className="loading-icon mx-auto" />
 			) : recc ? (
 				<Items items={recc} />
 			) : (
 				<div>
-					<div className="text-center">It appears you are logged out</div>
-
+					<div className="text-center text-black">
+						It appears you are logged out
+					</div>
 					<Link to="/login">Login</Link>
 				</div>
 			)}

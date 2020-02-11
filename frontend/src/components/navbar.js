@@ -8,7 +8,7 @@ const Navbar = () => {
 		<nav className="navbar navbar-expand navbar-light bg-dark fixed-top">
 			<div className="navbar-brand">
 				<Link to="/" className="nav-link">
-					<img src={logo} height="22px" alt="logo"></img>
+					<img src={logo} height="22px" alt="X5GON logo"></img>
 				</Link>
 			</div>
 			<button

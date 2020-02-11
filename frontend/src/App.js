@@ -81,7 +81,7 @@ const App = props => {
 		};
 
 		if (authTokens) {
-			return <Redirect to="/" />;
+			window.location.href = '/';
 		}
 
 		return (
