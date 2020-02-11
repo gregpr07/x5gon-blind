@@ -131,5 +131,7 @@ STATICFILES_DIRS = [os.path.join(os.path.dirname(
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+if os.getenv("PRODUCTION"):
+    DEBUG = False
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
