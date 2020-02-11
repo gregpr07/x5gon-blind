@@ -98,8 +98,8 @@ class presentPlayers(APIView):
         clusters = GM.predict(reprs).tolist()
 
         usernames = [x.user.username for x in users]
-        
-        types = [x.type for x in users]
+
+        types = [x.userType for x in users]
 
         usersinfo = [{'x': obj[0], 'y': obj[1], 'type': obj[2], 'r': 10, 'user':obj[3]}
                      for obj in zip(repX, repY, types, usernames)]
