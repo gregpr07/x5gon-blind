@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app',
+    'teachers',
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
@@ -131,7 +132,7 @@ STATICFILES_DIRS = [os.path.join(os.path.dirname(
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-if os.getenv("PRODUCTION"):
+if os.getenv("PRODUCTION") == 1:
     DEBUG = False
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True

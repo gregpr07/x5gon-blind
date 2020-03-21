@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../images/logo/x5gon_logo_dark.svg';
+import logo from '../images/logo/x5gon_logo_light.svg';
 
 const Navbar = () => {
 	const [authTokens, setAuthTokens] = useState(localStorage.getItem('user'));
 	return (
-		<nav className="navbar navbar-expand navbar-light bg-dark fixed-top">
+		<nav className="navbar navbar-expand navbar-dark bg-light fixed-top">
 			<div className="navbar-brand">
-				<Link to="/" className="nav-link">
+				<a href="https://platform.x5gon.org" className="nav-link">
 					<img src={logo} height="22px" alt="X5GON logo"></img>
-				</Link>
+				</a>
 			</div>
 			<button
 				className="navbar-toggler"
@@ -27,16 +27,16 @@ const Navbar = () => {
 					{authTokens ? (
 						<>
 							<a href="/logout">
-								<li className="nav-item nav-link text-white">Log out?</li>
+								<li className="nav-item nav-link text-primary">Log out?</li>
 							</a>
 						</>
 					) : (
 						<>
 							<Link to="/login">
-								<li className="nav-item nav-link text-white">Login</li>
+								<li className="nav-item nav-link text-primary">Login</li>
 							</Link>
 							<Link to="/signup">
-								<li className="nav-item nav-link text-white">Sign up</li>
+								<li className="nav-item nav-link text-primary">Sign up</li>
 							</Link>
 						</>
 					)}

@@ -33,6 +33,24 @@ max_value = 3
 ###################################################
 
 
+class defaultCall(APIView):
+    def post(self, request):
+        try:
+            user = User.objects.get(username=request.user)
+
+            classes = user.created_classes.all()
+
+            ret = {
+                'username': user.username,
+                'is_staff': user.is_staff,
+                'classesCreated': [clas.name for clas in classes]
+            }
+            return Response(ret)
+        except Exception as e:
+            print(e)
+            return Response(False)
+
+
 class presentPlayer(APIView):
     def get(self, request, name):
         if not request.user.is_staff:

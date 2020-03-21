@@ -13,6 +13,9 @@ class UserInfo(models.Model):
     #userHash = models.CharField(max_length=100, default=uuid.uuid4().hex)
     userType = models.IntegerField(default=0)
 
+    def __str__(self):
+        return self.user.username+'\' info'
+
 
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
@@ -30,6 +33,9 @@ class Material(models.Model):
     addedBy = models.ForeignKey(
         User, on_delete=models.SET_NULL, default=None, null=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Visit(models.Model):
     user = models.ForeignKey(UserInfo, on_delete=models.CASCADE)
@@ -38,3 +44,6 @@ class Visit(models.Model):
     timeOfVisit = models.DateTimeField(
         default=timezone.now, blank=True)
     engagement = models.IntegerField()
+
+    def __str__(self):
+        return self.user.user.username+' visited: '+self.material.name

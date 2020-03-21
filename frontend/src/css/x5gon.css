@@ -83,6 +83,10 @@ p {
 .pb-64 {
 	padding-bottom: 64px;
 }
+.p-64 {
+	padding-bottom: 64px;
+	padding-top: 64px;
+}
 h1,
 h2,
 h3,

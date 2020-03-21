@@ -104,16 +104,6 @@ for mat in mats:
 '''
 
 
-class checkStaffStatus(APIView):
-    def post(self, request):
-        try:
-            print(request.user)
-            return Response(request.user.is_staff)
-        except Exception as e:
-            print(e)
-            return Response(False)
-
-
 class example(APIView):
     def get(self, request):
         if not request.user.is_staff:

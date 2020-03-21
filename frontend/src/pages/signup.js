@@ -18,7 +18,7 @@ const Signup = props => {
 	const postRegister = e => {
 		e.preventDefault();
 		console.log(userType);
-		fetch(`/api/register/`, {
+		fetch(`/api/registration/`, {
 			method: 'POST',
 			credentials: 'same-origin',
 			headers: {

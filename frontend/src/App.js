@@ -133,6 +133,7 @@ const App = props => {
 					render={props => <Teachers {...props} token={authTokens} />}
 				/>
 				<Route exact path="/" component={Main} />
+				<Route exact path="/about" component={Main} />
 				<Route exact path="/logout" component={Logout} />
 				<Route
 					path="/recommendations"

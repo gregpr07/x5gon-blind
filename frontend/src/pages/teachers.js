@@ -8,6 +8,7 @@ import {
 	Redirect
 } from 'react-router-dom';
 import { getCookie } from '../components/functions';
+import '../css/teacher.css';
 
 const csrftoken = getCookie('csrftoken');
 
@@ -44,32 +45,38 @@ const Teachers = props => {
 	const [isLoggedIn, setIsLoggedIn] = useState();
 
 	const [authTokens, setAuthTokens] = useState(localStorage.getItem('user'));
+	const [selectedClassroom, setSelectedClassroom] = useState();
+	const [classrooms, setClassrooms] = useState([]);
 
-	if (authTokens) {
-		fetch(`/api/isstaff/`, {
-			method: 'POST',
-			credentials: 'same-origin',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-				'X-CSRFToken': csrftoken
-			}
-		})
-			.then(res => {
-				if (res.status !== 200) {
-					throw 'error';
+	useEffect(() => {
+		// fetch to get if user logged in, available classes and such
+		if (authTokens) {
+			fetch(`/teacher/default/`, {
+				method: 'POST',
+				credentials: 'same-origin',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					'X-CSRFToken': csrftoken
 				}
-				return res.json();
 			})
-			.then(json => {
-				console.log(json);
-				setIsLoggedIn(json); //json
-			})
-			.catch(rejection => {
-				console.log(rejection);
-				setTokens();
-			});
-	}
+				.then(res => {
+					if (res.status !== 200) {
+						throw 'error';
+					}
+					return res.json();
+				})
+				.then(json => {
+					console.log(json);
+					setIsLoggedIn(json['is_staff']); //json
+					setClassrooms(json.classesCreated);
+				})
+				.catch(rejection => {
+					console.log(rejection);
+					setTokens();
+				});
+		}
+	}, []);
 
 	const setTokens = data => {
 		if (data) {
@@ -180,7 +187,7 @@ const Teachers = props => {
 		}
 
 		return (
-			<div className="maxer mx-auto py-4">
+			<div className="maxer mx-auto py-4 px-5">
 				<Bubble
 					data={{
 						datasets: studentSet
@@ -231,24 +238,103 @@ const Teachers = props => {
 		);
 	};
 	const NavRouter = () => {
+		const routes = [
+			{
+				link: '/',
+				name: 'Home'
+			},
+			{
+				link: '/newmaterial',
+				name: 'Add material'
+			},
+			{
+				link: '/student/name',
+				name: 'Single student'
+			},
+			{
+				link: '/students',
+				name: 'All students'
+			},
+			{
+				link: '/classrooms',
+				name: 'My Classrooms'
+			},
+			{
+				externalLink: '/logout',
+				name: 'Log out'
+			}
+		];
+		const ClassSelector = () => {
+			const handleClass = name => {
+				if (name === selectedClassroom) {
+					setSelectedClassroom('');
+				} else {
+					setSelectedClassroom(name);
+				}
+			};
+			return (
+				<div className="dropdown">
+					<button
+						className="btn btn-secondary dropdown-toggle"
+						type="button"
+						id="dropdownMenuButton"
+						data-toggle="dropdown"
+						aria-haspopup="true"
+						aria-expanded="false"
+					>
+						{selectedClassroom ? selectedClassroom : 'Select classroom'}
+					</button>
+					<div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						{classrooms.map(single => (
+							<div
+								className="dropdown-item"
+								onClick={() => handleClass(single)}
+								key={single}
+							>
+								{single}
+							</div>
+						))}
+					</div>
+				</div>
+			);
+		};
 		return (
-			<div className="navbar">
-				<div className="my-3 mx-auto">
-					<Link to="/" className="mx-3">
-						Home
-					</Link>
-					<Link to="/newmaterial" className="mx-3">
-						Add material
-					</Link>
-					<Link to="/student/gregor" className="mx-3">
-						Single student
-					</Link>
-					<Link to="/students" className="mx-3">
-						All students
-					</Link>
-					<a href="/logout" className="mx-3">
-						Log out
-					</a>
+			<div className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+				<div className="navbar-brand">Teachers</div>
+				<button
+					className="navbar-toggler"
+					type="button"
+					data-toggle="collapse"
+					data-target="#navbarSupportedContent"
+					aria-controls="navbarSupportedContent"
+					aria-expanded="false"
+					aria-label="Toggle navigation"
+				>
+					<span className="navbar-toggler-icon"></span>
+				</button>
+				<div
+					className="my-3 mx-auto text-white teacher-nav collapse navbar-collapse"
+					id="navbarSupportedContent"
+				>
+					<ul className="navbar-nav mr-auto">
+						{routes.map(route => (
+							<li className="nav-item" key={route.name}>
+								{route.link ? (
+									<Link to={route.link} className="nav-link">
+										{route.name}
+									</Link>
+								) : (
+									<a
+										className="nav-link ml-md-5 pl-md-5"
+										href={route.externalLink}
+									>
+										{route.name}
+									</a>
+								)}
+							</li>
+						))}
+					</ul>
+					<ClassSelector />
 				</div>
 			</div>
 		);
@@ -256,8 +342,8 @@ const Teachers = props => {
 
 	const Footer = () => {
 		return (
-			<div className="navbar">
-				<div className="my-3 mx-auto">
+			<div className="navbar navbar-dark bg-dark">
+				<div className="mx-auto p-64">
 					<a
 						href="/static/Non_profesional_background.pdf"
 						className="mx-3 text-green"
@@ -271,7 +357,6 @@ const Teachers = props => {
 						Technical documentation
 					</a>
 				</div>
-				<div className="pt-3"></div>
 			</div>
 		);
 	};
@@ -419,7 +504,7 @@ const Teachers = props => {
 				});
 		};
 		return (
-			<div className="maxer-800 mx-auto pt-4">
+			<div className="maxer-800 mx-auto px-3 px-lg-0">
 				{addedSuccesfully ? (
 					<div className="alert alert-success">Material added succesfully</div>
 				) : null}
@@ -702,18 +787,34 @@ const Teachers = props => {
 		</div>
 	);
 
+	const Classrooms = () => {
+		return (
+			<div className="maxer mx-auto px-5">
+				Mein classrooms
+				{classrooms.map(classroom => (
+					<div className="card p-3 my-2 maxer-500" key={classroom}>
+						{classroom}
+					</div>
+				))}
+			</div>
+		);
+	};
+
 	return (
 		<div>
 			{isLoggedIn ? (
 				<>
 					<Router basename="teachers">
 						<NavRouter />
-						<Switch>
-							<Route exact path="/" component={Header} />
-							<Route path="/students" component={Chart} />
-							<Route path="/newmaterial" component={NewMaterial} />
-							<Route path="/student/:id" component={SingleStudent} />
-						</Switch>
+						<div className="p-128">
+							<Switch>
+								<Route exact path="/" component={Header} />
+								<Route path="/students" component={Chart} />
+								<Route path="/newmaterial" component={NewMaterial} />
+								<Route path="/student/:id" component={SingleStudent} />
+								<Route path="/classrooms" component={Classrooms} />
+							</Switch>
+						</div>
 						<Footer />
 					</Router>
 				</>
