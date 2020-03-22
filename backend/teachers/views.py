@@ -52,6 +52,65 @@ class defaultCall(APIView):
             return Response(False)
 
 
+class AllStuff(APIView):
+    def get(self, request):
+        if request.user.is_staff:
+            ret = {
+                'materials': [mat.name for mat in Material.objects.all()],
+                'students': [user.username for user in User.objects.all()]
+            }
+            return Response(ret)
+        return HttpResponse('Unauthorized', status=401)
+
+
+class CreateClassroom(APIView):
+    def post(self, request):
+
+        name = request.data['name']
+        description = request.data['description']
+        creator = User.objects.get(username=request.user)
+        materials = [Material.objects.get(name=mat)
+                     for mat in request.data['materials']]
+        students = [User.objects.get(username=student)
+                    for student in request.data['students']]
+
+        print(request.data)
+        newclass = Classes.objects.create(
+            name=name, description=description, creator=creator)
+        newclass.materials.add(*materials)
+        newclass.students.add(*students)
+
+        return Response('success')
+
+
+class UpdateClassroom(APIView):
+    def post(self, request):
+        currentname = request.data['currentname']
+
+        name = request.data['name']
+        description = request.data['description']
+        creator = User.objects.get(username=request.user)
+        materials = [Material.objects.get(name=mat)
+                     for mat in request.data['materials']]
+        students = [User.objects.get(username=student)
+                    for student in request.data['students']]
+
+        classroom = Classes.objects.get(name=currentname, creator=creator)
+
+        classroom.name = name
+        classroom.description = description
+        classroom.creator = creator
+
+        classroom.materials.clear()
+        classroom.students.clear()
+
+        classroom.materials.add(*materials)
+        classroom.students.add(*students)
+        classroom.save()
+        print('updated classroom: '+currentname)
+        return Response('success')
+
+
 class Classrooms(APIView):
     def get(self, request):
         try:
@@ -85,6 +144,23 @@ class Classroom(APIView):
         except Exception as e:
             print(e)
             return Response(False)
+
+
+class ClassroomInfo(APIView):
+    def get(self, request, name):
+        user = User.objects.get(username=request.user)
+        classroom = Classes.objects.get(creator=user, name=name)
+
+        ret = {
+            'title': classroom.name,
+            'description': classroom.description,
+            'classmaterials': [mat.displayName for mat in classroom.materials.all()],
+            'classstudents': [student.username for student in classroom.students.all()],
+            'materials': [mat.name for mat in Material.objects.all()],
+            'students': [user.username for user in User.objects.all()],
+        }
+
+        return Response(ret)
 
 
 class presentPlayer(APIView):

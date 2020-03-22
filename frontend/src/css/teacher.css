@@ -5,3 +5,6 @@
 	background-color: #f8f9fa;
 	cursor: pointer;
 }
+.selector-row div ul li {
+	cursor: pointer;
+}

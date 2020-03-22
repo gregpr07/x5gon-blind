@@ -40,6 +40,26 @@ const Header = () => {
 		</header>
 	);
 };
+const Footer = () => {
+	return (
+		<div className="navbar navbar-dark bg-dark">
+			<div className="mx-auto p-64">
+				<Link to="/" className="mx-3 text-green">
+					Home
+				</Link>
+				<a
+					href="/static/Non_profesional_background.pdf"
+					className="mx-3 text-green"
+				>
+					Teacher guide
+				</a>
+				<a href="/static/Technical_background.pdf" className="mx-3 text-green">
+					Technical documentation
+				</a>
+			</div>
+		</div>
+	);
+};
 
 const Teachers = props => {
 	const [authTokens, setAuthTokens] = useState(localStorage.getItem('user'));
@@ -49,7 +69,8 @@ const Teachers = props => {
 	const [classrooms, setClassrooms] = useState([]);
 	const [username, setUsername] = useState();
 
-	useEffect(() => {
+	//? functions
+	const defaultCheck = () => {
 		// fetch to get if user logged in, available classes and such
 		if (authTokens) {
 			fetch(`/teacher/default/`, {
@@ -78,8 +99,7 @@ const Teachers = props => {
 					setTokens();
 				});
 		}
-	}, []);
-
+	};
 	const setTokens = data => {
 		if (data) {
 			localStorage.setItem('user', data);
@@ -91,6 +111,11 @@ const Teachers = props => {
 		}
 	};
 
+	useEffect(() => {
+		defaultCheck();
+	}, []);
+
+	//? components
 	const AllStudents = props => {
 		const [studentSet, setStudents] = useState([]);
 		const [redirectTo, setRedirectTo] = useState(null);
@@ -276,7 +301,7 @@ const Teachers = props => {
 						))}
 					</ul>
 					<ul className="navbar-nav ml-auto">
-						<ClassSelector />
+						{/* <ClassSelector /> */}
 						<a className="nav-link pl-md-4" href={'/logout'}>
 							Logout{username ? ' (' + username + ')' : ''}
 						</a>
@@ -285,28 +310,7 @@ const Teachers = props => {
 			</div>
 		);
 	};
-
-	const Footer = () => {
-		return (
-			<div className="navbar navbar-dark bg-dark">
-				<div className="mx-auto p-64">
-					<a
-						href="/static/Non_profesional_background.pdf"
-						className="mx-3 text-green"
-					>
-						Teacher guide
-					</a>
-					<a
-						href="/static/Technical_background.pdf"
-						className="mx-3 text-green"
-					>
-						Technical documentation
-					</a>
-				</div>
-			</div>
-		);
-	};
-
+	//! dodajanje v classroom
 	const NewMaterial = () => {
 		const [addedSuccesfully, setAddedSuccesfully] = useState(false);
 		const [failed, setFailed] = useState(false);
@@ -548,7 +552,6 @@ const Teachers = props => {
 			</div>
 		);
 	};
-
 	const SingleStudent = props => {
 		const currentUser = props.match.params.id;
 		const [studentInfo, setStudentInfo] = useState(null);
@@ -673,34 +676,38 @@ const Teachers = props => {
 			);
 		};
 
-		const StudentVisits = object => (
-			<div className="card">
-				<ul className="list-group list-group-flush">
-					<li
-						className={'list-group-item'}
-						data-toggle="tooltip"
-						data-placement="top"
-						title="New to old"
-					>
-						User visit history
-					</li>
-					{object.visits.map((visit, index) => (
-						<li key={index} className={'list-group-item'}>
-							<a
-								className={'text-' + (visit.engagement ? 'success' : 'danger')}
-								href={visit.material_id__url}
-								target="blank"
-								data-toggle="tooltip"
-								data-placement="top"
-								title={visit.timeOfVisit}
-							>
-								{visit.material_id__name}
-							</a>
+		const StudentVisits = object => {
+			return (
+				<div className="card">
+					<ul className="list-group list-group-flush">
+						<li
+							className={'list-group-item'}
+							data-toggle="tooltip"
+							data-placement="top"
+							title="New to old"
+						>
+							User visit history
 						</li>
-					))}
-				</ul>
-			</div>
-		);
+						{object.visits.map((visit, index) => (
+							<li key={index} className={'list-group-item'}>
+								<a
+									className={
+										'text-' + (visit.engagement ? 'success' : 'danger')
+									}
+									href={visit.material_id__url}
+									target="blank"
+									data-toggle="tooltip"
+									data-placement="top"
+									title={visit.timeOfVisit}
+								>
+									{visit.material_id__name}
+								</a>
+							</li>
+						))}
+					</ul>
+				</div>
+			);
+		};
 
 		if (isError) {
 			return (
@@ -733,7 +740,6 @@ const Teachers = props => {
 			</div>
 		);
 	};
-
 	const Classrooms = () => {
 		const [detclassrooms, setDetclassrooms] = useState([]);
 		useEffect(() => {
@@ -749,6 +755,7 @@ const Teachers = props => {
 		return (
 			<div className="maxer mx-auto px-5">
 				<h3>My classrooms</h3>
+
 				<div className="mt-4">
 					{detclassrooms.map(classs => (
 						<Link
@@ -773,6 +780,9 @@ const Teachers = props => {
 							</div>
 						</Link>
 					))}
+				</div>
+				<div className="pt-3">
+					<Link to="/create-classroom">Create a new classroom</Link>
 				</div>
 			</div>
 		);
@@ -802,6 +812,335 @@ const Teachers = props => {
 				<h4 className="py-3">Classroom: {title}</h4>
 				<AllStudents title={title} />
 				<div className="p-64 px-4">{Materials(materials)}</div>
+				<div className="mt-4">
+					<p>Danger zone</p>
+					<Link
+						to={'/edit-classroom/' + title}
+						className="btn btn-warning mr-3"
+					>
+						Edit class details
+					</Link>
+					<button className="btn btn-danger">Delete classroom</button>
+				</div>
+			</div>
+		);
+	};
+	const CreateClassroom = () => {
+		const [classroom, setClassroom] = useState();
+		const [description, setDescription] = useState();
+		const [students, setStudents] = useState([]);
+		const [materials, setMaterials] = useState([]);
+
+		const [selStudents, setSelStudents] = useState([]);
+		const [selMaterials, setSelMaterials] = useState([]);
+
+		const [addedSuccesfully, setAddedSuccesfully] = useState(false);
+		const [failed, setFailed] = useState(false);
+
+		const handleResponse = json => {
+			setStudents(json.students);
+			setMaterials(json.materials);
+		};
+
+		const handleClick = (item, state, setstate) => {
+			if (state.includes(item)) {
+				setstate(state.filter(i => i !== item));
+			} else {
+				setstate([...state, item]);
+			}
+			console.log(selMaterials);
+		};
+
+		const handleSubmit = e => {
+			e.preventDefault();
+			fetch(`/teacher/create-classroom/`, {
+				method: 'POST',
+				credentials: 'same-origin',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					'X-CSRFToken': csrftoken
+				},
+				body: JSON.stringify({
+					name: classroom,
+					description: description,
+					materials: selMaterials,
+					students: selStudents
+				})
+			})
+				.then(res => res.json())
+				.then(json => {
+					console.log(json);
+					setAddedSuccesfully(true);
+					setFailed(false);
+				})
+				.catch(err => {
+					setFailed(true);
+					setAddedSuccesfully(false);
+				});
+			window.scrollTo(0, 0);
+		};
+
+		useEffect(() => {
+			fetch(`/teacher/all_stuff/`)
+				.then(res => res.json())
+				.then(json => {
+					console.log(json);
+					handleResponse(json);
+				});
+		}, []);
+
+		return (
+			<div className="maxer mx-auto px-md-5 text-dark">
+				{addedSuccesfully ? (
+					<div className="alert alert-success">Classroom added succesfully</div>
+				) : null}
+				{failed ? (
+					<div className="alert alert-danger">Classroom not added</div>
+				) : null}
+				<h4 className="py-3">Classroom creator</h4>
+				<div className="px-4 maxer-800">
+					<form onSubmit={handleSubmit}>
+						<div className="form-group">
+							<label htmlFor="inputTitle">Title</label>
+							<input
+								type="text"
+								className="form-control"
+								id="inputTitle"
+								placeholder="Title of classroom"
+								required
+								value={classroom}
+								onChange={e => setClassroom(e.target.value)}
+								maxLength="100"
+							/>
+						</div>
+						<div className="form-group">
+							<label htmlFor="inputDescription">Description</label>
+							<input
+								type="text"
+								className="form-control"
+								id="inputDescription"
+								placeholder="Description of classroom"
+								required
+								value={description}
+								onChange={e => setDescription(e.target.value)}
+								maxLength="200"
+							/>
+						</div>
+						<div className="row selector-row">
+							{/* materials */}
+							<div className="form-group col">
+								<label htmlFor="materials">Materials</label>
+								<ul class="list-group" id="materials">
+									{materials.map(mat => (
+										<li
+											key={mat}
+											class={
+												'list-group-item list-group-item-action ' +
+												(selMaterials.includes(mat) ? 'active' : '')
+											}
+											onClick={() =>
+												handleClick(mat, selMaterials, setSelMaterials)
+											}
+										>
+											{mat}
+										</li>
+									))}
+								</ul>
+							</div>
+							{/* materials */}
+							<div className="form-group col">
+								<label htmlFor="materials">Students</label>
+								<ul class="list-group" id="materials">
+									{students.map(mat => (
+										<li
+											key={mat}
+											class={
+												'list-group-item list-group-item-action ' +
+												(selStudents.includes(mat) ? 'active' : '')
+											}
+											onClick={() =>
+												handleClick(mat, selStudents, setSelStudents)
+											}
+										>
+											{mat}
+										</li>
+									))}
+								</ul>
+							</div>
+						</div>
+						<button className="btn btn-primary" type="submit">
+							Create classroom
+						</button>
+					</form>
+				</div>
+			</div>
+		);
+	};
+	const EditClassroom = props => {
+		const title = props.match.params.name;
+		const [classroom, setClassroom] = useState();
+		const [description, setDescription] = useState();
+		const [students, setStudents] = useState([]);
+		const [materials, setMaterials] = useState([]);
+
+		const [selStudents, setSelStudents] = useState([]);
+		const [selMaterials, setSelMaterials] = useState([]);
+
+		const [addedSuccesfully, setAddedSuccesfully] = useState(false);
+		const [failed, setFailed] = useState(false);
+
+		const handleResponse = json => {
+			setStudents(json.students);
+			setMaterials(json.materials);
+			setSelMaterials(json.classmaterials);
+			setSelStudents(json.classstudents);
+			setClassroom(json.title);
+			setDescription(json.description);
+		};
+
+		const handleClick = (item, state, setstate) => {
+			if (state.includes(item)) {
+				setstate(state.filter(i => i !== item));
+			} else {
+				setstate([...state, item]);
+			}
+			console.log(selMaterials);
+		};
+
+		const handleSubmit = e => {
+			e.preventDefault();
+			fetch(`/teacher/update-classroom/`, {
+				method: 'POST',
+				credentials: 'same-origin',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					'X-CSRFToken': csrftoken
+				},
+				body: JSON.stringify({
+					currentname: title,
+					name: classroom,
+					description: description,
+					materials: selMaterials,
+					students: selStudents
+				})
+			})
+				.then(res => res.json())
+				.then(json => {
+					console.log(json);
+					setAddedSuccesfully(true);
+					setFailed(false);
+				})
+				.catch(err => {
+					setFailed(true);
+					setAddedSuccesfully(false);
+				});
+			window.scrollTo(0, 0);
+		};
+
+		useEffect(() => {
+			fetch(`/teacher/classroominfo/${title}/`)
+				.then(res => res.json())
+				.then(json => {
+					console.log(json);
+					handleResponse(json);
+				});
+		}, []);
+
+		return (
+			<div className="maxer mx-auto px-md-5 text-dark">
+				{addedSuccesfully ? (
+					<div className="alert alert-success">
+						Classroom changed succesfully
+					</div>
+				) : null}
+				{failed ? (
+					<div className="alert alert-danger">Classroom not added</div>
+				) : null}
+				<h4 className="py-3">Classroom editor</h4>
+				<div className="px-4 maxer-800">
+					<form onSubmit={handleSubmit}>
+						<div className="form-group">
+							<label htmlFor="inputTitle">Title</label>
+							<input
+								type="text"
+								className="form-control"
+								id="inputTitle"
+								placeholder="Title of classroom"
+								required
+								value={classroom}
+								onChange={e => setClassroom(e.target.value)}
+								maxLength="100"
+							/>
+						</div>
+						<div className="form-group">
+							<label htmlFor="inputDescription">Description</label>
+							<input
+								type="text"
+								className="form-control"
+								id="inputDescription"
+								placeholder="Description of classroom"
+								required
+								value={description}
+								onChange={e => setDescription(e.target.value)}
+								maxLength="200"
+							/>
+						</div>
+						<div className="row selector-row">
+							{/* materials */}
+							<div className="form-group col">
+								<label htmlFor="materials">Materials</label>
+								<ul class="list-group" id="materials">
+									{materials.map(mat => (
+										<li
+											key={mat}
+											class={
+												'list-group-item list-group-item-action ' +
+												(selMaterials.includes(mat) ? 'active' : '')
+											}
+											onClick={() =>
+												handleClick(mat, selMaterials, setSelMaterials)
+											}
+										>
+											{mat}
+										</li>
+									))}
+								</ul>
+							</div>
+							{/* materials */}
+							<div className="form-group col">
+								<label htmlFor="materials">Students</label>
+								<ul class="list-group" id="materials">
+									{students.map(mat => (
+										<li
+											key={mat}
+											class={
+												'list-group-item list-group-item-action ' +
+												(selStudents.includes(mat) ? 'active' : '')
+											}
+											onClick={() =>
+												handleClick(mat, selStudents, setSelStudents)
+											}
+										>
+											{mat}
+										</li>
+									))}
+								</ul>
+							</div>
+						</div>
+						<button className="btn btn-warning mr-3" type="submit">
+							Update classroom
+						</button>
+						<Link
+							to={'/classrooms/' + title}
+							className="btn btn-primary"
+							type="submit"
+						>
+							Cancel
+						</Link>
+					</form>
+				</div>
 			</div>
 		);
 	};
@@ -816,6 +1155,12 @@ const Teachers = props => {
 						<Route exact path="/newmaterial" component={NewMaterial} />
 						<Route exact path="/students/:id" component={SingleStudent} />
 						<Route exact path="/classrooms" component={Classrooms} />
+						<Route exact path="/create-classroom" component={CreateClassroom} />
+						<Route
+							exact
+							path="/edit-classroom/:name"
+							component={EditClassroom}
+						/>
 						<Route exact path="/classrooms/:name" component={Classroom} />
 					</Switch>
 				</div>
