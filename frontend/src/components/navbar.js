@@ -23,11 +23,20 @@ const Navbar = () => {
 				<span className="navbar-toggler-icon"></span>
 			</button>
 			<div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+				<ul className="navbar-nav mr-auto">
+					{window.location.pathname !== '/' ? (
+						<Link className="mr-auto" to="/">
+							{'< '}Go home
+						</Link>
+					) : null}
+				</ul>
 				<ul className="navbar-nav ml-auto">
 					{authTokens ? (
 						<>
 							<a href="/logout">
-								<li className="nav-item nav-link text-primary">Log out?</li>
+								<li className="nav-item nav-link text-primary">
+									Log out? ({authTokens})
+								</li>
 							</a>
 						</>
 					) : (

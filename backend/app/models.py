@@ -8,7 +8,8 @@ import uuid
 
 
 class UserInfo(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name='info')
     params = JSONField(default=list)
     #userHash = models.CharField(max_length=100, default=uuid.uuid4().hex)
     userType = models.IntegerField(default=0)
@@ -26,8 +27,8 @@ post_save.connect(create_user_profile, sender=User)
 
 
 class Material(models.Model):
-    name = models.CharField(max_length=100)
-    displayName = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
+    displayName = models.CharField(max_length=100, unique=True)
     url = models.URLField()
     vector = ArrayField(models.IntegerField())
     addedBy = models.ForeignKey(

@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
 from app.models import UserInfo, Material, Visit
+from teachers.models import Classes
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 import uuid
@@ -85,23 +86,34 @@ class addMaterial(APIView):
         try:
             data = request.data
             user = User.objects.get(username=request.user)
-            Material.objects.create(
+
+            mat = Material.objects.create(
                 name=data['name'], displayName=data['dname'], url=data['url'], vector=data['vector'], addedBy=user)
+            print(data['add_to'])
+            try:
+                if data['add_to']:
+                    classroom = Classes.objects.get(name=data['add_to'])
+                    classroom.materials.add(mat)
+            except:
+                pass
             return Response(request.data)
-        except:
-            print('wrong data')
-            return Response(request.data)
+        except Exception as e:
+            print(e)
+            return HttpResponse(e, status=500)
 
 
-'''
-for api
+class AvailableClassrooms(APIView):
+    def get(self, request):
+        try:
+            user = User.objects.get(username=request.user)
+            classes = user.classes.all()
+            resp = [{'name': str(classroom.name), 'creator': str(classroom.creator)}
+                    for classroom in classes]
+            return Response(resp)
 
-mats = [x.split(';') for x in str.split('\n')]
-for mat in mats: 
-    Material.objects.create(name=mat[0],displayName=mat[0],url=mat[1],vector=mat[2:-1]) 
-    print('created',mat[0])
-
-'''
+        except Exception as e:
+            print(e)
+            return HttpResponse('Unauthorized', status=401)
 
 
 class example(APIView):
@@ -135,7 +147,7 @@ class trainingReccomendations(APIView):
 
 
 class personalReccomendations(APIView):
-    def get(self, request):
+    def get(self, request, name):
         try:
 
             prob = []
@@ -144,9 +156,11 @@ class personalReccomendations(APIView):
             # print(user.is_authenticated)
             print(user.username)
 
-            learner = Serial.parm_to_skill(user.userinfo.params[0])
+            learner = Serial.parm_to_skill(user.info.params[0])
 
-            all_mat = list(Material.objects.all().values(
+            materials = Classes.objects.get(name=name).materials
+
+            all_mat = list(materials.values(
                 'name', 'vector', 'url'))
 
             print(learner.learners)
@@ -201,7 +215,7 @@ class updateLearner(APIView):
 
         user = User.objects.get(username=name)
 
-        learner = Serial.parm_to_skill(user.userinfo.params[0])
+        learner = Serial.parm_to_skill(user.info.params[0])
         learner.fit(mat, y)
 
         # save to database
@@ -209,8 +223,8 @@ class updateLearner(APIView):
         material_obj = Material.objects.get(name=material)
         user_inf = UserInfo.objects.get(user=user)
 
-        user.userinfo.params = [Serial.skill_to_parm(learner), 0]
-        user.userinfo.save()
+        user.info.params = [Serial.skill_to_parm(learner), 0]
+        user.info.save()
 
         Visit.objects.create(
             user=user_inf, material=material_obj, engagement=eng)

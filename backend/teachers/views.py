@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
 from app.models import UserInfo, Material, Visit
+from teachers.models import Classes
 from django.http import HttpResponse
 
 
@@ -51,6 +52,41 @@ class defaultCall(APIView):
             return Response(False)
 
 
+class Classrooms(APIView):
+    def get(self, request):
+        try:
+            user = User.objects.get(username=request.user)
+            classrooms = Classes.objects.filter(creator=user)
+            ret = []
+            for classroom in classrooms:
+                info = {
+                    'name': classroom.name,
+                    'materials': classroom.materials.count(),
+                    'students': classroom.students.count(),
+                }
+                ret.append(info)
+            return Response(ret)
+        except Exception as e:
+            print(e)
+            return Response(False)
+
+
+class Classroom(APIView):
+    def get(self, request, name):
+        try:
+            user = User.objects.get(username=request.user)
+            classroom = Classes.objects.get(creator=user, name=name)
+            ret = []
+
+            ret = {
+                'materials': [mat.displayName for mat in classroom.materials.all()],
+            }
+            return Response(ret)
+        except Exception as e:
+            print(e)
+            return Response(False)
+
+
 class presentPlayer(APIView):
     def get(self, request, name):
         if not request.user.is_staff:
@@ -79,10 +115,17 @@ class presentPlayer(APIView):
 
 
 class presentPlayers(APIView):
-    def get(self, request):
-        if not request.user.is_staff:
+    def get(self, request, name):
+
+        if not request.user.is_staff or name == 'undefined':
             return HttpResponse('Unauthorized', status=401)
-        users = list(UserInfo.objects.all())
+
+        user = User.objects.get(username=request.user)
+
+        classroom = Classes.objects.get(name=name, creator=user)
+
+        users = [x.info for x in classroom.students.all()]
+
         learners = [Serial.parm_to_skill(
             info.params[0]) for info in users]
         reprs = []

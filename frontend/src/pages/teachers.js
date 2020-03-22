@@ -42,11 +42,12 @@ const Header = () => {
 };
 
 const Teachers = props => {
-	const [isLoggedIn, setIsLoggedIn] = useState();
-
 	const [authTokens, setAuthTokens] = useState(localStorage.getItem('user'));
-	const [selectedClassroom, setSelectedClassroom] = useState();
+	const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+	const [selectedClassroom, setSelectedClassroom] = useState('');
 	const [classrooms, setClassrooms] = useState([]);
+	const [username, setUsername] = useState();
 
 	useEffect(() => {
 		// fetch to get if user logged in, available classes and such
@@ -70,6 +71,7 @@ const Teachers = props => {
 					console.log(json);
 					setIsLoggedIn(json['is_staff']); //json
 					setClassrooms(json.classesCreated);
+					setUsername(json.username);
 				})
 				.catch(rejection => {
 					console.log(rejection);
@@ -89,116 +91,41 @@ const Teachers = props => {
 		}
 	};
 
-	const Login = () => {
-		const [username, setUsername] = useState();
-		const [password, setPassword] = useState();
-		const [isError, setIsError] = useState(false);
-		const handleLogin = e => {
-			e.preventDefault();
-			fetch(`/rest-auth/login/`, {
-				method: 'POST',
-				credentials: 'same-origin',
-				headers: {
-					Accept: 'application/json',
-					'Content-Type': 'application/json',
-					'X-CSRFToken': csrftoken
-				},
-				body: JSON.stringify({
-					username: username,
-					password: password
-				})
-			})
-				.then(res => {
-					if (res.status === 400) {
-						throw 400;
-					}
-					return res.json();
-				})
-				.then(json => {
-					console.log(json);
-					setTokens(json.key);
-				})
-				.catch(rejection => {
-					console.log(rejection);
-					setIsError(true);
-				});
-		};
-		return (
-			<div className="full-screen">
-				<div>
-					{isError ? (
-						<div className="alert alert-danger text-center">
-							Wrong username or password
-						</div>
-					) : null}
-					<form onSubmit={handleLogin} className="maxer-form mx-auto">
-						<div className="form-group">
-							<input
-								className="form-control"
-								type="username"
-								value={username}
-								onChange={e => {
-									setUsername(e.target.value);
-								}}
-								required
-								placeholder="Choose username"
-							/>
-						</div>
-						<div className="form-group">
-							<input
-								className="form-control"
-								type="password"
-								value={password}
-								onChange={e => {
-									setPassword(e.target.value);
-								}}
-								required
-								placeholder="Choose password"
-							/>
-						</div>
-						<div className="row">
-							<div className="mx-auto">
-								<button type="submit" className="button-green px-5 mb-2">
-									Login
-								</button>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-		);
-	};
-	const Chart = () => {
-		const [studentSet, setStudents] = useState(null);
+	const AllStudents = props => {
+		const [studentSet, setStudents] = useState([]);
 		const [redirectTo, setRedirectTo] = useState(null);
+		const classtitle = props.title;
+		// to only render once
 
 		useEffect(() => {
-			fetch(`/teacher/players/`)
-				.then(res => res.json())
-				.then(json => {
-					setStudents(json);
-					console.log(json);
-				});
+			if (classtitle) {
+				fetch(`/teacher/players/${classtitle}/`)
+					.then(res => res.json())
+					.then(json => {
+						setStudents(json);
+						console.log(json);
+					});
+			}
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, []);
 
-		if (redirectTo) {
-			return <Redirect to={`/student/${redirectTo}`} />;
-		}
-
-		return (
-			<div className="maxer mx-auto py-4 px-5">
+		const Chart = () => {
+			return (
 				<Bubble
 					data={{
 						datasets: studentSet
 					}}
 					options={{
 						onClick: function(evt, item) {
-							console.log('legend onClick', item);
-							const datasetIndex = item[0]._datasetIndex;
-							const index = item[0]._index;
-							const user = studentSet[datasetIndex].data[index].user;
-							setRedirectTo(user);
+							try {
+								console.log('legend onClick', item);
+								const datasetIndex = item[0]._datasetIndex;
+								const index = item[0]._index;
+								const user = studentSet[datasetIndex].data[index].user;
+								setRedirectTo(user);
+							} catch {
+								console.log('Change filter');
+							}
 						},
 						tooltips: {
 							callbacks: {
@@ -234,6 +161,33 @@ const Teachers = props => {
 						}
 					}}
 				/>
+			);
+		};
+		const ListAll = () => {
+			return (
+				<div className="row bg-light p-md-5 p-2 mt-5">
+					{studentSet.map((set, index) => (
+						<div className="col" key={index}>
+							{set.label}
+							<ul className="list-group my-3">
+								{set.data.map((person, indexx) => (
+									<li className="list-group-item" key={indexx}>
+										<Link to={'/students/' + person.user}>{person.user}</Link>
+									</li>
+								))}
+							</ul>
+						</div>
+					))}
+				</div>
+			);
+		};
+
+		return (
+			<div className="maxer mx-auto py-4 px-5">
+				{redirectTo ? <Redirect to={`/students/${redirectTo}`} /> : null}
+
+				<Chart />
+				<ListAll />
 			</div>
 		);
 	};
@@ -247,27 +201,23 @@ const Teachers = props => {
 				link: '/newmaterial',
 				name: 'Add material'
 			},
-			{
+			/* 			{
 				link: '/student/name',
 				name: 'Single student'
-			},
-			{
+			}, */
+			/* 			{
 				link: '/students',
 				name: 'All students'
-			},
+			}, */
 			{
 				link: '/classrooms',
 				name: 'My Classrooms'
-			},
-			{
-				externalLink: '/logout',
-				name: 'Log out'
 			}
 		];
 		const ClassSelector = () => {
 			const handleClass = name => {
 				if (name === selectedClassroom) {
-					setSelectedClassroom('');
+					//pass
 				} else {
 					setSelectedClassroom(name);
 				}
@@ -300,7 +250,7 @@ const Teachers = props => {
 		};
 		return (
 			<div className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-				<div className="navbar-brand">Teachers</div>
+				<div className="navbar-brand">My portal</div>
 				<button
 					className="navbar-toggler"
 					type="button"
@@ -319,22 +269,18 @@ const Teachers = props => {
 					<ul className="navbar-nav mr-auto">
 						{routes.map(route => (
 							<li className="nav-item" key={route.name}>
-								{route.link ? (
-									<Link to={route.link} className="nav-link">
-										{route.name}
-									</Link>
-								) : (
-									<a
-										className="nav-link ml-md-5 pl-md-5"
-										href={route.externalLink}
-									>
-										{route.name}
-									</a>
-								)}
+								<Link to={route.link} className="nav-link">
+									{route.name}
+								</Link>
 							</li>
 						))}
 					</ul>
-					<ClassSelector />
+					<ul className="navbar-nav ml-auto">
+						<ClassSelector />
+						<a className="nav-link pl-md-4" href={'/logout'}>
+							Logout{username ? ' (' + username + ')' : ''}
+						</a>
+					</ul>
 				</div>
 			</div>
 		);
@@ -363,6 +309,7 @@ const Teachers = props => {
 
 	const NewMaterial = () => {
 		const [addedSuccesfully, setAddedSuccesfully] = useState(false);
+		const [failed, setFailed] = useState(false);
 		const questions = [
 			{
 				q: 'Text alternatives: how much non-text content has text alternatives',
@@ -494,19 +441,29 @@ const Teachers = props => {
 					name: e.target[0].value,
 					dname: e.target[1].value,
 					url: e.target[2].value,
-					vector: arr()
+					vector: arr(),
+					add_to: selectedClassroom
 				})
 			})
 				.then(res => res.json())
 				.then(json => {
 					console.log(json);
 					setAddedSuccesfully(true);
+					setFailed(false);
+				})
+				.catch(err => {
+					setFailed(true);
+					setAddedSuccesfully(false);
 				});
+			window.scrollTo(0, 0);
 		};
 		return (
 			<div className="maxer-800 mx-auto px-3 px-lg-0">
 				{addedSuccesfully ? (
 					<div className="alert alert-success">Material added succesfully</div>
+				) : null}
+				{failed ? (
+					<div className="alert alert-danger">Material not added</div>
 				) : null}
 				<h4>Introduction</h4>
 				<p className="maxer-625 py-3">
@@ -516,6 +473,15 @@ const Teachers = props => {
 					accurate and comprehensive. Attribute description is based on ISO
 					40500:2012 standard.
 				</p>
+				{selectedClassroom ? (
+					<p>
+						Material will be added to <b>{selectedClassroom}</b>
+					</p>
+				) : (
+					<p className="text-primary">
+						Select classroom to add new material to it automatically
+					</p>
+				)}
 				<hr />
 
 				<form onSubmit={HandleSubmit}>
@@ -600,18 +566,6 @@ const Teachers = props => {
 				});
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, []);
-
-		/* 		useEffect(() => {
-			const interval = setInterval(() => {
-				fetch(`/teacher/present/${currentUser}`)
-					.then(res => res.json())
-					.then(json => {
-						setStudentInfo(json);
-						console.log(json);
-					});
-			}, 1000);
-			return () => clearInterval(interval);
-		}, []); */
 
 		const SpiderChart = () => {
 			const summary = studentInfo.annotated_summary;
@@ -779,48 +733,94 @@ const Teachers = props => {
 			</div>
 		);
 	};
-	const LoginWindow = () => (
-		<div className="h-100 row align-items-center">
-			<div className="col pt-35p">
-				<Login />
-			</div>
-		</div>
-	);
 
 	const Classrooms = () => {
+		const [detclassrooms, setDetclassrooms] = useState([]);
+		useEffect(() => {
+			console.log(detclassrooms);
+			fetch(`/teacher/myclassrooms/`)
+				.then(res => res.json())
+				.then(json => {
+					console.log(json);
+					setDetclassrooms(json);
+				});
+		}, []);
+
 		return (
 			<div className="maxer mx-auto px-5">
-				Mein classrooms
-				{classrooms.map(classroom => (
-					<div className="card p-3 my-2 maxer-500" key={classroom}>
-						{classroom}
-					</div>
-				))}
+				<h3>My classrooms</h3>
+				<div className="mt-4">
+					{detclassrooms.map(classs => (
+						<Link
+							to={'/classrooms/' + classs.name}
+							className="card card-my-classrooms p-3 my-3 maxer-500"
+							key={classs.name}
+							onClick={() => setSelectedClassroom(classs.name)}
+						>
+							<div className="row">
+								<div className="col">
+									<h4 className="card-title text-dark">{classs.name}</h4>
+									<h6 className="card-subtitle text-muted">Created by you</h6>
+								</div>
+								<div className="col">
+									<p className="text-muted p-0 m-0">
+										Materials: {classs.materials}
+									</p>
+									<p className="text-muted p-0 m-0">
+										Students: {classs.students}
+									</p>
+								</div>
+							</div>
+						</Link>
+					))}
+				</div>
 			</div>
 		);
 	};
-
+	const Classroom = props => {
+		const title = props.match.params.name;
+		const [materials, setMaterials] = useState([]);
+		useEffect(() => {
+			fetch(`/teacher/classroom/${title}/`)
+				.then(res => res.json())
+				.then(json => setMaterials(json.materials));
+		}, []);
+		const Materials = mats => {
+			return (
+				<div>
+					<h5>Materials</h5>
+					<ul class="list-group maxer-500">
+						{mats.map(mat => (
+							<li class="list-group-item">{mat}</li>
+						))}
+					</ul>
+				</div>
+			);
+		};
+		return (
+			<div className="maxer mx-auto px-md-5 text-dark">
+				<h4 className="py-3">Classroom: {title}</h4>
+				<AllStudents title={title} />
+				<div className="p-64 px-4">{Materials(materials)}</div>
+			</div>
+		);
+	};
 	return (
 		<div>
-			{isLoggedIn ? (
-				<>
-					<Router basename="teachers">
-						<NavRouter />
-						<div className="p-128">
-							<Switch>
-								<Route exact path="/" component={Header} />
-								<Route path="/students" component={Chart} />
-								<Route path="/newmaterial" component={NewMaterial} />
-								<Route path="/student/:id" component={SingleStudent} />
-								<Route path="/classrooms" component={Classrooms} />
-							</Switch>
-						</div>
-						<Footer />
-					</Router>
-				</>
-			) : (
-				<LoginWindow />
-			)}
+			<Router basename="teachers">
+				{!authTokens || !isLoggedIn ? (window.location = '/login') : null}
+				<NavRouter />
+				<div className="p-128">
+					<Switch>
+						<Route exact path="/" component={Header} />
+						<Route exact path="/newmaterial" component={NewMaterial} />
+						<Route exact path="/students/:id" component={SingleStudent} />
+						<Route exact path="/classrooms" component={Classrooms} />
+						<Route exact path="/classrooms/:name" component={Classroom} />
+					</Switch>
+				</div>
+				<Footer />
+			</Router>
 		</div>
 	);
 };

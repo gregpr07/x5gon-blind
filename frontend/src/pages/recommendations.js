@@ -11,9 +11,10 @@ const Recommendations = props => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [waitEval, setWaitEval] = useState(false);
 	const [clickedName, setClickedName] = useState();
+	const classroom = props.match.params.name;
 
 	const getreq = () => {
-		fetch(`/api/recommendations/`)
+		fetch(`/api/classroom/${classroom}/`)
 			.then(res => res.json())
 			.then(json => {
 				if (json !== 'user error') {

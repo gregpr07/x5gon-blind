@@ -72,7 +72,7 @@ const App = props => {
 				})
 				.then(json => {
 					console.log(json);
-					setTokens(json.key);
+					setTokens(userName);
 				})
 				.catch(rejection => {
 					console.log(rejection);
@@ -132,11 +132,15 @@ const App = props => {
 					path="/teachers"
 					render={props => <Teachers {...props} token={authTokens} />}
 				/>
-				<Route exact path="/" component={Main} />
+				<Route
+					exact
+					path="/"
+					render={props => <Main {...props} token={authTokens} />}
+				/>
 				<Route exact path="/about" component={Main} />
 				<Route exact path="/logout" component={Logout} />
 				<Route
-					path="/recommendations"
+					path="/classroom/:name"
 					exact
 					render={props => <Recommendations {...props} token={authTokens} />}
 				/>
