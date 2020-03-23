@@ -116,106 +116,44 @@ const Teachers = props => {
 	}, []);
 
 	//? components
-	const AllStudents = props => {
-		const [studentSet, setStudents] = useState([]);
-		const [redirectTo, setRedirectTo] = useState(null);
-		const classtitle = props.title;
-		// to only render once
-
-		useEffect(() => {
-			if (classtitle) {
-				fetch(`/teacher/players/${classtitle}/`)
-					.then(res => res.json())
-					.then(json => {
-						setStudents(json);
-						console.log(json);
-					});
+	const ClassSelector = () => {
+		const handleClass = name => {
+			if (name === selectedClassroom) {
+				//pass
+			} else {
+				setSelectedClassroom(name);
 			}
-			// eslint-disable-next-line react-hooks/exhaustive-deps
-		}, []);
-
-		const Chart = () => {
-			return (
-				<Bubble
-					data={{
-						datasets: studentSet
-					}}
-					options={{
-						onClick: function(evt, item) {
-							try {
-								console.log('legend onClick', item);
-								const datasetIndex = item[0]._datasetIndex;
-								const index = item[0]._index;
-								const user = studentSet[datasetIndex].data[index].user;
-								setRedirectTo(user);
-							} catch {
-								console.log('Change filter');
-							}
-						},
-						tooltips: {
-							callbacks: {
-								label: (tooltipItem, data) => {
-									// data for manipulation
-									return data.datasets[tooltipItem.datasetIndex].data[
-										tooltipItem.index
-									].user;
-								}
-							}
-						},
-						scales: {
-							yAxes: [
-								{
-									ticks: {
-										display: false
-									},
-									gridLines: {
-										display: false
-									}
-								}
-							],
-							xAxes: [
-								{
-									ticks: {
-										display: false
-									},
-									gridLines: {
-										display: false
-									}
-								}
-							]
-						}
-					}}
-				/>
-			);
 		};
-		const ListAll = () => {
-			return (
-				<div className="row bg-light p-md-5 p-2 mt-5">
-					{studentSet.map((set, index) => (
-						<div className="col" key={index}>
-							{set.label}
-							<ul className="list-group my-3">
-								{set.data.map((person, indexx) => (
-									<li className="list-group-item" key={indexx}>
-										<Link to={'/students/' + person.user}>{person.user}</Link>
-									</li>
-								))}
-							</ul>
+		return (
+			<div className="dropdown">
+				<button
+					className="btn btn-secondary dropdown-toggle"
+					type="button"
+					id="dropdownMenuButton"
+					data-toggle="dropdown"
+					aria-haspopup="true"
+					aria-expanded="false"
+				>
+					{selectedClassroom ? selectedClassroom : 'Select classroom'}
+				</button>
+				<div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+					{classrooms.map(single => (
+						<div
+							className={
+								'dropdown-item ' +
+								(selectedClassroom === single ? 'active' : '')
+							}
+							onClick={() => handleClass(single)}
+							key={single}
+						>
+							{single}
 						</div>
 					))}
 				</div>
-			);
-		};
-
-		return (
-			<div className="maxer mx-auto py-4 px-5">
-				{redirectTo ? <Redirect to={`/students/${redirectTo}`} /> : null}
-
-				<Chart />
-				<ListAll />
 			</div>
 		);
 	};
+
 	const NavRouter = () => {
 		const routes = [
 			{
@@ -239,40 +177,6 @@ const Teachers = props => {
 				name: 'My Classrooms'
 			}
 		];
-		const ClassSelector = () => {
-			const handleClass = name => {
-				if (name === selectedClassroom) {
-					//pass
-				} else {
-					setSelectedClassroom(name);
-				}
-			};
-			return (
-				<div className="dropdown">
-					<button
-						className="btn btn-secondary dropdown-toggle"
-						type="button"
-						id="dropdownMenuButton"
-						data-toggle="dropdown"
-						aria-haspopup="true"
-						aria-expanded="false"
-					>
-						{selectedClassroom ? selectedClassroom : 'Select classroom'}
-					</button>
-					<div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-						{classrooms.map(single => (
-							<div
-								className="dropdown-item"
-								onClick={() => handleClass(single)}
-								key={single}
-							>
-								{single}
-							</div>
-						))}
-					</div>
-				</div>
-			);
-		};
 		return (
 			<div className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
 				<div className="navbar-brand">My portal</div>
@@ -301,7 +205,6 @@ const Teachers = props => {
 						))}
 					</ul>
 					<ul className="navbar-nav ml-auto">
-						{/* <ClassSelector /> */}
 						<a className="nav-link pl-md-4" href={'/logout'}>
 							Logout{username ? ' (' + username + ')' : ''}
 						</a>
@@ -310,7 +213,6 @@ const Teachers = props => {
 			</div>
 		);
 	};
-	//! dodajanje v classroom
 	const NewMaterial = () => {
 		const [addedSuccesfully, setAddedSuccesfully] = useState(false);
 		const [failed, setFailed] = useState(false);
@@ -486,6 +388,7 @@ const Teachers = props => {
 						Select classroom to add new material to it automatically
 					</p>
 				)}
+				<ClassSelector />
 				<hr />
 
 				<form onSubmit={HandleSubmit}>
@@ -807,6 +710,117 @@ const Teachers = props => {
 				</div>
 			);
 		};
+		const AllStudents = props => {
+			const [studentSet, setStudents] = useState([]);
+			const [redirectTo, setRedirectTo] = useState(null);
+			const [isError, setIsError] = useState(false);
+			const classtitle = props.title;
+
+			// to only render once
+
+			useEffect(() => {
+				if (classtitle) {
+					fetch(`/teacher/players/${classtitle}/`)
+						.then(res => res.json())
+						.then(json => {
+							setStudents(json);
+							console.log(json);
+						})
+						.catch(err => {
+							console.log(err);
+							setIsError(true);
+						});
+				}
+				// eslint-disable-next-line react-hooks/exhaustive-deps
+			}, []);
+
+			const Chart = () => {
+				return (
+					<Bubble
+						data={{
+							datasets: studentSet
+						}}
+						options={{
+							onClick: function(evt, item) {
+								try {
+									console.log('legend onClick', item);
+									const datasetIndex = item[0]._datasetIndex;
+									const index = item[0]._index;
+									const user = studentSet[datasetIndex].data[index].user;
+									setRedirectTo(user);
+								} catch {
+									console.log('Change filter');
+								}
+							},
+							tooltips: {
+								callbacks: {
+									label: (tooltipItem, data) => {
+										// data for manipulation
+										return data.datasets[tooltipItem.datasetIndex].data[
+											tooltipItem.index
+										].user;
+									}
+								}
+							},
+							scales: {
+								yAxes: [
+									{
+										ticks: {
+											display: false
+										},
+										gridLines: {
+											display: false
+										}
+									}
+								],
+								xAxes: [
+									{
+										ticks: {
+											display: false
+										},
+										gridLines: {
+											display: false
+										}
+									}
+								]
+							}
+						}}
+					/>
+				);
+			};
+			const ListAll = () => {
+				return (
+					<div className="row bg-light p-md-5 p-2 mt-5">
+						{studentSet.map((set, index) => (
+							<div className="col" key={index}>
+								{set.label}
+								<ul className="list-group my-3">
+									{set.data.map((person, indexx) => (
+										<li className="list-group-item" key={indexx}>
+											<Link to={'/students/' + person.user}>{person.user}</Link>
+										</li>
+									))}
+								</ul>
+							</div>
+						))}
+					</div>
+				);
+			};
+
+			return (
+				<div className="maxer mx-auto py-4 px-5">
+					{redirectTo ? <Redirect to={`/students/${redirectTo}`} /> : null}
+					{isError ? (
+						<div className="alert alert-warning">
+							Visualation need at least two students with data
+						</div>
+					) : null}
+
+					<Chart />
+					<ListAll />
+				</div>
+			);
+		};
 		return (
 			<div className="maxer mx-auto px-md-5 text-dark">
 				<h4 className="py-3">Classroom: {title}</h4>
@@ -1058,7 +1072,7 @@ const Teachers = props => {
 				{failed ? (
 					<div className="alert alert-danger">Classroom not added</div>
 				) : null}
-				<h4 className="py-3">Classroom editor</h4>
+				<h4 className="py-3">Classroom editor ({title})</h4>
 				<div className="px-4 maxer-800">
 					<form onSubmit={handleSubmit}>
 						<div className="form-group">

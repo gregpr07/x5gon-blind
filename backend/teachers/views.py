@@ -83,6 +83,12 @@ class CreateClassroom(APIView):
         return Response('success')
 
 
+# ? should add??
+""" class DeleteClassroom(APIView):
+    def post(self,request):
+         """
+
+
 class UpdateClassroom(APIView):
     def post(self, request):
         currentname = request.data['currentname']
@@ -90,8 +96,10 @@ class UpdateClassroom(APIView):
         name = request.data['name']
         description = request.data['description']
         creator = User.objects.get(username=request.user)
+        print(request.data['materials'])
         materials = [Material.objects.get(name=mat)
                      for mat in request.data['materials']]
+
         students = [User.objects.get(username=student)
                     for student in request.data['students']]
 
@@ -195,65 +203,68 @@ class presentPlayers(APIView):
 
         if not request.user.is_staff or name == 'undefined':
             return HttpResponse('Unauthorized', status=401)
+        try:
+            user = User.objects.get(username=request.user)
 
-        user = User.objects.get(username=request.user)
+            classroom = Classes.objects.get(name=name, creator=user)
 
-        classroom = Classes.objects.get(name=name, creator=user)
+            users = [x.info for x in classroom.students.all()]
 
-        users = [x.info for x in classroom.students.all()]
+            learners = [Serial.parm_to_skill(
+                info.params[0]) for info in users]
+            reprs = []
 
-        learners = [Serial.parm_to_skill(
-            info.params[0]) for info in users]
-        reprs = []
+            for i in learners:
+                rep = []
+                for j in i.learners:
 
-        for i in learners:
-            rep = []
-            for j in i.learners:
+                    rep.append(i.learners[j].mu)
+                if rep != []:
+                    reprs.append(rep)
 
-                rep.append(i.learners[j].mu)
-            if rep != []:
-                reprs.append(rep)
+            reprs = np.array(reprs)
 
-        reprs = np.array(reprs)
+            # print(type(reprs[0]))
+            # print(type(np.array(reprs)))
 
-        # print(type(reprs[0]))
-        # print(type(np.array(reprs)))
+            reprs = np.array(reprs)
 
-        reprs = np.array(reprs)
+            # print(reprs.shape)
 
-        # print(reprs.shape)
+            tsne = TSNE(n_components=2)
+            tsne = tsne.fit(reprs)
 
-        tsne = TSNE(n_components=2)
-        tsne = tsne.fit(reprs)
+            # print('here')
+            repX = tsne.embedding_[:, 0].tolist()
+            repY = tsne.embedding_[:, 1].tolist()
 
-        # print('here')
-        repX = tsne.embedding_[:, 0].tolist()
-        repY = tsne.embedding_[:, 1].tolist()
+            GM = BayesianGaussianMixture(n_components=2, max_iter=200)
+            GM = GM.fit(reprs)
+            clusters = GM.predict(reprs).tolist()
 
-        GM = BayesianGaussianMixture(n_components=2, max_iter=200)
-        GM = GM.fit(reprs)
-        clusters = GM.predict(reprs).tolist()
+            usernames = [x.user.username for x in users]
 
-        usernames = [x.user.username for x in users]
+            types = [x.userType for x in users]
 
-        types = [x.userType for x in users]
+            usersinfo = [{'x': obj[0], 'y': obj[1], 'type': obj[2], 'r': 10, 'user':obj[3]}
+                         for obj in zip(repX, repY, types, usernames)]
 
-        usersinfo = [{'x': obj[0], 'y': obj[1], 'type': obj[2], 'r': 10, 'user':obj[3]}
-                     for obj in zip(repX, repY, types, usernames)]
+            formatted = [
+                {
+                    'label': 'Blind students',
+                    'data': [x for x in usersinfo if x['type'] == 0],
+                    'backgroundColor': '#EA9AAD85'
+                },
+                {
+                    'label': 'Partially blind students',
+                    'data': [x for x in usersinfo if x['type'] == 1],
+                    'backgroundColor': '#7EB7DF75'
+                }
+            ]
 
-        formatted = [
-            {
-                'label': 'Blind students',
-                'data': [x for x in usersinfo if x['type'] == 0],
-                'backgroundColor': '#EA9AAD85'
-            },
-            {
-                'label': 'Partially blind students',
-                'data': [x for x in usersinfo if x['type'] == 1],
-                'backgroundColor': '#7EB7DF75'
-            }
-        ]
+            # print(formatted)
 
-        # print(formatted)
-
-        return(Response(formatted))
+            return(Response(formatted))
+        except Exception as e:
+            print(e)
+            return HttpResponse(e, status=500)
