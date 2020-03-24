@@ -33,6 +33,9 @@ const Navbar = () => {
 				<ul className="navbar-nav ml-auto">
 					{authTokens ? (
 						<>
+							<Link to="/myprofile">
+								<li className="nav-item nav-link text-primary">My profile</li>
+							</Link>
 							<a href="/logout">
 								<li className="nav-item nav-link text-primary">
 									Log out? ({authTokens})

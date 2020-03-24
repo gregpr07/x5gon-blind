@@ -13,6 +13,7 @@ class UserInfo(models.Model):
     params = JSONField(default=list)
     #userHash = models.CharField(max_length=100, default=uuid.uuid4().hex)
     userType = models.IntegerField(default=0)
+    is_teacher = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username+'\' info'

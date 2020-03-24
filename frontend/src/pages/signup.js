@@ -11,6 +11,7 @@ const Signup = props => {
 	const [userName, setUserName] = useState('');
 	const [userType, setUserType] = useState(0);
 	const [password, setPassword] = useState('');
+	const [teacher, setTeacher] = useState(false);
 
 	const [isError, setIsError] = useState(false);
 	const [successfully, setSucessfully] = useState(false);
@@ -29,7 +30,8 @@ const Signup = props => {
 			body: JSON.stringify({
 				name: userName,
 				password: password,
-				userType: userType
+				userType: userType,
+				teacher: teacher
 			})
 		})
 			.then(res => res.json())
@@ -89,6 +91,21 @@ const Signup = props => {
 						<option value="0">Blind student</option>
 						<option value="1">Partially blind student</option>
 					</select>
+				</div>
+				<div className="form-check my-3">
+					<input
+						className="form-check-input"
+						type="checkbox"
+						checked={teacher}
+						id="defaultCheck1"
+						onChange={e => {
+							setTeacher(e.target.checked);
+							console.log(e.target.checked);
+						}}
+					/>
+					<label className="form-check-label" htmlFor="defaultCheck1">
+						I am a teacher
+					</label>
 				</div>
 				<button type="submit" className="button-green px-5 mb-2">
 					Sign Up

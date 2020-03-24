@@ -11,5 +11,6 @@ urlpatterns = [
     path('eval/',
          views.updateLearner.as_view()),
     path('register/', views.registerUser.as_view()),
+    path('myprofile/', views.Myprofile.as_view()),
     path('material/add', views.addMaterial.as_view()),
 ]

@@ -15,6 +15,7 @@ import Layout from './components/layout';
 import Teachers from './pages/teachers';
 import Logout from './pages/logout';
 import Navbar from './components/navbar';
+import Myprofile from './pages/myprofile';
 
 import './css/x5gon.css';
 import './css/bootstrap.css';
@@ -138,6 +139,7 @@ const App = props => {
 					render={props => <Main {...props} token={authTokens} />}
 				/>
 				<Route exact path="/about" component={Main} />
+				<Route exact path="/myprofile" component={Myprofile} />
 				<Route exact path="/logout" component={Logout} />
 				<Route
 					path="/classroom/:name"

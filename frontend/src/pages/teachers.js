@@ -179,7 +179,7 @@ const Teachers = props => {
 		];
 		return (
 			<div className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-				<div className="navbar-brand">My portal</div>
+				<div className="navbar-brand">Pythia</div>
 				<button
 					className="navbar-toggler"
 					type="button"

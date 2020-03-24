@@ -43,7 +43,7 @@ class defaultCall(APIView):
 
             ret = {
                 'username': user.username,
-                'is_staff': user.is_staff,
+                'is_staff': user.info.is_teacher,
                 'classesCreated': [clas.name for clas in classes]
             }
             return Response(ret)
@@ -54,7 +54,7 @@ class defaultCall(APIView):
 
 class AllStuff(APIView):
     def get(self, request):
-        if request.user.is_staff:
+        if request.user.info.is_teacher:
             ret = {
                 'materials': [mat.name for mat in Material.objects.all()],
                 'students': [user.username for user in User.objects.all()]
@@ -146,7 +146,7 @@ class Classroom(APIView):
             ret = []
 
             ret = {
-                'materials': [mat.displayName for mat in classroom.materials.all()],
+                'materials': [mat.name for mat in classroom.materials.all()],
             }
             return Response(ret)
         except Exception as e:
@@ -162,7 +162,7 @@ class ClassroomInfo(APIView):
         ret = {
             'title': classroom.name,
             'description': classroom.description,
-            'classmaterials': [mat.displayName for mat in classroom.materials.all()],
+            'classmaterials': [mat.name for mat in classroom.materials.all()],
             'classstudents': [student.username for student in classroom.students.all()],
             'materials': [mat.name for mat in Material.objects.all()],
             'students': [user.username for user in User.objects.all()],
@@ -173,7 +173,7 @@ class ClassroomInfo(APIView):
 
 class presentPlayer(APIView):
     def get(self, request, name):
-        if not request.user.is_staff:
+        if not request.user.info.is_teacher:
             return HttpResponse('Unauthorized', status=401)
         userinfo = UserInfo.objects.get(user__username=name)
         learner = Serial.parm_to_skill(userinfo.params[0])
@@ -201,7 +201,7 @@ class presentPlayer(APIView):
 class presentPlayers(APIView):
     def get(self, request, name):
 
-        if not request.user.is_staff or name == 'undefined':
+        if not request.user.info.is_teacher or name == 'undefined':
             return HttpResponse('Unauthorized', status=401)
         try:
             user = User.objects.get(username=request.user)

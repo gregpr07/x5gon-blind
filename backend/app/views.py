@@ -57,13 +57,30 @@ dummy_row = [0 for i in range(number_of_features)]
 
 # todo - add new materials view, api calls to x5gon
 
+
+class Myprofile(APIView):
+    def get(self, request):
+        try:
+            user = request.user
+            ret = {
+                'name': user.username,
+                'type': user.info.userType,
+                'is_teacher': user.info.is_teacher
+            }
+            return Response(ret)
+
+        except Exception as e:
+            print(e)
+            return HttpResponse(e, status=500)
+
+
 class registerUser(APIView):
     def post(self, request):
         try:
             name = request.data['name']
             password = request.data['password']
             userType = int(request.data['userType'])
-
+            is_teacher = bool(request.data['teacher'])
             default_params = [[], 0]
 
             user = User.objects.create_user(name, password=password)
@@ -71,6 +88,7 @@ class registerUser(APIView):
             userinfo = UserInfo.objects.get(user=user)
             userinfo.params = default_params
             userinfo.userType = userType
+            userinfo.is_teacher = is_teacher
             userinfo.save()
             print('created new user', user.username)
             return Response('created new user '+str(user.username))
@@ -81,7 +99,7 @@ class registerUser(APIView):
 
 class addMaterial(APIView):
     def post(self, request):
-        if not request.user.is_staff:
+        if not request.user.info.is_teacher:
             return HttpResponse('Unauthorized', status=401)
         try:
             data = request.data
