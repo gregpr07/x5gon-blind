@@ -18,6 +18,11 @@ class UserInfo(models.Model):
     def __str__(self):
         return self.user.username+'\' info'
 
+    def upgrade_teacher(self):
+        self.is_teacher = True
+        self.save()
+        return self.is_teacher
+
 
 def create_user_profile(sender, instance, created, **kwargs):
     if created:

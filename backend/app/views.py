@@ -74,6 +74,17 @@ class Myprofile(APIView):
             return HttpResponse(e, status=500)
 
 
+class upgradeToTeacher(APIView):
+    def post(self, request):
+        try:
+            print(request.user.info.upgrade_teacher())
+            return Response('upgraded to teacher acc')
+
+        except Exception as e:
+            print(e)
+            return HttpResponse(e, status=500)
+
+
 class registerUser(APIView):
     def post(self, request):
         try:

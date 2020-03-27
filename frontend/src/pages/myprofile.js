@@ -9,14 +9,42 @@ var csrftoken = getCookie('csrftoken');
 
 const Myprofile = props => {
 	const [profile, setProfile] = useState();
-	useEffect(() => {
+	const getStats = () => {
 		fetch(`/api/myprofile/`)
 			.then(res => res.json())
 			.then(json => {
 				console.log(json);
 				setProfile(json);
 			});
+	};
+	useEffect(() => {
+		getStats();
 	}, []);
+	const UpgradeTeacher = () => {
+		const postTeacher = () => {
+			fetch(`/api/myprofile/upgradeteacher/`, {
+				method: 'POST',
+				credentials: 'same-origin',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					'X-CSRFToken': csrftoken
+				}
+			})
+				.then(res => res.json())
+				.then(json => {
+					console.log(json);
+					getStats();
+				});
+		};
+		return (
+			<div>
+				<button className="btn btn-primary mt-3" onClick={postTeacher}>
+					Upgrade to teacher account
+				</button>
+			</div>
+		);
+	};
 	const PasswordReset = () => {
 		const [oldPassword, setOldPassword] = useState('');
 		const [password1, setPassword1] = useState('');
@@ -118,7 +146,11 @@ const Myprofile = props => {
 										: 'Partially blind student'}
 								</h4>
 
-								{profile.is_teacher ? <h4>You are a teacher</h4> : null}
+								{profile.is_teacher ? (
+									<h4>You are a teacher</h4>
+								) : (
+									<UpgradeTeacher />
+								)}
 
 								<PasswordReset />
 							</div>
