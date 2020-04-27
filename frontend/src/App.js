@@ -4,7 +4,7 @@ import {
 	Link,
 	Route,
 	Redirect,
-	Switch
+	Switch,
 } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import Signup from './pages/signup';
@@ -23,19 +23,20 @@ import './css/search.css';
 import './css/animate.css';
 
 import { getCookie } from './components/functions';
+import About from './pages/about';
 
 export const history = createBrowserHistory({
-	basename: process.env.PUBLIC_URL
+	basename: process.env.PUBLIC_URL,
 });
 
 //console.log(process.env.PUBLIC_URL + '/');
 
 var csrftoken = getCookie('csrftoken');
 
-const App = props => {
+const App = (props) => {
 	const [authTokens, setAuthTokens] = useState(localStorage.getItem('user'));
 
-	const setTokens = data => {
+	const setTokens = (data) => {
 		if (data) {
 			localStorage.setItem('user', data);
 			setAuthTokens(data);
@@ -50,7 +51,7 @@ const App = props => {
 		const [userName, setUserName] = useState('');
 		const [password, setPassword] = useState('');
 
-		const postLogin = e => {
+		const postLogin = (e) => {
 			e.preventDefault();
 			fetch(`/rest-auth/login/`, {
 				method: 'POST',
@@ -58,24 +59,24 @@ const App = props => {
 				headers: {
 					Accept: 'application/json',
 					'Content-Type': 'application/json',
-					'X-CSRFToken': csrftoken
+					'X-CSRFToken': csrftoken,
 				},
 				body: JSON.stringify({
 					username: userName,
-					password: password
-				})
+					password: password,
+				}),
 			})
-				.then(res => {
+				.then((res) => {
 					if (res.status === 400) {
 						throw 400;
 					}
 					return res.json();
 				})
-				.then(json => {
+				.then((json) => {
 					console.log(json);
 					setTokens(userName);
 				})
-				.catch(rejection => {
+				.catch((rejection) => {
 					console.log(rejection);
 					setIsError(true);
 				});
@@ -92,13 +93,13 @@ const App = props => {
 					{isError ? (
 						<div className="alert alert-danger">User does not exist</div>
 					) : null}
-					<form onSubmit={e => postLogin(e)} className="maxer-form mx-auto">
+					<form onSubmit={(e) => postLogin(e)} className="maxer-form mx-auto">
 						<div className="form-group">
 							<input
 								className="form-control"
 								type="username"
 								value={userName}
-								onChange={e => {
+								onChange={(e) => {
 									setUserName(e.target.value);
 								}}
 								placeholder="username"
@@ -109,7 +110,7 @@ const App = props => {
 								className="form-control"
 								type="password"
 								value={password}
-								onChange={e => {
+								onChange={(e) => {
 									setPassword(e.target.value);
 								}}
 								placeholder="Choose a password"
@@ -131,26 +132,26 @@ const App = props => {
 			<Switch>
 				<Route
 					path="/teachers"
-					render={props => <Teachers {...props} token={authTokens} />}
+					render={(props) => <Teachers {...props} token={authTokens} />}
 				/>
 				<Route
 					exact
-					path="/"
-					render={props => <Main {...props} token={authTokens} />}
+					path="/students"
+					render={(props) => <Main {...props} token={authTokens} />}
 				/>
-				<Route exact path="/about" component={Main} />
+				<Route exact path="/" component={About} />
 				<Route exact path="/myprofile" component={Myprofile} />
 				<Route exact path="/logout" component={Logout} />
 				<Route
 					path="/classroom/:name"
 					exact
-					render={props => <Recommendations {...props} token={authTokens} />}
+					render={(props) => <Recommendations {...props} token={authTokens} />}
 				/>
 				<Route path="/login" component={Login} exact />
 				<Route
 					path="/signup"
 					exact
-					render={props => <Signup {...props} token={authTokens} />}
+					render={(props) => <Signup {...props} token={authTokens} />}
 				/>
 				<Route>
 					<div>page not found</div>

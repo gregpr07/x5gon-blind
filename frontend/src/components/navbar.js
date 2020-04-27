@@ -33,6 +33,9 @@ const Navbar = () => {
 				<ul className="navbar-nav ml-auto">
 					{authTokens ? (
 						<>
+							<Link to="/students">
+								<li className="nav-item nav-link text-primary">Portal</li>
+							</Link>
 							<Link to="/myprofile">
 								<li className="nav-item nav-link text-primary">My profile</li>
 							</Link>

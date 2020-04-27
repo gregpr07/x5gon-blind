@@ -5,10 +5,11 @@ import {
 	Link,
 	Route,
 	Switch,
-	Redirect
+	Redirect,
 } from 'react-router-dom';
 import { getCookie } from '../components/functions';
 import '../css/teacher.css';
+import { Footer } from '../components/layout';
 
 const csrftoken = getCookie('csrftoken');
 
@@ -40,7 +41,7 @@ const Header = () => {
 		</header>
 	);
 };
-const Footer = () => {
+/* const Footer = () => {
 	return (
 		<div className="navbar navbar-dark bg-dark">
 			<div className="mx-auto p-64">
@@ -59,9 +60,9 @@ const Footer = () => {
 			</div>
 		</div>
 	);
-};
+}; */
 
-const Teachers = props => {
+const Teachers = (props) => {
 	const [authTokens, setAuthTokens] = useState(localStorage.getItem('user'));
 	const [isLoggedIn, setIsLoggedIn] = useState(true);
 
@@ -79,28 +80,28 @@ const Teachers = props => {
 				headers: {
 					Accept: 'application/json',
 					'Content-Type': 'application/json',
-					'X-CSRFToken': csrftoken
-				}
+					'X-CSRFToken': csrftoken,
+				},
 			})
-				.then(res => {
+				.then((res) => {
 					if (res.status !== 200) {
 						throw 'error';
 					}
 					return res.json();
 				})
-				.then(json => {
+				.then((json) => {
 					console.log(json);
 					setIsLoggedIn(json['is_staff']); //json
 					setClassrooms(json.classesCreated);
 					setUsername(json.username);
 				})
-				.catch(rejection => {
+				.catch((rejection) => {
 					console.log(rejection);
 					setTokens();
 				});
 		}
 	};
-	const setTokens = data => {
+	const setTokens = (data) => {
 		if (data) {
 			localStorage.setItem('user', data);
 			//setAuthTokens(data);
@@ -117,7 +118,7 @@ const Teachers = props => {
 
 	//? components
 	const ClassSelector = () => {
-		const handleClass = name => {
+		const handleClass = (name) => {
 			if (name === selectedClassroom) {
 				//pass
 			} else {
@@ -137,7 +138,7 @@ const Teachers = props => {
 					{selectedClassroom ? selectedClassroom : 'Select classroom'}
 				</button>
 				<div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-					{classrooms.map(single => (
+					{classrooms.map((single) => (
 						<div
 							className={
 								'dropdown-item ' +
@@ -158,11 +159,11 @@ const Teachers = props => {
 		const routes = [
 			{
 				link: '/',
-				name: 'Home'
+				name: 'Home',
 			},
 			{
 				link: '/newmaterial',
-				name: 'Add material'
+				name: 'Add material',
 			},
 			/* 			{
 				link: '/student/name',
@@ -174,8 +175,8 @@ const Teachers = props => {
 			}, */
 			{
 				link: '/classrooms',
-				name: 'My Classrooms'
-			}
+				name: 'My Classrooms',
+			},
 		];
 		return (
 			<div className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -196,7 +197,7 @@ const Teachers = props => {
 					id="navbarSupportedContent"
 				>
 					<ul className="navbar-nav mr-auto">
-						{routes.map(route => (
+						{routes.map((route) => (
 							<li className="nav-item" key={route.name}>
 								<Link to={route.link} className="nav-link">
 									{route.name}
@@ -223,8 +224,8 @@ const Teachers = props => {
 					'AAA: all non-text content has text alternatives',
 					'AA: majority of non-text content has text alternatives',
 					'A: some non-text content has text alternatives',
-					'Non-compliant: no text alternatives are provided'
-				]
+					'Non-compliant: no text alternatives are provided',
+				],
 			},
 			{
 				q: 'Time-based media: now much of time based media has alternatives',
@@ -232,8 +233,8 @@ const Teachers = props => {
 					'AAA: all non-text content has text alternatives',
 					'AA: majority of non-text content has text alternatives',
 					'A: some non-text content has text alternatives',
-					'Non-compliant: no text alternatives are provided'
-				]
+					'Non-compliant: no text alternatives are provided',
+				],
 			},
 			{
 				q:
@@ -242,8 +243,8 @@ const Teachers = props => {
 					'AAA: all content is presented in a simplified way',
 					'AA: majority of content is presented in a simplified way',
 					'A: only a small fraction of content is presented in a simplified way',
-					'Non-compliant: no content is presented in a simplified way'
-				]
+					'Non-compliant: no content is presented in a simplified way',
+				],
 			},
 			{
 				q:
@@ -252,8 +253,8 @@ const Teachers = props => {
 					'AAA: foreground and background color can be modified',
 					'AA: Sound management mechanism is separated from system for web site navigation',
 					'A: colors do not carry information',
-					'Non-compliant: content is nod made easily distinguishable for the user'
-				]
+					'Non-compliant: content is nod made easily distinguishable for the user',
+				],
 			},
 			{
 				q:
@@ -262,8 +263,8 @@ const Teachers = props => {
 					'AAA: the whole web site is accessible with the keyboard',
 					'AA: most of the web site is accessible with the keyboard',
 					'A: main parts of web site are accessible with the keyboard',
-					'Non-compliant: web content is completely inaccessible with the keyboard'
-				]
+					'Non-compliant: web content is completely inaccessible with the keyboard',
+				],
 			},
 			{
 				q:
@@ -272,8 +273,8 @@ const Teachers = props => {
 					'AAA: web site contains no time limited content',
 					'AA: user has the possibility to set speed of time limited content for all time limited content',
 					'A: user has the possibility to set speed for most of time limited content',
-					'Non-compliant: web content requires a lot of time-limited interaction'
-				]
+					'Non-compliant: web content requires a lot of time-limited interaction',
+				],
 			},
 			{
 				q: 'Navigation: does the website support easy navigation',
@@ -281,8 +282,8 @@ const Teachers = props => {
 					'AAA: purpose and location (inside the same web site/outside) is clear from the name of the link',
 					'AA: web content supports different ways to navigate to it',
 					'A: navigation sequence between web contents is logical and intuitive',
-					'Non-compliant: navigation on the web content is difficult and unintuitive'
-				]
+					'Non-compliant: navigation on the web content is difficult and unintuitive',
+				],
 			},
 			{
 				q: 'Readability: is the content readable and understandable',
@@ -290,8 +291,8 @@ const Teachers = props => {
 					'AAA: the content has support for different levels of reading (simplified versions of content are available)',
 					'AA: All parts of web content (if applicable) have marked the language in which they are written',
 					'A: It is marked in which language the web site is written',
-					'Non-compliant: web content is written in different languages and is written in difficult to understand style'
-				]
+					'Non-compliant: web content is written in different languages and is written in difficult to understand style',
+				],
 			},
 			{
 				q:
@@ -300,8 +301,8 @@ const Teachers = props => {
 					'AAA: Bigger changes to the user interface that happen automatically can be disabled',
 					'AA: Navigation of the website is consistent across all parts of the website',
 					'A: Changes to the user interface do not happen automatically',
-					'Non-compliant: interaction of web site with the user is inherently unpredictable'
-				]
+					'Non-compliant: interaction of web site with the user is inherently unpredictable',
+				],
 			},
 			{
 				q:
@@ -310,9 +311,9 @@ const Teachers = props => {
 					'AAA: Web site provides context aware help with instructions and recommendations for input',
 					'AA: In case the user makes an input mistake web site automatically suggests corrections',
 					'A: Web site automatically detects input mistake',
-					'Non-compliant: there is no help with user input'
-				]
-			}
+					'Non-compliant: there is no help with user input',
+				],
+			},
 		];
 		const topics = [
 			'Perception',
@@ -324,9 +325,9 @@ const Teachers = props => {
 			null,
 			'Understandability',
 			null,
-			null
+			null,
 		];
-		const HandleSubmit = e => {
+		const HandleSubmit = (e) => {
 			e.preventDefault();
 			const arr = () => {
 				var x = [];
@@ -341,23 +342,23 @@ const Teachers = props => {
 				headers: {
 					Accept: 'application/json',
 					'Content-Type': 'application/json',
-					'X-CSRFToken': csrftoken
+					'X-CSRFToken': csrftoken,
 				},
 				body: JSON.stringify({
 					name: e.target[0].value,
 					dname: e.target[1].value,
 					url: e.target[2].value,
 					vector: arr(),
-					add_to: selectedClassroom
-				})
+					add_to: selectedClassroom,
+				}),
 			})
-				.then(res => res.json())
-				.then(json => {
+				.then((res) => res.json())
+				.then((json) => {
 					console.log(json);
 					setAddedSuccesfully(true);
 					setFailed(false);
 				})
-				.catch(err => {
+				.catch((err) => {
 					setFailed(true);
 					setAddedSuccesfully(false);
 				});
@@ -455,15 +456,15 @@ const Teachers = props => {
 			</div>
 		);
 	};
-	const SingleStudent = props => {
+	const SingleStudent = (props) => {
 		const currentUser = props.match.params.id;
 		const [studentInfo, setStudentInfo] = useState(null);
 		const [isError, setIsError] = useState(false);
 
 		useEffect(() => {
 			fetch(`/teacher/present/${currentUser}`)
-				.then(res => res.json())
-				.then(json => {
+				.then((res) => res.json())
+				.then((json) => {
 					if (json === 'Error') {
 						setIsError(true);
 					}
@@ -476,7 +477,7 @@ const Teachers = props => {
 		const SpiderChart = () => {
 			const summary = studentInfo.annotated_summary;
 			var data = [];
-			summary[1].map(item => {
+			summary[1].map((item) => {
 				data.push(item.value);
 			});
 			console.log(data);
@@ -489,19 +490,19 @@ const Teachers = props => {
 								{
 									label: '',
 									data: data,
-									backgroundColor: '#009CCC75'
-								}
-							]
+									backgroundColor: '#009CCC75',
+								},
+							],
 						}}
 						options={{
 							legend: {
-								display: false
+								display: false,
 							},
 							scale: {
 								ticks: {
-									suggestedMin: 0
-								}
-							}
+									suggestedMin: 0,
+								},
+							},
 						}}
 					/>
 				</div>
@@ -519,7 +520,7 @@ const Teachers = props => {
 			}
 			const normdist = (xarr, mu, sig) => {
 				var yarr = [];
-				xarr.map(x => {
+				xarr.map((x) => {
 					yarr.push(
 						(1 / (sig * (2 * 3.14) ** 2)) *
 							2.81 ** ((-1 / 2) * (x - mu / sig) ** 2)
@@ -541,14 +542,14 @@ const Teachers = props => {
 							return {
 								label: summary[0][index],
 								data: normdist(xrange, el.mu, el.sigma),
-								backgroundColor: colors[index]
+								backgroundColor: colors[index],
 							};
 						}),
-						lineAtIndex: 0
+						lineAtIndex: 0,
 					}}
 					options={{
 						legend: {
-							display: true
+							display: true,
 						},
 						scales: {
 							xAxes: [
@@ -556,30 +557,30 @@ const Teachers = props => {
 									display: false,
 
 									gridLines: {
-										color: 'rgba(0, 0, 0, 0)'
-									}
-								}
+										color: 'rgba(0, 0, 0, 0)',
+									},
+								},
 							],
 							yAxes: [
 								{
 									display: false,
 									gridLines: {
-										color: 'rgba(0, 0, 0, 0)'
-									}
-								}
-							]
+										color: 'rgba(0, 0, 0, 0)',
+									},
+								},
+							],
 						},
 						elements: {
 							point: {
-								radius: 0
-							}
-						}
+								radius: 0,
+							},
+						},
 					}}
 				/>
 			);
 		};
 
-		const StudentVisits = object => {
+		const StudentVisits = (object) => {
 			return (
 				<div className="card">
 					<ul className="list-group list-group-flush">
@@ -648,8 +649,8 @@ const Teachers = props => {
 		useEffect(() => {
 			console.log(detclassrooms);
 			fetch(`/teacher/myclassrooms/`)
-				.then(res => res.json())
-				.then(json => {
+				.then((res) => res.json())
+				.then((json) => {
 					console.log(json);
 					setDetclassrooms(json);
 				});
@@ -660,7 +661,7 @@ const Teachers = props => {
 				<h3>My classrooms</h3>
 
 				<div className="mt-4">
-					{detclassrooms.map(classs => (
+					{detclassrooms.map((classs) => (
 						<Link
 							to={'/classrooms/' + classs.name}
 							className="card card-my-classrooms p-3 my-3 maxer-500"
@@ -690,27 +691,27 @@ const Teachers = props => {
 			</div>
 		);
 	};
-	const Classroom = props => {
+	const Classroom = (props) => {
 		const title = props.match.params.name;
 		const [materials, setMaterials] = useState([]);
 		useEffect(() => {
 			fetch(`/teacher/classroom/${title}/`)
-				.then(res => res.json())
-				.then(json => setMaterials(json.materials));
+				.then((res) => res.json())
+				.then((json) => setMaterials(json.materials));
 		}, []);
-		const Materials = mats => {
+		const Materials = (mats) => {
 			return (
 				<div>
 					<h5>Materials</h5>
 					<ul class="list-group maxer-500">
-						{mats.map(mat => (
+						{mats.map((mat) => (
 							<li class="list-group-item">{mat}</li>
 						))}
 					</ul>
 				</div>
 			);
 		};
-		const AllStudents = props => {
+		const AllStudents = (props) => {
 			const [studentSet, setStudents] = useState([]);
 			const [redirectTo, setRedirectTo] = useState(null);
 			const [isError, setIsError] = useState(false);
@@ -721,12 +722,12 @@ const Teachers = props => {
 			useEffect(() => {
 				if (classtitle) {
 					fetch(`/teacher/players/${classtitle}/`)
-						.then(res => res.json())
-						.then(json => {
+						.then((res) => res.json())
+						.then((json) => {
 							setStudents(json);
 							console.log(json);
 						})
-						.catch(err => {
+						.catch((err) => {
 							console.log(err);
 							setIsError(true);
 						});
@@ -738,10 +739,10 @@ const Teachers = props => {
 				return (
 					<Bubble
 						data={{
-							datasets: studentSet
+							datasets: studentSet,
 						}}
 						options={{
-							onClick: function(evt, item) {
+							onClick: function (evt, item) {
 								try {
 									console.log('legend onClick', item);
 									const datasetIndex = item[0]._datasetIndex;
@@ -759,31 +760,31 @@ const Teachers = props => {
 										return data.datasets[tooltipItem.datasetIndex].data[
 											tooltipItem.index
 										].user;
-									}
-								}
+									},
+								},
 							},
 							scales: {
 								yAxes: [
 									{
 										ticks: {
-											display: false
+											display: false,
 										},
 										gridLines: {
-											display: false
-										}
-									}
+											display: false,
+										},
+									},
 								],
 								xAxes: [
 									{
 										ticks: {
-											display: false
+											display: false,
 										},
 										gridLines: {
-											display: false
-										}
-									}
-								]
-							}
+											display: false,
+										},
+									},
+								],
+							},
 						}}
 					/>
 				);
@@ -851,21 +852,21 @@ const Teachers = props => {
 		const [addedSuccesfully, setAddedSuccesfully] = useState(false);
 		const [failed, setFailed] = useState(false);
 
-		const handleResponse = json => {
+		const handleResponse = (json) => {
 			setStudents(json.students);
 			setMaterials(json.materials);
 		};
 
 		const handleClick = (item, state, setstate) => {
 			if (state.includes(item)) {
-				setstate(state.filter(i => i !== item));
+				setstate(state.filter((i) => i !== item));
 			} else {
 				setstate([...state, item]);
 			}
 			console.log(selMaterials);
 		};
 
-		const handleSubmit = e => {
+		const handleSubmit = (e) => {
 			e.preventDefault();
 			fetch(`/teacher/create-classroom/`, {
 				method: 'POST',
@@ -873,22 +874,22 @@ const Teachers = props => {
 				headers: {
 					Accept: 'application/json',
 					'Content-Type': 'application/json',
-					'X-CSRFToken': csrftoken
+					'X-CSRFToken': csrftoken,
 				},
 				body: JSON.stringify({
 					name: classroom,
 					description: description,
 					materials: selMaterials,
-					students: selStudents
-				})
+					students: selStudents,
+				}),
 			})
-				.then(res => res.json())
-				.then(json => {
+				.then((res) => res.json())
+				.then((json) => {
 					console.log(json);
 					setAddedSuccesfully(true);
 					setFailed(false);
 				})
-				.catch(err => {
+				.catch((err) => {
 					setFailed(true);
 					setAddedSuccesfully(false);
 				});
@@ -897,8 +898,8 @@ const Teachers = props => {
 
 		useEffect(() => {
 			fetch(`/teacher/all_stuff/`)
-				.then(res => res.json())
-				.then(json => {
+				.then((res) => res.json())
+				.then((json) => {
 					console.log(json);
 					handleResponse(json);
 				});
@@ -924,7 +925,7 @@ const Teachers = props => {
 								placeholder="Title of classroom"
 								required
 								value={classroom}
-								onChange={e => setClassroom(e.target.value)}
+								onChange={(e) => setClassroom(e.target.value)}
 								maxLength="100"
 							/>
 						</div>
@@ -937,7 +938,7 @@ const Teachers = props => {
 								placeholder="Description of classroom"
 								required
 								value={description}
-								onChange={e => setDescription(e.target.value)}
+								onChange={(e) => setDescription(e.target.value)}
 								maxLength="200"
 							/>
 						</div>
@@ -946,7 +947,7 @@ const Teachers = props => {
 							<div className="form-group col">
 								<label htmlFor="materials">Materials</label>
 								<ul class="list-group" id="materials">
-									{materials.map(mat => (
+									{materials.map((mat) => (
 										<li
 											key={mat}
 											class={
@@ -966,7 +967,7 @@ const Teachers = props => {
 							<div className="form-group col">
 								<label htmlFor="materials">Students</label>
 								<ul class="list-group" id="materials">
-									{students.map(mat => (
+									{students.map((mat) => (
 										<li
 											key={mat}
 											class={
@@ -991,7 +992,7 @@ const Teachers = props => {
 			</div>
 		);
 	};
-	const EditClassroom = props => {
+	const EditClassroom = (props) => {
 		const title = props.match.params.name;
 		const [classroom, setClassroom] = useState();
 		const [description, setDescription] = useState();
@@ -1004,7 +1005,7 @@ const Teachers = props => {
 		const [addedSuccesfully, setAddedSuccesfully] = useState(false);
 		const [failed, setFailed] = useState(false);
 
-		const handleResponse = json => {
+		const handleResponse = (json) => {
 			setStudents(json.students);
 			setMaterials(json.materials);
 			setSelMaterials(json.classmaterials);
@@ -1015,14 +1016,14 @@ const Teachers = props => {
 
 		const handleClick = (item, state, setstate) => {
 			if (state.includes(item)) {
-				setstate(state.filter(i => i !== item));
+				setstate(state.filter((i) => i !== item));
 			} else {
 				setstate([...state, item]);
 			}
 			console.log(selMaterials);
 		};
 
-		const handleSubmit = e => {
+		const handleSubmit = (e) => {
 			e.preventDefault();
 			fetch(`/teacher/update-classroom/`, {
 				method: 'POST',
@@ -1030,23 +1031,23 @@ const Teachers = props => {
 				headers: {
 					Accept: 'application/json',
 					'Content-Type': 'application/json',
-					'X-CSRFToken': csrftoken
+					'X-CSRFToken': csrftoken,
 				},
 				body: JSON.stringify({
 					currentname: title,
 					name: classroom,
 					description: description,
 					materials: selMaterials,
-					students: selStudents
-				})
+					students: selStudents,
+				}),
 			})
-				.then(res => res.json())
-				.then(json => {
+				.then((res) => res.json())
+				.then((json) => {
 					console.log(json);
 					setAddedSuccesfully(true);
 					setFailed(false);
 				})
-				.catch(err => {
+				.catch((err) => {
 					setFailed(true);
 					setAddedSuccesfully(false);
 				});
@@ -1055,8 +1056,8 @@ const Teachers = props => {
 
 		useEffect(() => {
 			fetch(`/teacher/classroominfo/${title}/`)
-				.then(res => res.json())
-				.then(json => {
+				.then((res) => res.json())
+				.then((json) => {
 					console.log(json);
 					handleResponse(json);
 				});
@@ -1084,7 +1085,7 @@ const Teachers = props => {
 								placeholder="Title of classroom"
 								required
 								value={classroom}
-								onChange={e => setClassroom(e.target.value)}
+								onChange={(e) => setClassroom(e.target.value)}
 								maxLength="100"
 							/>
 						</div>
@@ -1097,7 +1098,7 @@ const Teachers = props => {
 								placeholder="Description of classroom"
 								required
 								value={description}
-								onChange={e => setDescription(e.target.value)}
+								onChange={(e) => setDescription(e.target.value)}
 								maxLength="200"
 							/>
 						</div>
@@ -1106,7 +1107,7 @@ const Teachers = props => {
 							<div className="form-group col">
 								<label htmlFor="materials">Materials</label>
 								<ul class="list-group" id="materials">
-									{materials.map(mat => (
+									{materials.map((mat) => (
 										<li
 											key={mat}
 											class={
@@ -1126,7 +1127,7 @@ const Teachers = props => {
 							<div className="form-group col">
 								<label htmlFor="materials">Students</label>
 								<ul class="list-group" id="materials">
-									{students.map(mat => (
+									{students.map((mat) => (
 										<li
 											key={mat}
 											class={
@@ -1163,7 +1164,7 @@ const Teachers = props => {
 			<Router basename="teachers">
 				{!authTokens || !isLoggedIn ? (window.location = '/login') : null}
 				<NavRouter />
-				<div className="p-128">
+				<div className="pt-128">
 					<Switch>
 						<Route exact path="/" component={Header} />
 						<Route exact path="/newmaterial" component={NewMaterial} />
@@ -1178,7 +1179,7 @@ const Teachers = props => {
 						<Route exact path="/classrooms/:name" component={Classroom} />
 					</Switch>
 				</div>
-				<Footer />
+				<Footer theme="dark" />
 			</Router>
 		</div>
 	);
