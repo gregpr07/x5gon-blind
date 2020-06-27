@@ -39,12 +39,7 @@ const About = (props) => {
               </p>
               <p className="mt-0 mb-2">or visit</p>
               <Link href="/students">
-                <a
-                  type="button"
-                  className="btn btn-lg btn-block btn-outline-primary"
-                >
-                  Student portal
-                </a>
+                <a className="button-green px-5">Student portal</a>
               </Link>
             </div>
           </div>
@@ -68,12 +63,7 @@ const About = (props) => {
               </p>
               <p className="mt-0 mb-2">or visit</p>
               <Link href="/teachers">
-                <a
-                  type="button"
-                  className="btn btn-lg btn-block btn-outline-primary"
-                >
-                  Teacher portal
-                </a>
+                <a className="button-green px-5">Teacher portal</a>
               </Link>
             </div>
           </div>

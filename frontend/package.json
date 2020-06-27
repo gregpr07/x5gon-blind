@@ -3,13 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "cross-env NODE_ENV=development PORT=3000 node server-proxy.js",
     "build": "next build",
     "start": "next start"
   },
   "dependencies": {
+    "express": "^4.17.1",
     "next": "9.4.4",
+    "next-images": "^1.4.0",
     "react": "16.13.1",
-    "react-dom": "16.13.1"
-  }
+    "react-dom": "16.13.1",
+    "swr": "^0.2.3"
+  },
+  "devDependencies": {
+    "cross-env": "^5.0.1",
+    "http-proxy-middleware": "^0.17.4"
+  },
+  "proxy": "http://localhost:8000"
 }

@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import Link from "next/link";
-//import logo from "../images/logo/x5gon_logo_light.svg";
+import { handleLogin, isLoggedIn } from "../../services/auth";
+import logo from "../images/logo/x5gon_logo_light.svg";
 
 const Navbar = () => {
-  const [authTokens, setAuthTokens] = useState("bnjnklnnln");
+  const [authTokens, setAuthTokens] = useState(isLoggedIn());
   return (
     <nav className="navbar navbar-expand navbar-dark bg-light fixed-top">
       <div className="navbar-brand">
         <a href="https://platform.x5gon.org" className="nav-link">
-          <img height="22px" alt="X5GON logo"></img>
+          <img src={logo} height="22px" alt="X5GON logo"></img>
         </a>
       </div>
       <button
