@@ -3,9 +3,9 @@ const express = require("express");
 const next = require("next");
 
 const devProxy = {
-  "/rest-auth": {
-    target: "http://localhost:8000/rest-auth/",
-    pathRewrite: { "^/rest-auth": "/rest-auth" },
+  "/api": {
+    target: "http://localhost:8000/",
+    //pathRewrite: { "^/api": "/api" },
     changeOrigin: true,
   },
 };

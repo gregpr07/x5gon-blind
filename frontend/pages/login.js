@@ -18,7 +18,7 @@ const Login = () => {
 
   const postLogin = (e) => {
     e.preventDefault();
-    fetch(`/rest-auth/login/`, {
+    fetch(`/api/rest-auth/login/`, {
       ...POSTHeader(),
       body: JSON.stringify({
         username: userName,
@@ -26,18 +26,22 @@ const Login = () => {
       }),
     })
       .then((res) => {
-        if (res.status === 400) {
-          throw 400;
+        if (res.status === 200) {
+          return res.json();
+        } else {
+          throw res;
         }
-        return res.json();
       })
       .then((json) => {
         console.log(json);
         handleLogin(userName);
+        setIsError(false);
       })
       .catch((rejection) => {
-        console.log(rejection);
-        setIsError(true);
+        rejection.json().then((err) => {
+          console.log(err);
+          setIsError(err.non_field_errors);
+        });
       });
   };
 
@@ -45,9 +49,7 @@ const Login = () => {
     <>
       <Navbar />
       <Layout>
-        {isError ? (
-          <div className="alert alert-danger">User does not exist</div>
-        ) : null}
+        {isError ? <div className="alert alert-danger">{isError}</div> : null}
         <form onSubmit={(e) => postLogin(e)} className="maxer-form mx-auto">
           <div className="form-group">
             <input

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import { handleLogin, isLoggedIn } from "../../services/auth";
+import Router from "next/router";
+import { handleLogin, getUserName, logout } from "../../services/auth";
 import logo from "../images/logo/x5gon_logo_light.svg";
 
-const Navbar = () => {
-  const [authTokens, setAuthTokens] = useState(isLoggedIn());
+const Navbar = (router) => {
+  const [authTokens, setAuthTokens] = useState(getUserName());
   return (
     <nav className="navbar navbar-expand navbar-dark bg-light fixed-top">
       <div className="navbar-brand">
@@ -24,26 +25,26 @@ const Navbar = () => {
         <span className="navbar-toggler-icon"></span>
       </button>
       <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-        {/* <ul className="navbar-nav mr-auto">
-          {window.location.pathname !== "/" ? (
-            <Link className="mr-auto" to="/">
-              {"< "}Go home
-            </Link>
-          ) : null}
-        </ul> */}
+        <ul className="navbar-nav mr-auto"></ul>
         <ul className="navbar-nav ml-auto">
           {authTokens ? (
             <>
-              <Link href="/students">
+              <Link href="/portal">
                 <li className="nav-item nav-link text-primary">Portal</li>
               </Link>
               <Link href="/myprofile">
-                <li className="nav-item nav-link text-primary">My profile</li>
-              </Link>
-              <a href="/logout">
                 <li className="nav-item nav-link text-primary">
-                  Log out? ({authTokens})
+                  My profile ({authTokens})
                 </li>
+              </Link>
+              <a
+                href="/"
+                onClick={(event) => {
+                  //event.preventDefault()
+                  logout(() => navigate(`/`));
+                }}
+              >
+                <li className="nav-item nav-link text-primary">Logout</li>
               </a>
             </>
           ) : (

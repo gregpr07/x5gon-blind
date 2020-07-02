@@ -21,9 +21,9 @@ from .views import index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('app.urls')),
-    path('teacher/', include('teachers.urls')),
-    re_path(r'^rest-auth/', include('rest_auth.urls')),
+    path('api/user/', include('app.urls')),
+    path('api/teacher/', include('teachers.urls')),
+    re_path(r'^api/rest-auth/', include('rest_auth.urls')),
     #path('', index),
 ]
 

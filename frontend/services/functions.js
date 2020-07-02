@@ -14,13 +14,14 @@ export function getCookie(name) {
 }
 
 export const POSTHeader = () => {
+  //const csrftoken = getCookie("csrftoken"); // because it's handled with nginx on production
   return {
     method: "POST",
     credentials: "same-origin",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      "X-CSRFToken": getCookie("csrftoken"),
+      //"X-CSRFToken": csrftoken,
     },
   };
 };

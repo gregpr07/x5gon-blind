@@ -1,12 +1,14 @@
 export const isBrowser = () => typeof window !== "undefined";
 
 export const getUser = () =>
-  isBrowser() && window.localStorage.getItem("gatsbyUser")
-    ? JSON.parse(window.localStorage.getItem("gatsbyUser"))
+  isBrowser() && window.localStorage.getItem("blindUser")
+    ? JSON.parse(window.localStorage.getItem("blindUser"))
     : {};
 
 const setUser = (user) =>
-  window.localStorage.setItem("gatsbyUser", JSON.stringify(user));
+  isBrowser()
+    ? window.localStorage.setItem("blindUser", JSON.stringify(user))
+    : null;
 
 export const handleLogin = (username) => {
   if (username) {
@@ -22,6 +24,11 @@ export const isLoggedIn = () => {
   const user = getUser();
 
   return !!user.username;
+};
+
+export const getUserName = () => {
+  const user = getUser();
+  return user.username;
 };
 
 export const logout = (callback) => {
