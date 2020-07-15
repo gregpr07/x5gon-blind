@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import Layout from "../src/components/layout";
-import Navbar from "../src/components/navbar";
-import PrivateRoute from "../src/components/privateRoute";
+import Layout from "../../src/components/layout";
+import Navbar from "../../src/components/navbar";
+import PrivateRoute from "../../src/components/privateRoute";
 import useSWR from "swr";
+import { fetcher } from "../../services/functions";
 
 const Main = () => {
-  const fetcher = (url) => fetch(url).then((r) => r.json());
   const { data, error } = useSWR("/api/user/availableclasses/", fetcher);
+  const link = "/portal";
   return (
     <PrivateRoute>
       <Layout>
@@ -20,8 +21,8 @@ const Main = () => {
                 {data
                   ? data.map((classs) => (
                       <Link
-                        href="/classroom/[pid]"
-                        as={`/classroom/${classs.name}`}
+                        href={`${link}/[pid]`}
+                        as={`${link}/${classs.name}`}
                       >
                         <a
                           className="card card-my-classrooms mx-auto p-3 my-3 maxer-500"
@@ -42,6 +43,10 @@ const Main = () => {
                     ))
                   : "loading"}
               </div>
+            </div>
+
+            <div className="mt-5 text-white">
+              <a className="button-green px-3">Join new classroom</a>
             </div>
           </div>
         </div>

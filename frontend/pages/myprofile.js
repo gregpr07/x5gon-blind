@@ -3,7 +3,7 @@ import Layout from "../src/components/layout";
 import Navbar from "../src/components/navbar";
 import PrivateRoute from "../src/components/privateRoute";
 import { POSTHeader } from "../services/functions";
-import useSWR from "swr";
+import { updateData } from "../services/auth";
 
 const Myprofile = (props) => {
   const [profile, setProfile] = useState();
@@ -27,7 +27,8 @@ const Myprofile = (props) => {
         .then((res) => res.json())
         .then((json) => {
           console.log(json);
-          //getStats();
+          updateData();
+          getStats();
         });
     };
     return (
@@ -108,6 +109,7 @@ const Myprofile = (props) => {
                 setOldPassword(e.target.value);
               }}
               placeholder="Your old password"
+              required
             />
             {MapErrors(isError.old_password)}
           </div>
@@ -127,6 +129,7 @@ const Myprofile = (props) => {
                 setPassword1(e.target.value);
               }}
               placeholder="Choose a password"
+              required
             />
             {MapErrors(isError.new_password1)}
           </div>
@@ -146,6 +149,7 @@ const Myprofile = (props) => {
                 setPassword2(e.target.value);
               }}
               placeholder="Choose a password"
+              required
             />
             {MapErrors(isError.new_password2)}
           </div>

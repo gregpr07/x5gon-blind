@@ -12,11 +12,29 @@ const setUser = (user) =>
 
 export const handleLogin = (username) => {
   if (username) {
-    return setUser({
-      username: username,
-    });
+    fetch(`/api/user/myprofile/`)
+      .then((res) => res.json())
+      .then((json) => {
+        console.log("logging in");
+        setUser({
+          username: json.name,
+          is_teacher: json.is_teacher,
+        });
+        window.history.back();
+      });
   }
+  return false;
+};
 
+export const updateData = () => {
+  fetch(`/api/user/myprofile/`)
+    .then((res) => res.json())
+    .then((json) => {
+      setUser({
+        username: json.name,
+        is_teacher: json.is_teacher,
+      });
+    });
   return false;
 };
 
@@ -24,6 +42,12 @@ export const isLoggedIn = () => {
   const user = getUser();
 
   return !!user.username;
+};
+
+export const isTeacher = () => {
+  const user = getUser();
+
+  return !!user.is_teacher;
 };
 
 export const getUserName = () => {

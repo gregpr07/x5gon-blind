@@ -1,3 +1,5 @@
+import { logout } from "./auth";
+
 export function getCookie(name) {
   var cookieValue = null;
   if (document.cookie && document.cookie !== "") {
@@ -25,3 +27,14 @@ export const POSTHeader = () => {
     },
   };
 };
+
+export const fetcher = (url) =>
+  fetch(url).then((r) => {
+    // logout on unauthorized
+    if (r.status === 401) {
+      console.log("unauthorized");
+      logout(() => navigate(`/`));
+    }
+
+    return r.json();
+  });

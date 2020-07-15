@@ -1,7 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import Head from "next/head";
-import logo from "../images/logo/x5gon_logo_light.svg";
+import logo from "../src/images/logo/x5gon_logo_light.svg";
+import { TeacherRoute } from "./privateRoute";
 
 const Header = () => {
   return (
@@ -48,12 +49,7 @@ const Layout = (props) => {
 };
 
 export const Footer = (props) => (
-  <footer
-    className={
-      "pt-4 my-md-5 pt-md-5 text-dark px-3"
-      /* (props.theme === 'dark' ? ' bg-dark' : '') */
-    }
-  >
+  <footer className={"pt-4 my-md-5 pt-md-5 text-dark px-3"}>
     <div className="row">
       <div className="col-12 col-md">
         <a href="https://platform.x5gon.org" className="nav-link">
@@ -70,7 +66,7 @@ export const Footer = (props) => (
             </a>
           </li>
           <li>
-            <Link href="/students">
+            <Link href="/portal">
               <a className="text-muted">Students</a>
             </Link>
           </li>
@@ -86,12 +82,12 @@ export const Footer = (props) => (
         <h5>Resources</h5>
         <ul className="list-unstyled text-small">
           <li>
-            <Link href="/static/Non_profesional_background.pdf">
+            <Link href="/static/non_profesional_background.pdf">
               <a className="text-muted">Teacher guide</a>
             </Link>
           </li>
           <li>
-            <Link href="/static/Technical_background.pdf">
+            <Link href="/static/technical_background.pdf">
               <a className="text-muted">Technical documentation</a>
             </Link>
           </li>{" "}
@@ -104,10 +100,14 @@ export const Footer = (props) => (
 
 export const TeacherLayout = (props) => {
   return (
-    <div className="full-screen bg-blue text-center text-white">
-      <Header />
-      {props.children}
-    </div>
+    <TeacherRoute>
+      <div className="full-screen bg-blue text-center">
+        <Header />
+        {props.children}
+      </div>
+      <Footer theme="dark" />
+    </TeacherRoute>
   );
 };
+
 export default Layout;

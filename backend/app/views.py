@@ -58,6 +58,11 @@ dummy_row = [0 for i in range(number_of_features)]
 # todo - add new materials view, api calls to x5gon
 
 
+# ? if need more info about user
+""" class getUserInfo(APIView):
+    def get(self,request): """
+
+
 class Myprofile(APIView):
     def get(self, request):
         try:

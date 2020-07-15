@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import Layout from "../src/components/layout";
-import Navbar from "../src/components/navbar";
+import Router from "next/router";
+import Layout from "../components/layout";
+import Navbar from "../components/navbar";
 import { isLoggedIn, handleLogin } from "../services/auth";
 import { POSTHeader } from "../services/functions";
 
@@ -13,7 +14,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   if (authTokens) {
-    window.location.href = "/";
+    Router.push("/");
   }
 
   const postLogin = (e) => {
@@ -35,7 +36,9 @@ const Login = () => {
       .then((json) => {
         console.log(json);
         handleLogin(userName);
+
         setIsError(false);
+        //Router.push("/");
       })
       .catch((rejection) => {
         rejection.json().then((err) => {
@@ -49,6 +52,7 @@ const Login = () => {
     <>
       <Navbar />
       <Layout>
+        <h4 className="mb-5">Login</h4>
         {isError ? <div className="alert alert-danger">{isError}</div> : null}
         <form onSubmit={(e) => postLogin(e)} className="maxer-form mx-auto">
           <div className="form-group">
@@ -60,6 +64,7 @@ const Login = () => {
                 setUserName(e.target.value);
               }}
               placeholder="username"
+              required
             />
           </div>
           <div className="form-group">
@@ -70,7 +75,8 @@ const Login = () => {
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
-              placeholder="Choose a password"
+              placeholder="Your password"
+              required
             />
           </div>
           <button type="submit" className="button-green px-5 mb-2">

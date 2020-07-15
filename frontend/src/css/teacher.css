@@ -1,10 +1,10 @@
 .teacher-nav a {
-	color: white;
+  color: white;
 }
 .card-my-classrooms:hover {
-	background-color: #f8f9fa;
-	cursor: pointer;
+  background-color: #f8f9fa;
+  cursor: pointer;
 }
 .selector-row div ul li {
-	cursor: pointer;
+  cursor: pointer;
 }

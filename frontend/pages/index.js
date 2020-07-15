@@ -38,7 +38,7 @@ const About = (props) => {
                 </Link>
               </p>
               <p className="mt-0 mb-2">or visit</p>
-              <Link href="/students">
+              <Link href="/portal">
                 <a className="button-green px-5">Student portal</a>
               </Link>
             </div>
