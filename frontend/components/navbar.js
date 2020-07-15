@@ -73,11 +73,11 @@ export const TeacherNavbar = () => {
       name: "Home",
     },
     {
-      link: "/newmaterial",
+      link: "/teachers/newmaterial",
       name: "Add material",
     },
     {
-      link: "/classrooms",
+      link: "/teachers/classrooms",
       name: "My Classrooms",
     },
   ];

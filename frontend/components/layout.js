@@ -101,7 +101,7 @@ export const Footer = (props) => (
 export const TeacherLayout = (props) => {
   return (
     <TeacherRoute>
-      <div className="full-screen bg-blue text-center">
+      <div>
         <Header />
         {props.children}
       </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import Layout from "../../src/components/layout";
-import Navbar from "../../src/components/navbar";
+import Layout from "../../components/layout";
+import Navbar from "../../components/navbar";
 import PrivateRoute from "../../src/components/privateRoute";
 import useSWR from "swr";
 import { fetcher } from "../../services/functions";
