@@ -15,15 +15,16 @@ const Classroom = (props) => {
   const { cid } = router.query;
   const title = cid;
 
-  /*   const [materials, setMaterials] = useState([]);
+  const [materials, setMaterials] = useState([]);
   useEffect(() => {
-    fetch(`/api/teacher/classroom/${title}/`)
-      .then((res) => res.json())
-      .then((json) => setMaterials(json.materials));
-  }, []); */
+    if (cid) {
+      fetch(`/api/teacher/classroom/${title}/`)
+        .then((res) => res.json())
+        .then((json) => setMaterials(json.materials));
+    }
+  }, [cid]);
 
-  const { data, error } = useSWR(`/api/user/classroom/${cid}/`, fetcher);
-  const materials = data;
+  //const { data, error } = useSWR(`/api/user/classroom/${cid}/`, fetcher);
 
   const Materials = (mats) => {
     console.log(mats);
@@ -32,8 +33,8 @@ const Classroom = (props) => {
         <h5>Materials</h5>
         <ul className="list-group maxer-500">
           {mats.map((mat) => (
-            <li className="list-group-item" key={mat.name}>
-              {mat.name}
+            <li className="list-group-item" key={mat}>
+              {mat}
             </li>
           ))}
         </ul>
@@ -128,7 +129,7 @@ const Classroom = (props) => {
               <ul className="list-group my-3">
                 {set.data.map((person, indexx) => (
                   <li className="list-group-item" key={indexx}>
-                    <Link href={"/students/" + person.user}>
+                    <Link href={"/teachers/students/" + person.user}>
                       <a>{person.user}</a>
                     </Link>
                   </li>

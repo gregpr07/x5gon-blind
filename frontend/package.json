@@ -8,9 +8,9 @@
     "start": "next start"
   },
   "dependencies": {
+    "bootstrap": "^4.5.0",
     "chart.js": "^2.9.3",
     "express": "^4.17.1",
-    "http-proxy-middleware": "^1.0.5",
     "next": "9.4.4",
     "next-images": "^1.4.0",
     "react": "16.13.1",
@@ -19,7 +19,8 @@
     "swr": "^0.2.3"
   },
   "devDependencies": {
-    "cross-env": "^5.0.1"
+    "cross-env": "^5.0.1",
+    "http-proxy-middleware": "^0.17.4"
   },
   "proxy": "http://localhost:8000"
 }

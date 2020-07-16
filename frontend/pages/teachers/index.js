@@ -8,7 +8,7 @@ const Index = () => {
       <TeacherNavbar />
       <header className="bg-white" style={{ zIndex: "-100" }}>
         <div className="mx-auto maxer contents">
-          <div className="row no-gutters my-auto mt-md-0">
+          <div className="row no-gutters my-auto pt-0 pt-sm-5 pt-lg-0 mt-0 mt-sm-5 mt-lg-0">
             <div className="col-md-12 col-lg-6 my-auto">
               <div className="main-content pl-1 ml-4">
                 <h1 className="text-black text-main-header">Understand</h1>

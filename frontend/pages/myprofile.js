@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import Layout from "../src/components/layout";
-import Navbar from "../src/components/navbar";
-import PrivateRoute from "../src/components/privateRoute";
+import Layout from "../components/layout";
+import Navbar from "../components/navbar";
+import PrivateRoute from "../components/privateRoute";
 import { POSTHeader } from "../services/functions";
 import { updateData } from "../services/auth";
 
@@ -164,7 +164,8 @@ const Myprofile = (props) => {
     <PrivateRoute>
       <Layout>
         <Navbar />
-        <div className="animated fadeIn text-dark">
+        <div className="text-dark">
+          {/* animated fadeIn  */}
           <div className="">
             <div className="text-green mx-auto">
               <h3>My profile</h3>

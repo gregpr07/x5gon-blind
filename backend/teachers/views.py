@@ -180,7 +180,7 @@ class presentPlayer(APIView):
 
         ll = learner.learners
         if ll == {}:
-            return (Response('Error'))
+            return HttpResponse('Empty user', status=500)
 
         # annotated_data = annotate_learner(ll)
         annotated_summary = player_summary(ll)

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import Layout from "../../src/components/layout";
-import Navbar from "../../src/components/navbar";
-import PrivateRoute from "../../src/components/privateRoute";
+import Layout from "../../components/layout";
+import Navbar from "../../components/navbar";
+import PrivateRoute from "../../components/privateRoute";
 import { POSTHeader, fetcher } from "../../services/functions";
 
 import useSWR from "swr";
