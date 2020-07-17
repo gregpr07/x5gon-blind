@@ -1,34 +1,22 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { POSTHeader } from "../../../../services/functions";
+import { TeacherLayout } from "../../../components/layout";
+import { TeacherNavbar } from "../../../components/navbar";
+import { POSTHeader } from "../../../services/functions";
 
-import { TeacherLayout } from "../../../../components/layout";
-import { TeacherNavbar } from "../../../../components/navbar";
-
-const EditClassroom = (props) => {
-  const router = useRouter();
-  const { cid } = router.query;
-  const title = cid;
-
+const CreateClassroom = () => {
   const [classroom, setClassroom] = useState();
   const [description, setDescription] = useState();
   const [students, setStudents] = useState([]);
   const [materials, setMaterials] = useState([]);
 
-  const [selStudents, setSelStudents] = useState([]);
   const [selMaterials, setSelMaterials] = useState([]);
 
   const [addedSuccesfully, setAddedSuccesfully] = useState(false);
   const [failed, setFailed] = useState(false);
 
   const handleResponse = (json) => {
-    setStudents(json.students);
     setMaterials(json.materials);
-    setSelMaterials(json.classmaterials);
-    setSelStudents(json.classstudents);
-    setClassroom(json.title);
-    setDescription(json.description);
   };
 
   const handleClick = (item, state, setstate) => {
@@ -42,14 +30,13 @@ const EditClassroom = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch(`/api/teacher/update-classroom/`, {
+    fetch(`/api/teacher/create-classroom/`, {
       ...POSTHeader(),
       body: JSON.stringify({
-        currentname: title,
         name: classroom,
         description: description,
         materials: selMaterials,
-        students: selStudents,
+        students: [],
       }),
     })
       .then((res) => res.json())
@@ -66,35 +53,25 @@ const EditClassroom = (props) => {
   };
 
   useEffect(() => {
-    console.log(props);
-    if (!classroom && cid) {
-      fetch(`/api/teacher/classroominfo/${title}/`)
-        .then((res) => {
-          if (res.status === 200) {
-            return res.json();
-          } else throw res.status;
-        })
-        .then((json) => {
-          console.log(json);
-          handleResponse(json);
-        })
-        .catch((status) => console.log("error:" + status));
-    }
-  }, [cid]);
+    fetch(`/api/teacher/createinfo/`)
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json);
+        handleResponse(json);
+      });
+  }, []);
 
   return (
     <TeacherLayout>
       <TeacherNavbar />
       <div className="maxer mx-auto px-md-5 text-dark pt-128">
         {addedSuccesfully ? (
-          <div className="alert alert-success">
-            Classroom changed succesfully
-          </div>
+          <div className="alert alert-success">Classroom added succesfully</div>
         ) : null}
         {failed ? (
           <div className="alert alert-danger">Classroom not added</div>
         ) : null}
-        <h4 className="py-3">Classroom editor ({title})</h4>
+        <h4 className="py-3">Classroom creator</h4>
         <div className="px-4 maxer-800">
           <form onSubmit={handleSubmit}>
             <div className="form-group">
@@ -127,11 +104,11 @@ const EditClassroom = (props) => {
               {/* materials */}
               <div className="form-group col">
                 <label htmlFor="materials">Materials</label>
-                <ul class="list-group" id="materials">
+                <ul className="list-group" id="materials">
                   {materials.map((mat) => (
                     <li
                       key={mat}
-                      class={
+                      className={
                         "list-group-item list-group-item-action " +
                         (selMaterials.includes(mat) ? "active" : "")
                       }
@@ -145,34 +122,10 @@ const EditClassroom = (props) => {
                 </ul>
               </div>
               {/* materials */}
-              <div className="form-group col">
-                <label htmlFor="materials">Students</label>
-                <ul class="list-group" id="materials">
-                  {students.map((mat) => (
-                    <li
-                      key={mat}
-                      class={
-                        "list-group-item list-group-item-action " +
-                        (selStudents.includes(mat) ? "active" : "")
-                      }
-                      onClick={() =>
-                        handleClick(mat, selStudents, setSelStudents)
-                      }
-                    >
-                      {mat}
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </div>
-            <button className="btn btn-warning mr-3" type="submit">
-              Update classroom
+            <button className="btn btn-primary" type="submit">
+              Create classroom
             </button>
-            <Link href={"/teachers/classrooms/" + title}>
-              <a className="btn btn-secondary" type="submit">
-                Back
-              </a>
-            </Link>
           </form>
         </div>
       </div>
@@ -180,4 +133,4 @@ const EditClassroom = (props) => {
   );
 };
 
-export default EditClassroom;
+export default CreateClassroom;

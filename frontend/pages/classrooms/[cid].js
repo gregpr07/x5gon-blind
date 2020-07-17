@@ -90,6 +90,8 @@ const Recommendations = (props) => {
     );
   };
 
+  console.log(error);
+
   return (
     <PrivateRoute>
       <Layout>
@@ -102,8 +104,11 @@ const Recommendations = (props) => {
         ) : error ? (
           <div>
             <div className="text-center text-black">
-              It appears you are logged out
+              You are not in this class
             </div>
+            <Link href="/classrooms">
+              <a>Join class</a>
+            </Link>
           </div>
         ) : (
           <div className="loading-icon mx-auto" />

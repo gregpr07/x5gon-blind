@@ -34,8 +34,8 @@ max_value = 3
 ###################################################
 
 
-class defaultCall(APIView):
-    def post(self, request):
+class createInfo(APIView):
+    def get(self, request):
         try:
             user = User.objects.get(username=request.user)
 
@@ -43,24 +43,13 @@ class defaultCall(APIView):
 
             ret = {
                 'username': user.username,
-                'is_staff': user.info.is_teacher,
-                'classesCreated': [clas.name for clas in classes]
+                'classesCreated': [clas.name for clas in classes],
+                'materials': [mat.name for mat in Material.objects.all()],
             }
             return Response(ret)
         except Exception as e:
             print(e)
             return Response(False)
-
-
-class AllStuff(APIView):
-    def get(self, request):
-        if request.user.info.is_teacher:
-            ret = {
-                'materials': [mat.name for mat in Material.objects.all()],
-                'students': [user.username for user in User.objects.all()]
-            }
-            return Response(ret)
-        return HttpResponse('Unauthorized', status=401)
 
 
 class CreateClassroom(APIView):
@@ -110,10 +99,10 @@ class UpdateClassroom(APIView):
         classroom.creator = creator
 
         classroom.materials.clear()
-        classroom.students.clear()
+        classroom.activeStudents.clear()
 
         classroom.materials.add(*materials)
-        classroom.students.add(*students)
+        classroom.activeStudents.add(*students)
         classroom.save()
         print('updated classroom: '+currentname)
         return Response('success')
@@ -163,9 +152,11 @@ class ClassroomInfo(APIView):
             'title': classroom.name,
             'description': classroom.description,
             'classmaterials': [mat.name for mat in classroom.materials.all()],
-            'classstudents': [student.username for student in classroom.students.all()],
+            # active students
+            'classstudents': [student.username for student in classroom.activeStudents.all()],
             'materials': [mat.name for mat in Material.objects.all()],
-            'students': [user.username for user in User.objects.all()],
+            # joined students
+            'students': [user.username for user in classroom.students.all()],
         }
 
         return Response(ret)

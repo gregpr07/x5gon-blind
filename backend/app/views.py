@@ -140,14 +140,52 @@ class AvailableClassrooms(APIView):
     def get(self, request):
         try:
             user = User.objects.get(username=request.user)
-            classes = user.classes.all()
+            classes = user.confirmed_classes.all()
             resp = [{'name': str(classroom.name), 'creator': str(classroom.creator)}
                     for classroom in classes]
             return Response(resp)
 
         except Exception as e:
             print(e)
-            return HttpResponse('Unauthorized', status=401)
+            return HttpResponse('Internal error', status=500)
+
+
+class AllClassrooms(APIView):
+    def get(self, request):
+        try:
+            if not request.user.is_authenticated:
+                return HttpResponse('Unauthorized', status=401)
+            user = User.objects.get(username=request.user)
+
+            classes = Classes.objects.all()
+
+            resp = [{'name': str(classroom.name), 'creator': str(classroom.creator), 'materials': classroom.materials.count(),
+                     'students': classroom.students.count(), 'description': str(classroom.description), 'is_joined': user in classroom.students.all()}
+                    for classroom in classes]
+            return Response(resp)
+
+        except Exception as e:
+            print(e)
+            return HttpResponse('Internal error', status=500)
+
+
+class joinClassroom(APIView):
+    def post(self, request):
+        try:
+            data = request.data
+            if not request.user.is_authenticated:
+                return HttpResponse('Unauthorized', status=401)
+
+            classroom = Classes.objects.get(name=data['class'])
+
+            classroom.activeStudents.add(request.user)
+            classroom.students.add(request.user)
+
+            return Response('added successfully')
+
+        except Exception as e:
+            print(e)
+            return HttpResponse('Internal error', status=500)
 
 
 class example(APIView):
@@ -187,12 +225,17 @@ class personalReccomendations(APIView):
             prob = []
             user = User.objects.get(username=request.user)
 
+            classroom = Classes.objects.get(name=name)
+
+            if not user in classroom.activeStudents.all():
+                return HttpResponse('Not enroled in class', status=403)
+
             # print(user.is_authenticated)
             print(user.username)
 
             learner = Serial.parm_to_skill(user.info.params[0])
 
-            materials = Classes.objects.get(name=name).materials
+            materials = classroom.materials
 
             all_mat = list(materials.values(
                 'name', 'vector', 'url'))

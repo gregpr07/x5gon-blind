@@ -50,7 +50,7 @@ const Classroom = (props) => {
     // to only render once
 
     useEffect(() => {
-      if (classtitle) {
+      if (cid) {
         fetch(`/api/teacher/players/${classtitle}/`)
           .then((res) => res.json())
           .then((json) => {
@@ -63,7 +63,7 @@ const Classroom = (props) => {
           });
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [cid]);
 
     const Chart = () => {
       return (

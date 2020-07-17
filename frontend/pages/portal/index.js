@@ -8,7 +8,7 @@ import { fetcher } from "../../services/functions";
 
 const Main = () => {
   const { data, error } = useSWR("/api/user/availableclasses/", fetcher);
-  const link = "/portal";
+  const link = "/classrooms";
   return (
     <PrivateRoute>
       <Layout>
@@ -46,7 +46,9 @@ const Main = () => {
             </div>
 
             <div className="mt-5 text-white">
-              <a className="button-green px-3">Join new classroom</a>
+              <Link href="/classrooms">
+                <a className="button-green px-3">Join new classroom</a>
+              </Link>{" "}
             </div>
           </div>
         </div>

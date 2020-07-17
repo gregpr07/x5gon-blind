@@ -11,6 +11,8 @@ class Classes(models.Model):
     materials = models.ManyToManyField(
         Material, related_name='classes')
     students = models.ManyToManyField(User, related_name='classes')
+    activeStudents = models.ManyToManyField(
+        User, related_name='confirmed_classes')
 
     def __str__(self):
         return self.name

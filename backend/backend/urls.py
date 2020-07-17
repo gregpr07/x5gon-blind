@@ -27,9 +27,9 @@ urlpatterns = [
     #path('', index),
 ]
 
-urlpatterns += [
+""" urlpatterns += [
     # match the root
     #re_path(r'^$', index),
     # match all other pages
     re_path(r'^(?:.*)/?$', index),
-]
+] """

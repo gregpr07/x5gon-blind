@@ -14,32 +14,34 @@ const SingleStudent = (props) => {
   const { sid } = router.query;
 
   const currentUser = sid;
-  //const [studentInfo, setStudentInfo] = useState(null);
-  //const [isError, setIsError] = useState(false);
+  const [studentInfo, setStudentInfo] = useState(null);
+  const [isError, setIsError] = useState(false);
 
-  const { data, error } = useSWR(
+  /*   const { data, error } = useSWR(
     `/api/teacher/present/${currentUser}`,
     fetcher
-  );
+  ); */
 
-  const studentInfo = data;
-  const isError = error;
+  /*   const studentInfo = data;
+  const isError = error; */
 
-  /* useEffect(() => {
+  useEffect(() => {
     if (sid) {
       fetch(`/api/teacher/present/${currentUser}`)
-        .then((res) => res.json())
+        .then((res) => {
+          if (res.status === 200) {
+            return res.json();
+          } else throw res.status;
+        })
         .then((json) => {
-          if (json === "Error") {
-            setIsError(true);
-          }
-          if (json) {
-            setStudentInfo(json);
-            console.log(json);
-          }
-        });
+          console.log(json);
+
+          setStudentInfo(json);
+          console.log(json);
+        })
+        .catch((status) => (status === 500 ? setIsError(true) : null));
     }
-  }, [sid]); */
+  }, [sid]);
 
   const SpiderChart = () => {
     const summary = studentInfo.annotated_summary;
@@ -196,7 +198,7 @@ const SingleStudent = (props) => {
               <StudentVisits visits={studentInfo.visits} />
             </div>
           </div>
-        ) : error ? (
+        ) : isError ? (
           <div className="maxer-1000 mx-auto">User doesn't have any data</div>
         ) : (
           <div className="d-flex justify-content-center">

@@ -48,7 +48,7 @@ const Classrooms = () => {
           ))}
         </div>
         <div className="pt-3">
-          <Link href="/teachers/create-classroom">
+          <Link href="/teachers/classrooms/create">
             <a>Create a new classroom</a>
           </Link>
         </div>
