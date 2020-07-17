@@ -1,0 +1,73 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Journal Article
+% LaTeX Template
+% Version 1.4 (15/5/16)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com) with extensive modifications by
+% Vel (vel@LaTeXTemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass{minimal}
+
+\usepackage{blindtext} % Package to generate dummy text throughout this template 
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+\usepackage{adjustbox}
+
+% define style for ``not visible nodes and edges''
+\tikzset{bled/.style={black!40, line width=1pt, fill=white}}
+
+\usepackage{graphicx}
+
+
+
+\usepackage[english]{babel} % Language hyphenation and typographical rules
+
+
+
+
+\usepackage{hyperref} % For hyperlinks in the PDF
+
+\title{Understandable Bayesian Recommendation Engine}
+%\author{Martin Molan \\
+%	Jozef Stefan International Postgraduate School  \\
+%	\and 
+%	T \\
+%	His Company / University \\
+%	}
+
+% Hint: \title{what ever}, \author{who care} and \date{when ever} could stand 
+% before or after the \begin{document} command 
+% BUT the \maketitle command MUST come AFTER the \begin{document} command! 
+
+
+
+
+
+\begin{document}    
+
+% Print the title
+%\maketitle
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE CONTENTS
+%----------------------------------------------------------------------------------------
+ 
+
+Preferences, learned by the model, determine the characteristic of each instance (student) in the population. These preferences can be arranged into a vector $p = (p_1, p_2, \dots, p_n)$. Students can thus be imagined as a point in an $n$ dimensional space. Since $n$ is significantly higher than $2$ such high dimensional space cannot be plotted. In order to plot this high dimensional space, we use a TSNE dimensional reduction (non linear projection) technique to project the points form the original $n$ dimensional space to $2$ dimensions. Important characteristic of TSNE projection technique is that it retains \emph{closeness} -- instances that are similar in original $n$ dimensional space (meaning similar students) will be plotted close to one another in $2$ dimensional space.
+
+
+\end{document}
