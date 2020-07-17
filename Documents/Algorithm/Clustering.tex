@@ -67,7 +67,6 @@
 %----------------------------------------------------------------------------------------
  
 
-\section{Clustering explanation}
 Preferences, learned by the model, determine the characteristic of each instance (student) in the population. These preferences can be arranged into a vector $p = (p_1, p_2, \dots, p_n)$. Students can thus be imagined as a point in an $n$ dimensional space. Since $n$ is significantly higher than $2$ such high dimensional space cannot be plotted. In order to plot this high dimensional space, we use a TSNE dimensional reduction (non linear projection) technique to project the points form the original $n$ dimensional space to $2$ dimensions. Important characteristic of TSNE projection technique is that it retains \emph{closeness} -- instances that are similar in original $n$ dimensional space (meaning similar students) will be plotted close to one another in $2$ dimensional space.
 
 
