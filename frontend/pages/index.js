@@ -25,13 +25,7 @@ const About = (props) => {
               <h4 className="my-0 font-weight-normal text-dark">Students</h4>
             </div>
             <div className="card-body text-muted">
-              <h3 className="card-title pricing-card-title">Learn</h3>
-              <ul className="list-unstyled mt-3 mb-4">
-                <li>Feature</li>
-                <li>Feature</li>
-                <li>Feature</li>
-                <li>Feature</li>
-              </ul>
+              <h3 className="card-title pricing-card-title py-4">Learn</h3>
               <p className="m-0">
                 <Link href="/signup">
                   <a>Sign up for free</a>
@@ -49,13 +43,7 @@ const About = (props) => {
               <h4 className="my-0 font-weight-normal text-dark">Teachers</h4>
             </div>
             <div className="card-body text-muted">
-              <h3 className="card-title pricing-card-title">Manage</h3>
-              <ul className="list-unstyled mt-3 mb-4">
-                <li>Feature</li>
-                <li>Feature</li>
-                <li>Feature</li>
-                <li>Feature</li>
-              </ul>
+              <h3 className="card-title pricing-card-title py-4">Manage</h3>
               <p className="m-0">
                 <Link href="/signup">
                   <a>Sign up for free</a>
