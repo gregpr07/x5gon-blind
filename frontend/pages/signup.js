@@ -109,7 +109,7 @@ const Signup = (props) => {
             I am a teacher
           </label>
         </div>
-        <button type="submit" className="button-green px-5 mb-2">
+        <button type="submit" className="btn btn-outline-success px-5 mb-2">
           Sign Up
         </button>
       </form>

@@ -47,7 +47,9 @@ const Main = () => {
 
             <div className="mt-5 text-white">
               <Link href="/classrooms">
-                <a className="button-green px-3">Join new classroom</a>
+                <a className="btn btn-outline-success px-3">
+                  Join new classroom
+                </a>
               </Link>{" "}
             </div>
           </div>

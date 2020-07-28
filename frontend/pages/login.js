@@ -79,7 +79,7 @@ const Login = () => {
               required
             />
           </div>
-          <button type="submit" className="button-green px-5 mb-2">
+          <button type="submit" className="btn btn-outline-success px-5 mb-2">
             Sign In
           </button>
         </form>

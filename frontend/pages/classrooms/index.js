@@ -6,6 +6,7 @@ import PrivateRoute from "../../components/privateRoute";
 import useSWR from "swr";
 import { fetcher } from "../../services/functions";
 import { POSTHeader } from "../../services/functions";
+import { isTeacher } from "../../services/auth";
 
 const Main = () => {
   const { data, error } = useSWR("/api/user/allclasses/", fetcher);
@@ -51,7 +52,7 @@ const Main = () => {
                           ) : (
                             <button
                               onClick={() => handleJoin(classs.name)}
-                              class="button-green px-3"
+                              class="btn btn-outline-success px-3"
                             >
                               Join classroom
                             </button>
@@ -75,6 +76,13 @@ const Main = () => {
                   : "loading"}
               </div>
             </div>
+            {isTeacher() ? (
+              <Link href="/teachers/classrooms/create">
+                <a className="btn btn-outline-secondary px-3">
+                  Create new classroom
+                </a>
+              </Link>
+            ) : null}
           </div>
         </div>
       </Layout>

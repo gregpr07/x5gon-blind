@@ -87,13 +87,13 @@ const Myprofile = (props) => {
       }
     };
     return (
-      <div className="mt-5">
+      <div className="">
         {successfully ? (
           <div className="alert alert-success">{successfully}</div>
         ) : null}
-        <form onSubmit={resetPassword} className="maxer-form">
+        <form onSubmit={resetPassword} className="">
           <h5>Change your password</h5>
-          <div className="form-group mb-4">
+          <div className="form-group mt-4">
             <input
               className={
                 "form-control" +
@@ -153,7 +153,10 @@ const Myprofile = (props) => {
             />
             {MapErrors(isError.new_password2)}
           </div>
-          <button type="submit" className="btn btn-primary mb-2">
+          <button
+            type="submit"
+            className="btn btn-lg btn-outline-primary btn-block"
+          >
             Change password
           </button>
         </form>
@@ -167,23 +170,25 @@ const Myprofile = (props) => {
         <div className="text-dark">
           {/* animated fadeIn  */}
           <div className="">
-            <div className="text-green mx-auto">
-              <h3>My profile</h3>
+            <div className="mx-auto">
+              <h3 className="text-green">My profile</h3>
               {!profile ? null : (
-                <div className="text-white mt-4 text-left maxer-500 mx-auto">
-                  <h4>User: {profile.name}</h4>
-                  <h4>
-                    Type:{" "}
-                    {profile.type === 0
-                      ? "Blind student"
-                      : "Partially blind student"}
-                  </h4>
+                <div className="text-left maxer-500 mx-auto">
+                  <div className="list-group list-group-flush py-5">
+                    <p className="list-group-item">User: {profile.name}</p>
+                    <p className="list-group-item">
+                      Type:{" "}
+                      {profile.type === 0
+                        ? "Blind student"
+                        : "Partially blind student"}
+                    </p>
 
-                  {profile.is_teacher ? (
-                    <h4>You are a teacher</h4>
-                  ) : (
-                    <UpgradeTeacher />
-                  )}
+                    {profile.is_teacher ? (
+                      <p className="list-group-item">You are a teacher</p>
+                    ) : (
+                      <UpgradeTeacher />
+                    )}
+                  </div>
 
                   <PasswordReset />
                 </div>
