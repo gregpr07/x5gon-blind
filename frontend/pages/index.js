@@ -1,64 +1,83 @@
 import React from "react";
 import Link from "next/link";
-import Layout from "../components/layout";
+import { NewLayout } from "../components/layout";
 import Navbar from "../components/navbar";
 
-const About = (props) => {
+const Index = (props) => {
   return (
-    <Layout>
-      <Navbar />
-
-      <div className="px-3 my-5 pb-md-4 p-128 mx-auto text-center pt-md-0 pt-5">
-        <h3 className="display-5 pb-3 animated fadeIn">
-          Pythia learning assistant
-        </h3>
-        <p className="lead maxer-800 mx-auto">
-          Recommendation engine, based on scalable, interpretable Bayesian
-          Opposition based classifier.
-        </p>
-      </div>
-
-      <div className="maxer-800 mx-auto px-4 px-lg-0">
-        <div className="card-deck mb-3 text-center">
-          <div className="card mb-4 box-shadow">
-            <div className="card-header">
-              <h4 className="my-0 font-weight-normal text-dark">Students</h4>
+    <NewLayout>
+      <div>
+        <div className="position-relative overflow-hidden p-3 pt-5 mt-3 mt-md-0 p-md-5 m-md-3 text-center bg-light">
+          <div className="col-md-5 p-lg-5 mx-auto my-5">
+            <h2 className="display-3 font-weight-normal">Pythia assistant</h2>
+            <p className="lead font-weight-normal">
+              Recommendation engine, based on scalable, interpretable Bayesian
+              Opposition based classifier.
+            </p>
+            <button className="btn btn-outline-secondary" href="#">
+              Coming soon
+            </button>
+          </div>
+          <div className="product-device shadow-sm d-none d-md-block" />
+          <div className="product-device product-device-2 shadow-sm d-none d-md-block" />
+        </div>
+        <div className="d-md-flex flex-md-equal w-100 my-md-3 pl-md-3">
+          <div className="bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden">
+            <div className="my-3 py-3">
+              <h2 className="display-5">Students</h2>
+              <p className="lead">Learn</p>
             </div>
-            <div className="card-body text-muted">
-              <h3 className="card-title pricing-card-title py-4">Learn</h3>
-              <p className="m-0">
+            <div
+              className="bg-light shadow-sm mx-auto"
+              style={{
+                width: "80%",
+                height: "200px",
+                borderRadius: "21px 21px 0 0",
+              }}
+            >
+              <div
+                style={{
+                  paddingTop: "90px",
+                }}
+              >
                 <Link href="/signup">
-                  <a>Sign up for free</a>
+                  <a className="btn btn-outline-secondary" href="#">
+                    Sign up for free
+                  </a>
                 </Link>
-              </p>
-              <p className="mt-0 mb-2">or visit</p>
-              <Link href="/portal">
-                <a className="button-green px-5">Student portal</a>
-              </Link>
+              </div>
             </div>
           </div>
-
-          <div className="card mb-4 box-shadow">
-            <div className="card-header">
-              <h4 className="my-0 font-weight-normal text-dark">Teachers</h4>
+          <div className="bg-light mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
+            <div className="my-3 p-3">
+              <h2 className="display-5">Teachers</h2>
+              <p className="lead">Manage</p>
             </div>
-            <div className="card-body text-muted">
-              <h3 className="card-title pricing-card-title py-4">Manage</h3>
-              <p className="m-0">
+            <div
+              className="bg-dark shadow-sm mx-auto"
+              style={{
+                width: "80%",
+                height: "200px",
+                borderRadius: "21px 21px 0 0",
+              }}
+            >
+              <div
+                style={{
+                  paddingTop: "90px",
+                }}
+              >
                 <Link href="/signup">
-                  <a>Sign up for free</a>
+                  <a className="btn btn-outline-secondary" href="#">
+                    Sign up for free
+                  </a>
                 </Link>
-              </p>
-              <p className="mt-0 mb-2">or visit</p>
-              <Link href="/teachers">
-                <a className="button-green px-5">Teacher portal</a>
-              </Link>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </Layout>
+    </NewLayout>
   );
 };
 
-export default About;
+export default Index;

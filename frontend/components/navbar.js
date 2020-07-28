@@ -32,10 +32,10 @@ export const Navbar = (router) => {
           {authTokens ? (
             <>
               <Link href="/portal">
-                <li className="nav-item nav-link text-primary">Portal</li>
+                <li className="nav-item nav-link text-dark">Portal</li>
               </Link>
               <Link href="/myprofile">
-                <li className="nav-item nav-link text-primary">
+                <li className="nav-item nav-link text-dark">
                   My profile ({authTokens})
                 </li>
               </Link>
@@ -46,16 +46,16 @@ export const Navbar = (router) => {
                   logout(() => navigate(`/`));
                 }}
               >
-                <li className="nav-item nav-link text-primary">Logout</li>
+                <li className="nav-item nav-link text-dark">Logout</li>
               </a>
             </>
           ) : (
             <>
               <Link href="/login">
-                <li className="nav-item nav-link text-primary">Login</li>
+                <li className="nav-item nav-link text-dark">Login</li>
               </Link>
               <Link href="/signup">
-                <li className="nav-item nav-link text-primary">Sign up</li>
+                <li className="nav-item nav-link text-dark">Sign up</li>
               </Link>
             </>
           )}
