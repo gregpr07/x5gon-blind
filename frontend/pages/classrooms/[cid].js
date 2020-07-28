@@ -26,19 +26,19 @@ const Recommendations = (props) => {
       <div>
         <ul className="searched-items">
           {props.items.map((single) => (
-            <div key={single.name} className="maxer-540 mx-auto my-3">
-              <div className="card">
-                <div className="card-body bg-light">
-                  <a
-                    href={single.url}
-                    target="blank"
-                    onClick={() => clickedItems(single.name)}
-                  >
-                    <h4>{single.name}</h4>
-                  </a>
+            <a
+              className="card card-my-classrooms mx-auto p-4 my-3 maxer-500"
+              key={single.name}
+              href={single.url}
+              target="blank"
+              onClick={() => clickedItems(single.name)}
+            >
+              <div className="row">
+                <div className="col">
+                  <h4 className="card-title text-primary m-0">{single.name}</h4>
                 </div>
               </div>
-            </div>
+            </a>
           ))}
         </ul>
       </div>
@@ -67,20 +67,21 @@ const Recommendations = (props) => {
 
   const Eval = () => {
     return (
-      <div className="position-fixed z-2000 full-width">
+      <div className="">
         <div className="alert alert-success" role="alert">
-          <h4 className="alert-heading">Did you like {clickedName}</h4>
+          <p>Did you like </p>
+          <h4 className="alert-heading">{clickedName}</h4>
 
           <hr />
 
           <button
-            className="btn btn-success m-3 px-5"
+            className="btn btn-outline-success m-3 px-5"
             onClick={() => postEval(1)}
           >
             Yes
           </button>
           <button
-            className="btn btn-danger m-3 px-5"
+            className="btn btn-outline-danger m-3 px-5"
             onClick={() => postEval(0)}
           >
             No
@@ -94,25 +95,27 @@ const Recommendations = (props) => {
 
   return (
     <PrivateRoute>
-      <Layout>
+      <Layout hideFooter={true}>
         <Navbar />
-        {cid ? <h4 className="mb-5">{cid}</h4> : null}
-        {waitEval ? (
-          <Eval />
-        ) : data ? (
-          <Items items={data} />
-        ) : error ? (
-          <div>
-            <div className="text-center text-black">
-              You are not in this class
+        <div className="container">
+          {cid ? <h4 className="mb-5">{cid}</h4> : null}
+          {waitEval ? (
+            <Eval />
+          ) : data ? (
+            <Items items={data} />
+          ) : error ? (
+            <div>
+              <div className="text-center text-black">
+                You are not in this class
+              </div>
+              <Link href="/classrooms">
+                <a>Join class</a>
+              </Link>
             </div>
-            <Link href="/classrooms">
-              <a>Join class</a>
-            </Link>
-          </div>
-        ) : (
-          <div className="loading-icon mx-auto" />
-        )}
+          ) : (
+            <div className="loading-icon mx-auto" />
+          )}
+        </div>
       </Layout>
     </PrivateRoute>
   );

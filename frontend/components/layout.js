@@ -44,7 +44,7 @@ const Layout = (props) => {
       <div className="full-screen text-center text-white">
         <div className="mb-5 mb-md-0" />
         <div className="full-screen p-128 text-dark">{props.children}</div>
-        <Footer />
+        {props.hideFooter ? null : <Footer />}
       </div>
     </>
   );
@@ -63,14 +63,13 @@ export const NewLayout = (props) => {
 
 export const Footer = (props) => (
   <footer className="container py-5">
-    <div className="row pt-3">
+    <div className="row pt-3 ml-2 ml-md-0">
       <div className="col-12 col-md">
         <a href="https://platform.x5gon.org">
           <img src={logo} height="22px" alt="X5GON logo"></img>
         </a>
-        <small className="d-block mt-2 text-muted">2019-2020</small>
       </div>
-      <div className="col-6 col-md text-dark">
+      <div className="col-12 col-sm text-dark pt-4 pt-md-0">
         <h5>Site links</h5>
         <ul className="list-unstyled text-small">
           <li>
@@ -90,7 +89,7 @@ export const Footer = (props) => (
           </li>
         </ul>
       </div>
-      <div className="col-6 col-md text-dark">
+      <div className="col-12 col-sm text-dark">
         <h5>Resources</h5>
         <ul className="list-unstyled text-small">
           <li>
@@ -105,7 +104,7 @@ export const Footer = (props) => (
           </li>{" "}
         </ul>
       </div>
-      <div className="col-6 col-md text-dark">
+      <div className="col-12 col-sm text-dark">
         <h5>About</h5>
         <ul className="list-unstyled text-small">
           <li>

@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { NewLayout } from "../components/layout";
 import Navbar from "../components/navbar";
+import { isLoggedIn, isTeacher } from "../services/auth";
 
 const Index = (props) => {
   return (
@@ -9,7 +10,9 @@ const Index = (props) => {
       <div>
         <div className="position-relative overflow-hidden p-3 pt-5 mt-3 mt-md-0 p-md-5 m-md-3 text-center bg-light">
           <div className="col-md-5 p-lg-5 mx-auto my-5">
-            <h2 className="display-3 font-weight-normal">Pythia assistant</h2>
+            <h2 className="display-3 font-weight-normal">
+              Pythia blind assistant
+            </h2>
             <p className="lead font-weight-normal">
               Recommendation engine, based on scalable, interpretable Bayesian
               Opposition based classifier.
@@ -40,9 +43,9 @@ const Index = (props) => {
                   paddingTop: "90px",
                 }}
               >
-                <Link href="/signup">
+                <Link href={isLoggedIn() ? "/portal" : "/signup"}>
                   <a className="btn btn-outline-secondary" href="#">
-                    Sign up for free
+                    {isLoggedIn() ? "Student portal" : "Sign up for free"}
                   </a>
                 </Link>
               </div>
@@ -66,9 +69,21 @@ const Index = (props) => {
                   paddingTop: "90px",
                 }}
               >
-                <Link href="/signup">
+                <Link
+                  href={
+                    isLoggedIn()
+                      ? isTeacher()
+                        ? "/teachers"
+                        : "/myprofile"
+                      : "/signup"
+                  }
+                >
                   <a className="btn btn-outline-secondary" href="#">
-                    Sign up for free
+                    {isLoggedIn()
+                      ? isTeacher()
+                        ? "Teachers portal"
+                        : "Upgrade account"
+                      : "Sign up for free"}
                   </a>
                 </Link>
               </div>

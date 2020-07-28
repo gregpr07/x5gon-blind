@@ -13,7 +13,10 @@ const Main = () => {
     <PrivateRoute>
       <Layout>
         <Navbar />
-        <div className="animated fadeIn text-dark">
+        <div
+          className="animated fadeIn text-dark container
+        "
+        >
           <div className="">
             <div className="text-green mx-auto">
               <h3>Available classrooms</h3>

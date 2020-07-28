@@ -36,7 +36,8 @@ export const Navbar = (router) => {
               </Link>
               <Link href="/myprofile">
                 <li className="nav-item nav-link text-dark">
-                  My profile ({authTokens})
+                  My profile{" "}
+                  <span className="d-none d-md-inline">({authTokens})</span>
                 </li>
               </Link>
               <a

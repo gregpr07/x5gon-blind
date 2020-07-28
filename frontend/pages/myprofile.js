@@ -167,7 +167,7 @@ const Myprofile = (props) => {
     <PrivateRoute>
       <Layout>
         <Navbar />
-        <div className="text-dark">
+        <div className="text-dark container">
           {/* animated fadeIn  */}
           <div className="">
             <div className="mx-auto">

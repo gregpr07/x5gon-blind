@@ -45,10 +45,10 @@ const Main = () => {
                               <a>{classs.name}</a>
                             </Link>
                           </h5>
-                          <p class="card-text">{classs.description}</p>
+                          <p class="card-text m-0">{classs.description}</p>
 
                           {classs.is_joined ? (
-                            <p>You are already in this class</p>
+                            <p className="m-0">You are already in this class</p>
                           ) : (
                             <button
                               onClick={() => handleJoin(classs.name)}
@@ -58,7 +58,7 @@ const Main = () => {
                             </button>
                           )}
                         </div>
-                        <div class="card-footer text-muted">
+                        <div class="border-top p-2 text-muted">
                           <div className="row">
                             <div className="col-12 col-sm-4">
                               Created by: {classs.creator}
