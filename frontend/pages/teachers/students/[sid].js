@@ -179,6 +179,33 @@ const SingleStudent = (props) => {
       </div>
     );
   };
+  const Accordion = (props) => {
+    return (
+      <div id="accordion">
+        <div className="bg-none" id="headingOne">
+          <h5 className="mb-0">
+            <button
+              className="btn btn-outline-info"
+              data-toggle="collapse"
+              data-target={"#collapseOn" + props.info.id}
+              aria-expanded="true"
+              aria-controls={"collapseOn" + props.info.id}
+            >
+              {props.info.title}
+            </button>
+          </h5>
+        </div>
+        <div
+          id={"collapseOn" + props.info.id}
+          className="collapse"
+          aria-labelledby="headingOne"
+          data-parent="#accordion"
+        >
+          <div className="">{props.children}</div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <TeacherLayout>
@@ -192,7 +219,50 @@ const SingleStudent = (props) => {
             </h4>
             <div className="col-9">
               <SpiderChart />
+
+              <Accordion info={{ title: "Interpret spider chart", id: "one" }}>
+                <p className="py-2">
+                  This plots highlights most informative feature values (in
+                  average) that contribute to <i>positive</i> usability of a
+                  certain material for each of the three categories.
+                </p>
+              </Accordion>
+
               <GaussianDistro />
+
+              <Accordion
+                info={{ title: "Interpret gaussian chart", id: "two" }}
+              >
+                <p className="py-2">
+                  How do I interpret Gaussians? Simply - they give you much more
+                  information than a number. Standard algorithms give their
+                  estimate for parameter. We give you a range where we believe
+                  the parameter to be. And of course, our range changes the more
+                  information about the learner we get.
+                </p>
+                <p>
+                  The more we know about the preferences of the user, the
+                  tighter our range estimate becomes. How can you see that on
+                  the graph? Just check the 'width' of the hill.{" "}
+                  <i>
+                    The wider the hill the more uncertain about the parameter
+                    estimate we are
+                  </i>
+                  . The narrower the hill the more certain we are - if the hill
+                  deforms into a single line than we are absolutely certain in
+                  our estimate. But we will need a lot of data before we are
+                  that certain. Also we don't stay that certain till the end of
+                  time - over time we slowly loose certainty - our hills become
+                  wider. On the image, we can see that we care much more certain
+                  into blue parameter than into orange one. Again the only thing
+                  that communicates certainty is is the shape.
+                </p>
+                <img src="/static/two_gauss.png" alt="my image" />
+                <p>
+                  Can you guess which parameter we can estimate with more
+                  certainty?
+                </p>
+              </Accordion>
             </div>
             <div className="col">
               <StudentVisits visits={studentInfo.visits} />
