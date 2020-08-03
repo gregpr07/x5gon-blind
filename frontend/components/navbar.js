@@ -7,7 +7,7 @@ import logo from "../src/images/logo/x5gon_logo_light.svg";
 export const Navbar = (router) => {
   const [authTokens, setAuthTokens] = useState(getUserName());
   return (
-    <nav className="navbar navbar-expand navbar-dark bg-light fixed-top">
+    <nav className="navbar navbar-expand navbar-dark bg-light fixed-top mx-0 mx-md-3">
       <div className="navbar-brand">
         <Link href="/">
           <a className="nav-link">
