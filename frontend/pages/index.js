@@ -1,12 +1,14 @@
 import React from "react";
 import Link from "next/link";
-import { NewLayout } from "../components/layout";
+import { Layout } from "../components/layout";
 import Navbar from "../components/navbar";
 import { isLoggedIn, isTeacher } from "../services/auth";
 
 const Index = (props) => {
   return (
-    <NewLayout>
+    <Layout hideTopMargin={true}>
+      <Navbar />
+
       <div>
         <div className="position-relative overflow-hidden p-3 pt-5 mt-3 mt-md-0 p-md-5 m-md-3 text-center bg-light">
           <div className="col-md-5 p-lg-5 mx-auto my-5">
@@ -91,7 +93,7 @@ const Index = (props) => {
           </div>
         </div>
       </div>
-    </NewLayout>
+    </Layout>
   );
 };
 

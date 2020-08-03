@@ -37,7 +37,7 @@ const Header = () => {
   );
 };
 
-const Layout = (props) => {
+const oldLayout = (props) => {
   return (
     <>
       <Header />
@@ -50,13 +50,16 @@ const Layout = (props) => {
   );
 };
 
-export const NewLayout = (props) => {
+export const Layout = (props) => {
   return (
     <>
-      <Header />
-      <Navbar />
-      <div>{props.children}</div>
-      <Footer />
+      {props.hideHeader ? null : <Header />}
+
+      <div className={props.hideTopMargin ? "pt-5 mt-4" : "p-128 mt-5 mt-md-0"}>
+        {props.children}
+      </div>
+
+      {props.hideFooter ? null : <Footer />}
     </>
   );
 };

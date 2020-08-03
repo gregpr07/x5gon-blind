@@ -19,7 +19,7 @@ const Main = () => {
         >
           <div className="">
             <div className="text-green mx-auto">
-              <h3>Available classrooms</h3>
+              <h3>Classrooms</h3>
               <div className="mx-auto mt-4">
                 {data
                   ? data.map((classs) => (
