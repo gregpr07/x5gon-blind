@@ -55,7 +55,12 @@ export const Layout = (props) => {
     <>
       {props.hideHeader ? null : <Header />}
 
-      <div className={props.hideTopMargin ? "pt-5 mt-4" : "p-128 mt-5 mt-md-0"}>
+      <div
+        className={
+          "text-center " +
+          (props.hideTopMargin ? "pt-md-5 mt-4" : "p-128 mt-5 mt-md-0")
+        }
+      >
         {props.children}
       </div>
 
