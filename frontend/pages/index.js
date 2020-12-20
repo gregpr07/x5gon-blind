@@ -19,9 +19,6 @@ const Index = (props) => {
               Recommendation engine, based on scalable, interpretable Bayesian
               Opposition based classifier.
             </p>
-            <button className="btn btn-outline-secondary" href="#">
-              Coming soon
-            </button>
           </div>
           <div className="product-device shadow-sm d-none d-md-block" />
           <div className="product-device product-device-2 shadow-sm d-none d-md-block" />
