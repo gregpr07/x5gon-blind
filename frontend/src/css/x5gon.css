@@ -90,11 +90,13 @@ p {
 h1,
 h2,
 h3,
+h4,
 h5,
 h6,
 .h1,
 .h2,
 .h3,
+.h4,
 .h5,
 .h6 {
   font-family: "IBM Plex Serif", /* 'Fira Sans' */ serif;
@@ -123,7 +125,7 @@ h4,
   line-height: 52px;
   font-size: 36px;
   font-weight: 300;
-  font-family: "Open Sans";
+  /* font-family: "Open Sans"; */
   letter-spacing: 0.3;
 }
 h5 {
